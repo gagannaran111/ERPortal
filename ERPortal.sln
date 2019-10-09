@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPortal.WebUI", "ERPortal.WebUI\ERPortal.WebUI.csproj", "{0C102DB8-EFFD-4706-BBDE-60E3051E3D13}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPortal.Core", "ERPortal.Core\ERPortal.Core.csproj", "{22603FC3-5EF6-4C9C-830A-5AA0BB423B77}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPortal.DataAccess.InMemory", "ERPortal.DataAccess.InMemory\ERPortal.DataAccess.InMemory.csproj", "{6573FDC9-992D-4F41-86CA-BBF7A1CECD5B}"
@@ -13,16 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPortal.DataAccess.SQL", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPortal.Services", "ERPortal.Services\ERPortal.Services.csproj", "{75F8FE7F-C19F-4FB4-9E1E-E8210A85D450}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPortal.WebUI", "ERPortal.WebUI\ERPortal.WebUI.csproj", "{DA137C3F-1D6F-4CD5-A760-302EBC2AC56C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0C102DB8-EFFD-4706-BBDE-60E3051E3D13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C102DB8-EFFD-4706-BBDE-60E3051E3D13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C102DB8-EFFD-4706-BBDE-60E3051E3D13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C102DB8-EFFD-4706-BBDE-60E3051E3D13}.Release|Any CPU.Build.0 = Release|Any CPU
 		{22603FC3-5EF6-4C9C-830A-5AA0BB423B77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{22603FC3-5EF6-4C9C-830A-5AA0BB423B77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22603FC3-5EF6-4C9C-830A-5AA0BB423B77}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{75F8FE7F-C19F-4FB4-9E1E-E8210A85D450}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75F8FE7F-C19F-4FB4-9E1E-E8210A85D450}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75F8FE7F-C19F-4FB4-9E1E-E8210A85D450}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA137C3F-1D6F-4CD5-A760-302EBC2AC56C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA137C3F-1D6F-4CD5-A760-302EBC2AC56C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA137C3F-1D6F-4CD5-A760-302EBC2AC56C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA137C3F-1D6F-4CD5-A760-302EBC2AC56C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
