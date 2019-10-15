@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,10 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\IRepository.cs" />
+    <Compile Include="Models\BaseEntity.cs" />
+    <Compile Include="Models\ERApplication.cs" />
+    <Compile Include="Models\ERCMemberComments.cs" />
+    <Compile Include="Models\ERScreeningDetails.cs" />
+    <Compile Include="Models\ERScreeningInstitute.cs" />
+    <Compile Include="Models\FieldType.cs" />
+    <Compile Include="Models\Operator.cs" />
+    <Compile Include="Models\UserAccounts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

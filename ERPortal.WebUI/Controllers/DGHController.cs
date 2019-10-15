@@ -6,15 +6,10 @@ using System.Web.Mvc;
 
 namespace ERPortal.WebUI.Controllers
 {
-    public class AccountController : Controller
+    public class DGHController : Controller
     {
-        // GET: Account
+        // GET: DGH
         public ActionResult Index()
-        {
-            return View();
-        }
-
-        public ActionResult Login()
         {
             return View();
         }

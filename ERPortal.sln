@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPortal.DataAccess.SQL", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPortal.Services", "ERPortal.Services\ERPortal.Services.csproj", "{75F8FE7F-C19F-4FB4-9E1E-E8210A85D450}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPortal.WebUI", "ERPortal.WebUI\ERPortal.WebUI.csproj", "{DA137C3F-1D6F-4CD5-A760-302EBC2AC56C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPortal.WebUI", "ERPortal.WebUI\ERPortal.WebUI.csproj", "{5E0F7D8F-5BB0-446D-8C47-1359DD5FF17A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{75F8FE7F-C19F-4FB4-9E1E-E8210A85D450}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75F8FE7F-C19F-4FB4-9E1E-E8210A85D450}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75F8FE7F-C19F-4FB4-9E1E-E8210A85D450}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DA137C3F-1D6F-4CD5-A760-302EBC2AC56C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DA137C3F-1D6F-4CD5-A760-302EBC2AC56C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DA137C3F-1D6F-4CD5-A760-302EBC2AC56C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DA137C3F-1D6F-4CD5-A760-302EBC2AC56C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E0F7D8F-5BB0-446D-8C47-1359DD5FF17A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E0F7D8F-5BB0-446D-8C47-1359DD5FF17A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E0F7D8F-5BB0-446D-8C47-1359DD5FF17A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E0F7D8F-5BB0-446D-8C47-1359DD5FF17A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,7 +42,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InMemoryRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ERPortal.Core\ERPortal.Core.csproj">
+      <Project>{22603FC3-5EF6-4C9C-830A-5AA0BB423B77}</Project>
+      <Name>ERPortal.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERPortal.Services\ERPortal.Services.csproj">
+      <Project>{75f8fe7f-c19f-4fb4-9e1e-e8210a85d450}</Project>
+      <Name>ERPortal.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERPortal.WebUI\ERPortal.WebUI.csproj">
+      <Project>{5e0f7d8f-5bb0-446d-8c47-1359dd5ff17a}</Project>
+      <Name>ERPortal.WebUI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
