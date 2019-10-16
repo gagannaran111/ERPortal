@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace ERPortal.Core.Models
 {
-    public class Operator
+    public class Operator : BaseEntity
     {
+        public string Name { get; set; }
+
     }
 }

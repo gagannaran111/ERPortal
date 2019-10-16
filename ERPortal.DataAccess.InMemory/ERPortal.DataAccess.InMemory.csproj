@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Caching" />
@@ -53,10 +56,6 @@
     <ProjectReference Include="..\ERPortal.Services\ERPortal.Services.csproj">
       <Project>{75f8fe7f-c19f-4fb4-9e1e-e8210a85d450}</Project>
       <Name>ERPortal.Services</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ERPortal.WebUI\ERPortal.WebUI.csproj">
-      <Project>{5e0f7d8f-5bb0-446d-8c47-1359dd5ff17a}</Project>
-      <Name>ERPortal.WebUI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

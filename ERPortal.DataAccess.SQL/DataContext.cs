@@ -23,20 +23,24 @@ namespace ERPortal.DataAccess.SQL
         {
             //base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ERApplication>().HasOptional(a => a.ScreeningReport);
-            modelBuilder.Entity<ERApplication>().Property(p => p.DGHComments).HasColumnType("nvarchar(max)");
-            modelBuilder.Entity<ERApplication>().Property(p => p.DGHCommentsForPilot).HasColumnType("nvarchar(max)");
+            modelBuilder.Entity<ERApplication>().HasOptional(a => a.DGHComments);
+            modelBuilder.Entity<ERApplication>().HasOptional(a => a.ERCComments);
+            modelBuilder.Entity<ERApplication>().HasRequired(a => a.OperatorName);
 
+            modelBuilder.Entity<Comments>().Property(c => c.Remarks).HasColumnType("nvarchar(max)");
+            modelBuilder.Entity<Comments>().HasRequired(c => c.LinkedUser);
 
-            modelBuilder.Entity<ERCMemberComments>().HasRequired(c => c.LinkedApplication);
-            modelBuilder.Entity<ERCMemberComments>().Property(p => p.Remarks).HasColumnType("nvarchar(max)");
+            modelBuilder.Entity<UserAccounts>().Property(u => u.EmailID).IsRequired();
+            modelBuilder.Entity<UserAccounts>().HasOptional(u => u.OperatorName);
+
         }
 
         public DbSet<ERApplication> ERApplications { get; set; }
-        public DbSet<ERCMemberComments> ERCMemberComments { get; set; }
+        public DbSet<Comments> Comments { get; set; }
         public DbSet<ERScreeningDetails> ERScreeningDetails { get; set; }
         public DbSet<ERScreeningInstitute> ERScreeningInstitutes { get; set; }
         public DbSet<FieldType> FieldTypes { get; set; }
-        //public DbSet<Operator> Operators { get; set; }
+        public DbSet<Operator> Operators { get; set; }
         public DbSet<UserAccounts> UserAccounts { get; set; }
 
     }
