@@ -52,7 +52,6 @@ namespace ERPortal.WebUI.Controllers
             }
         }
 
-        //
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -61,11 +60,11 @@ namespace ERPortal.WebUI.Controllers
             return View();
         }
 
-        //
-        // POST: /Account/Login
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+
+       //POST: /Account/Login
+       [HttpPost]
+       [AllowAnonymous]
+       [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)

@@ -18,6 +18,12 @@ namespace ERPortal.WebUI
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+                name: "Operator",
+                url: "{controller}/{id}",
+                defaults: new { controller = "Operator", action = "Index", id = UrlParameter.Optional }
+            );
         }
     }
 }

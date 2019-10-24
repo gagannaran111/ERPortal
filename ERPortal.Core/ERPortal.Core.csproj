@@ -48,16 +48,16 @@
     <Compile Include="Contracts\IRepository.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\ERApplication.cs" />
-    <Compile Include="Models\Comments.cs" />
-    <Compile Include="Models\ERScreeningDetails.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\ERScreeningDetail.cs" />
     <Compile Include="Models\ERScreeningInstitute.cs" />
     <Compile Include="Models\FieldType.cs" />
+    <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Operator.cs" />
-    <Compile Include="Models\UserAccounts.cs" />
+    <Compile Include="Models\UserAccount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\OperatorERApplicationViewModel.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

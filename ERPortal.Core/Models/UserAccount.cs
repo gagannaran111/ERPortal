@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ERPortal.Core.Models
 {
-    public class UserAccounts : BaseEntity
+    public class UserAccount : BaseEntity
     {
         public string EmailID { get; set; }
         public string FirstName { get; set; }

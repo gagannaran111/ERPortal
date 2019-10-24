@@ -6,10 +6,15 @@ using System.Web.Mvc;
 
 namespace ERPortal.WebUI.Controllers
 {
-    public class ERCommitteeController : Controller
+    public class AdminController : Controller
     {
-        // GET: ERCommittee
+        // GET: Admin
         public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult AddFieldType()
         {
             return View();
         }

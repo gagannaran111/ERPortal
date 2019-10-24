@@ -23,25 +23,29 @@ namespace ERPortal.DataAccess.SQL
         {
             //base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ERApplication>().HasOptional(a => a.ScreeningReport);
-            modelBuilder.Entity<ERApplication>().HasOptional(a => a.DGHComments);
-            modelBuilder.Entity<ERApplication>().HasOptional(a => a.ERCComments);
-            modelBuilder.Entity<ERApplication>().HasRequired(a => a.OperatorName);
+            modelBuilder.Entity<ERApplication>().HasRequired(a => a.OperatorName).WithMany().WillCascadeOnDelete(false);
+            modelBuilder.Entity<ERApplication>().HasRequired(a => a.FieldTypes).WithMany().WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Comments>().Property(c => c.Remarks).HasColumnType("nvarchar(max)");
-            modelBuilder.Entity<Comments>().HasRequired(c => c.LinkedUser);
+            modelBuilder.Entity<Comment>().Property(c => c.Text).HasColumnType("nvarchar(max)");
+            modelBuilder.Entity<Comment>().HasRequired(c => c.LinkedUser);
+            modelBuilder.Entity<Comment>().HasRequired(c => c.LinkedApplication);
 
-            modelBuilder.Entity<UserAccounts>().Property(u => u.EmailID).IsRequired();
-            modelBuilder.Entity<UserAccounts>().HasOptional(u => u.OperatorName);
+            modelBuilder.Entity<UserAccount>().Property(u => u.EmailID).IsRequired();
+            modelBuilder.Entity<UserAccount>().HasOptional(u => u.OperatorName).WithMany().WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<Notification>().HasRequired(n => n.UserID);
+            modelBuilder.Entity<Notification>().HasOptional(n => n.LinkedERApplication).WithMany().WillCascadeOnDelete(true); ;
 
         }
 
         public DbSet<ERApplication> ERApplications { get; set; }
-        public DbSet<Comments> Comments { get; set; }
-        public DbSet<ERScreeningDetails> ERScreeningDetails { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<ERScreeningDetail> ERScreeningDetails { get; set; }
         public DbSet<ERScreeningInstitute> ERScreeningInstitutes { get; set; }
         public DbSet<FieldType> FieldTypes { get; set; }
         public DbSet<Operator> Operators { get; set; }
-        public DbSet<UserAccounts> UserAccounts { get; set; }
+        public DbSet<UserAccount> UserAccounts { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
     }
 }

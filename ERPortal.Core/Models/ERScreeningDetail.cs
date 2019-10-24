@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ERPortal.Core.Models
 {
-    public class ERScreeningDetails: BaseEntity
+    public class ERScreeningDetail: BaseEntity
     {
         // Operator Section
         public virtual ERScreeningInstitute IssuingInstitute { get; set; }

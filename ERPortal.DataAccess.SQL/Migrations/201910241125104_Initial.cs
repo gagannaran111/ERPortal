@@ -12,12 +12,16 @@
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
-                        Remarks = c.String(),
+                        Type = c.Int(nullable: false),
+                        Text = c.String(),
                         CreatedAt = c.DateTimeOffset(nullable: false, precision: 7),
+                        LinkedApplication_Id = c.String(nullable: false, maxLength: 128),
                         LinkedUser_Id = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.ERApplications", t => t.LinkedApplication_Id, cascadeDelete: true)
                 .ForeignKey("dbo.UserAccounts", t => t.LinkedUser_Id, cascadeDelete: true)
+                .Index(t => t.LinkedApplication_Id)
                 .Index(t => t.LinkedUser_Id);
             
             CreateTable(
@@ -27,13 +31,14 @@
                         Id = c.String(nullable: false, maxLength: 128),
                         FieldName = c.String(),
                         DateOfDiscovery = c.DateTime(nullable: false),
-                        DateOfCommercialProduction = c.DateTime(),
+                        DateOfInitialCommercialProduction = c.DateTime(),
+                        DateOfLastCommercialProduction = c.DateTime(),
                         PresentlyUnderProduction = c.Boolean(),
                         ERScreeningStatus = c.Boolean(),
                         FieldOIIP = c.Int(),
                         FieldGIIP = c.Int(),
                         PilotDesign = c.Boolean(),
-                        PilotProductionProfile = c.String(),
+                        PilotProductionProfile = c.Int(),
                         TechnicallyCompatible = c.Boolean(),
                         EconomicViability = c.Boolean(),
                         AdditonalRemarks = c.String(),
@@ -47,26 +52,17 @@
                         DGHFileAttachmentForPilot = c.String(),
                         FinalApprovalStatus = c.Boolean(),
                         CreatedAt = c.DateTimeOffset(nullable: false, precision: 7),
-                        FieldTypes_Id = c.String(maxLength: 128),
+                        FieldTypes_Id = c.String(nullable: false, maxLength: 128),
                         OperatorName_Id = c.String(nullable: false, maxLength: 128),
                         ScreeningReport_Id = c.String(maxLength: 128),
-                        DGHComments_Id = c.String(maxLength: 128),
-                        DGHCommentsForPilot_Id = c.String(maxLength: 128),
-                        ERCComments_Id = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.FieldTypes", t => t.FieldTypes_Id)
-                .ForeignKey("dbo.Operators", t => t.OperatorName_Id, cascadeDelete: true)
+                .ForeignKey("dbo.Operators", t => t.OperatorName_Id)
                 .ForeignKey("dbo.ERScreeningDetails", t => t.ScreeningReport_Id)
-                .ForeignKey("dbo.Comments", t => t.DGHComments_Id)
-                .ForeignKey("dbo.Comments", t => t.DGHCommentsForPilot_Id)
-                .ForeignKey("dbo.Comments", t => t.ERCComments_Id)
                 .Index(t => t.FieldTypes_Id)
                 .Index(t => t.OperatorName_Id)
-                .Index(t => t.ScreeningReport_Id)
-                .Index(t => t.DGHComments_Id)
-                .Index(t => t.DGHCommentsForPilot_Id)
-                .Index(t => t.ERCComments_Id);
+                .Index(t => t.ScreeningReport_Id);
             
             CreateTable(
                 "dbo.FieldTypes",
@@ -132,31 +128,49 @@
                         OperatorName_Id = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Operators", t => t.OperatorName_Id)
+                .ForeignKey("dbo.Operators", t => t.OperatorName_Id, cascadeDelete: true)
                 .Index(t => t.OperatorName_Id);
+            
+            CreateTable(
+                "dbo.Notifications",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        Text = c.String(),
+                        IsRead = c.Boolean(nullable: false),
+                        CreatedAt = c.DateTimeOffset(nullable: false, precision: 7),
+                        LinkedERApplication_Id = c.String(maxLength: 128),
+                        UserID_Id = c.String(nullable: false, maxLength: 128),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.ERApplications", t => t.LinkedERApplication_Id, cascadeDelete: true)
+                .ForeignKey("dbo.UserAccounts", t => t.UserID_Id, cascadeDelete: true)
+                .Index(t => t.LinkedERApplication_Id)
+                .Index(t => t.UserID_Id);
             
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.Notifications", "UserID_Id", "dbo.UserAccounts");
+            DropForeignKey("dbo.Notifications", "LinkedERApplication_Id", "dbo.ERApplications");
             DropForeignKey("dbo.Comments", "LinkedUser_Id", "dbo.UserAccounts");
             DropForeignKey("dbo.UserAccounts", "OperatorName_Id", "dbo.Operators");
-            DropForeignKey("dbo.ERApplications", "ERCComments_Id", "dbo.Comments");
-            DropForeignKey("dbo.ERApplications", "DGHCommentsForPilot_Id", "dbo.Comments");
-            DropForeignKey("dbo.ERApplications", "DGHComments_Id", "dbo.Comments");
+            DropForeignKey("dbo.Comments", "LinkedApplication_Id", "dbo.ERApplications");
             DropForeignKey("dbo.ERApplications", "ScreeningReport_Id", "dbo.ERScreeningDetails");
             DropForeignKey("dbo.ERScreeningDetails", "IssuingInstitute_Id", "dbo.ERScreeningInstitutes");
             DropForeignKey("dbo.ERApplications", "OperatorName_Id", "dbo.Operators");
             DropForeignKey("dbo.ERApplications", "FieldTypes_Id", "dbo.FieldTypes");
+            DropIndex("dbo.Notifications", new[] { "UserID_Id" });
+            DropIndex("dbo.Notifications", new[] { "LinkedERApplication_Id" });
             DropIndex("dbo.UserAccounts", new[] { "OperatorName_Id" });
             DropIndex("dbo.ERScreeningDetails", new[] { "IssuingInstitute_Id" });
-            DropIndex("dbo.ERApplications", new[] { "ERCComments_Id" });
-            DropIndex("dbo.ERApplications", new[] { "DGHCommentsForPilot_Id" });
-            DropIndex("dbo.ERApplications", new[] { "DGHComments_Id" });
             DropIndex("dbo.ERApplications", new[] { "ScreeningReport_Id" });
             DropIndex("dbo.ERApplications", new[] { "OperatorName_Id" });
             DropIndex("dbo.ERApplications", new[] { "FieldTypes_Id" });
             DropIndex("dbo.Comments", new[] { "LinkedUser_Id" });
+            DropIndex("dbo.Comments", new[] { "LinkedApplication_Id" });
+            DropTable("dbo.Notifications");
             DropTable("dbo.UserAccounts");
             DropTable("dbo.ERScreeningInstitutes");
             DropTable("dbo.ERScreeningDetails");
