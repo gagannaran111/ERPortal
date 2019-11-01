@@ -1,0 +1,236 @@
+﻿@model ERPortal.Core.ViewModels.AdminManageViewModel
+
+<div class="accordion" id="accordionAdmin">
+    <div class="card">
+        <div class="card-header bg-gradient-info" id="headingOne">
+            <h2 class="mb-0">
+                <button class="btn btn-link text-white" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <h5>Manage User Accounts</h5>
+                </button>
+            </h2>
+        </div>
+
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionAdmin">
+            <div class="card-body">
+                @{ if (Model.UserAccounts.Count() != 0)
+                    {
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">First Name</th>
+                                    <th scope="col">Last Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Organisation</th>
+                                    <th scope="col" class="text-center">Manage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var Account in Model.UserAccounts)
+                                {
+                                    <tr id="row_@Account.Id">
+                                        <td>@Account.FirstName</td>
+                                        <td>@Account.LastName</td>
+                                        <td>@Account.EmailID</td>
+                                        <td>@Account.OrganisationName</td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-warning" value="@Account.Id">Edit</button>
+                                            <button type="button" class="btn btn-danger" value="@Account.Id">Delete</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <h4>No User Accounts available</h4>
+                    }
+                }
+                <br />
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="AjaxAddUser" data-title="User">Add new User</button>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header bg-gradient-info" id="headingTwo">
+            <h2 class="mb-0">
+                <button class="btn btn-link collapsed text-white" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <h5>Manage Organisations</h5>
+                </button>
+            </h2>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionAdmin">
+            <div class="card-body">
+                @{
+                    if (Model.Organisations.Count() != 0)
+                    {
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Organization</th>
+                                    <th scope="col" class="text-center">Manage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var Organisation in Model.Organisations)
+                                {
+                                    <tr id="row_@Organisation.Id">
+                                        <td>@Organisation.Name</td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-warning" value="@Organisation.Id">Edit</button>
+                                            <button type="button" class="btn btn-danger" value="@Organisation.Id">Delete</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <h4>No Organization data available</h4>
+                    }
+                }
+                <br />
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="AjaxAddOrganisation" data-title="Organisation">Add new Organisation</button>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header bg-gradient-info" id="headingThree">
+            <h2 class="mb-0">
+                <button class="btn btn-link collapsed text-white" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    <h5>Manage Field Types</h5>
+                </button>
+            </h2>
+        </div>
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionAdmin">
+            <div class="card-body">
+                @{
+                    if (Model.FieldTypes.Count() != 0)
+                    {
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Field Type</th>
+                                    <th scope="col" class="text-center">Manage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var FieldType in Model.FieldTypes)
+                                {
+                                    <tr id="row_@FieldType.Id">
+                                        <td>@FieldType.Type</td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-warning" value="@FieldType.Id">Edit</button>
+                                            <button type="button" class="btn btn-danger" value="@FieldType.Id">Delete</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <h4>No Field Types available</h4>
+                    }
+                }
+                <br />
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="AjaxAddFieldType" data-title="Field Type">Add new Field Type</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" form="myForm" class="btn btn-primary" id="saveButton">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#formModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var targetPage = button.data('page'); // Extract page redirection from data-* attributes
+            var modalTitle = button.data('title');// Extract Modal title from data-* attributes
+            // Initiate an AJAX request here (and then updating in a callback)
+            $.ajax({
+                url: "/Admin/" + targetPage,
+                success: function (result) {
+                    $("#formModalLabel").html("Add " + modalTitle);
+                    $('#modalContent').html(result);
+                    if ($("#saveButton").is(":hidden")) {
+                        $('#saveButton').show();
+                    }
+                },
+                error: function () {
+                    $('#modalContent').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
+                    if ($("#saveButton").is(":visible")) {
+                        $('#saveButton').fadeOut();
+                    }
+                },
+                fail: function (xhr, textStatus, errorThrown) {
+                    $('#modalContent').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
+                    if ($("#saveButton").is(":visible")) {
+                        $('#saveButton').fadeOut();
+                    }
+                }
+            });
+        });
+        $(document).on('submit', '#myForm', function (e) {
+            // stop default form submission
+            e.preventDefault();
+            var formUrl = $('#myForm').attr('action');
+            $.ajax({
+                url: formUrl,
+                type: 'POST',
+                data: $('#myForm').serialize(),
+                success: function (result) {
+                    if ('Success' == result) {
+                        $('#modalContent').html('<div class="alert alert-success" role="alert"> Successfully Added </div >');
+                        if ($("#saveButton").is(":visible")) {
+                            $('#saveButton').fadeOut();
+                        }
+                    } else {
+                        $('#modalContent').html(result);
+                    }
+                },
+                error: function () {
+                    $('#modalContent').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
+                    if ($("#saveButton").is(":visible")) {
+                        $('#saveButton').fadeOut();
+                    }
+                },
+                fail: function (xhr, textStatus, errorThrown) {
+                    $('#modalContent').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
+                    if ($("#saveButton").is(":visible")) {
+                        $('#saveButton').fadeOut();
+                    }
+                }
+            });
+        });
+    });
+
+</script>

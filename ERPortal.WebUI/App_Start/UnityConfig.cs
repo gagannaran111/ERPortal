@@ -52,8 +52,8 @@ namespace ERPortal.WebUI
             container.RegisterType<IRepository<FieldType>, SQLRepository<FieldType>>();
             container.RegisterType<IRepository<ERScreeningDetail>, SQLRepository<ERScreeningDetail>>();
             container.RegisterType<IRepository<ERScreeningInstitute>, SQLRepository<ERScreeningInstitute>>();
-            container.RegisterType<IRepository<Operator>, SQLRepository<Operator>>();
-            //container.RegisterType<IRepository<UserAccounts>, SQLRepository<UserAccounts>>();
+            container.RegisterType<IRepository<Organisation>, SQLRepository<Organisation>>();
+            container.RegisterType<IRepository<UserAccount>, SQLRepository<UserAccount>>();
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿@model ERPortal.Core.ViewModels.OperatorERApplicationViewModel
+﻿@model ERPortal.Core.ViewModels.OperatorERProposalViewModel
 <div class="d-flex justify-content-center">
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
 
         <div class="card border-success mb-3" style="min-width:55rem;">
-            <div class="card-header bg-success text-white"><h4>Submit ER Proposal</h4></div>
+            <div class="card-header bg-gradient-success text-white"><h4>Submit ER Proposal</h4></div>
             <div class="card-body" style="padding-left:50px;">
                 <div class="form-horizontal">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })

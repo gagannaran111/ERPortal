@@ -31,12 +31,31 @@ namespace ERPortal.WebUI.Controllers
         {
             ViewBag.Title = "Submit Proposal";
 
-            OperatorERApplicationViewModel viewModel = new OperatorERApplicationViewModel();
+            OperatorERProposalViewModel viewModel = new OperatorERProposalViewModel();
 
             viewModel.ERApplications = new ERApplication();
             viewModel.FieldTypes = FieldTypeContext.Collection();
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult SubmitERProposal(OperatorERProposalViewModel _ERApplication)
+        {
+            ViewBag.Title = "Submit Proposal";
+
+            if (!ModelState.IsValid)
+            {
+                return View(_ERApplication);
+            }
+
+            else
+            {
+                ERApplicationContext.Insert(_ERApplication.ERApplications);
+                ERApplicationContext.Commit();
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

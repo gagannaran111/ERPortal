@@ -9,7 +9,9 @@ namespace ERPortal.Core.Models
     public class ERScreeningDetail: BaseEntity
     {
         // Operator Section
-        public virtual ERScreeningInstitute IssuingInstitute { get; set; }
+        public string ERScreeningInstituteId { get; set; }
+        public virtual ERScreeningInstitute ERScreeningInstitute { get; set; }
+
         public string ReportDocumentPath { get; set; }
         public Boolean? FirstOrderScreening { get; set; }
         public Boolean? SecondOrderScreening { get; set; }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ERPortal.Core.Models;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ERPortal.WebUI.Models
@@ -64,6 +65,19 @@ namespace ERPortal.WebUI.Models
 
     public class RegisterViewModel
     {
+        [Required]
+        [Display(Name = "First Name")]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} character long.", MinimumLength = 1)]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Last Name")]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} character long.", MinimumLength = 1)]
+        public string LastName { get; set; }
+
+        [Display(Name = "Organisation")]
+        public virtual Organisation OperatorName { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]

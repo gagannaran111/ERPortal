@@ -13,7 +13,7 @@ namespace ERPortal.DataAccess.SQL.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201910241125104_Initial"; }
+            get { return "201911011119368_Initial"; }
         }
         
         string IMigrationMetadata.Source

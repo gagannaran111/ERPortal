@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ERPortal.Core.ViewModels
 {
-    public class OperatorERApplicationViewModel
+    public class OperatorERProposalViewModel
     {
         public ERApplication ERApplications { get; set; }
         public IEnumerable<FieldType> FieldTypes { get; set; }

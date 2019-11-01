@@ -11,13 +11,15 @@ namespace ERPortal.Core.Models
     public class ERApplication : BaseEntity
     {
         // Operator Section
+        public string OrganisationId { get; set; }
         [Display(Name = "Operator Name")]
         [Required(ErrorMessage = "Valid Operator Name is required")]
-        public virtual Operator OperatorName { get; set; }
+        public virtual Organisation Organisation { get; set; }
 
+        public string FieldTypeId { get; set; }
         [Display(Name = "Field Type")]
         [Required(ErrorMessage = "Valid Field Type is required")]
-        public virtual FieldType FieldTypes { get; set; }
+        public virtual FieldType FieldType { get; set; }
 
         [Display(Name = "Field Name")]
         public string FieldName { get; set; }
@@ -40,8 +42,9 @@ namespace ERPortal.Core.Models
         [Display(Name = "ER Screening Carried out")]
         public Boolean? ERScreeningStatus { get; set; }
 
-        [Display(Name = "Upload Screening report")]
-        public virtual ERScreeningDetail ScreeningReport { get; set; }
+        public string ERScreeningDetailId { get; set; }
+        [Display(Name = "Screening report")]
+        public virtual ERScreeningDetail ERScreeningDetail { get; set; }
 
         [Display(Name = "Field OIIP")]
         public int? FieldOIIP { get; set; }

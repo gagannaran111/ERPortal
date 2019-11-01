@@ -46,5 +46,11 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ERPortal.DataAccess.SQL\ERPortal.DataAccess.SQL.csproj">
+      <Project>{654FFBDC-43D8-45A2-A82C-27D9DF14E05F}</Project>
+      <Name>ERPortal.DataAccess.SQL</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

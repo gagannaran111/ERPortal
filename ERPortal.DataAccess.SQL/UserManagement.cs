@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERPortal.Core.Models
+namespace ERPortal.DataAccess.SQL
 {
-    public class Operator : BaseEntity
+    class UserManagement
     {
-        public string Name { get; set; }
-
     }
 }
