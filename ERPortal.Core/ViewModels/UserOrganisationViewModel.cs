@@ -11,6 +11,5 @@ namespace ERPortal.Core.ViewModels
     { 
         public UserAccount user { get; set; }
         public IEnumerable<Organisation> organisations { get; set; }
-        public String OrganisationID { get; set; }
     }
 }

@@ -70,10 +70,6 @@ namespace ERPortal.WebUI.Controllers
         [HttpPost]
         public ActionResult AjaxAddUser(UserOrganisationViewModel userAccount)
         {
-            if (userAccount.OrganisationID != null)
-            {
-                userAccount.user.OrganisationId = OrganisationContext.Find(userAccount.OrganisationID).Id;
-            }
 
             if (!ModelState.IsValid)
             {
@@ -91,7 +87,7 @@ namespace ERPortal.WebUI.Controllers
         public ActionResult AjaxAddOrganisation()
         {
             Organisation organisation = new Organisation();
-            return View();
+            return View(organisation);
         }
 
         [HttpPost]

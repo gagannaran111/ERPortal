@@ -11,7 +11,7 @@ namespace ERPortal.Core.Models
     {
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Valid OrganisationType Type is required")]
+        [Required(ErrorMessage = "Valid Organisation Type is required")]
         public OrganisationType Type { get; set; }
     }
 

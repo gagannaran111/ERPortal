@@ -11,18 +11,18 @@
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                     <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.OperatorName, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                        @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                         <div class="col-sm-6 d-flex align-items-center">
-                            @Html.EditorFor(model => model.ERApplications.OperatorName.Name, new { htmlAttributes = new { @class = "form-control disabled", @readonly = "readonly" } })
-                            @Html.ValidationMessageFor(model => model.ERApplications.OperatorName, "", new { @class = "text-danger" })
+                            @Html.EditorFor(model => model.ERApplications.Organisation.Name, new { htmlAttributes = new { @class = "form-control disabled", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.ERApplications.Organisation, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.FieldTypes, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                        @Html.LabelFor(model => model.ERApplications.FieldType, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                         <div class="col-sm-6 d-flex align-items-center">
-                            @Html.DropDownListFor(model => model.ERApplications.FieldTypes, new SelectList(Model.FieldTypes, "--Select Field Type--", "--Select Field Type--"), new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.ERApplications.FieldTypes, "", new { @class = "text-danger" })
+                            @Html.DropDownListFor(model => model.ERApplications.FieldType, new SelectList(Model.FieldTypes, "Id", "Type"), new { @class = "form -control" })
+                            @Html.ValidationMessageFor(model => model.ERApplications.FieldType, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
