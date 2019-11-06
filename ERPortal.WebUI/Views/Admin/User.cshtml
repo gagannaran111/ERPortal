@@ -4,7 +4,7 @@
     Layout = null;
 }
 
-@using (Html.BeginForm("AjaxAddUser", "Admin", FormMethod.Post, new { @id = "myForm" }))
+@using (Html.BeginForm("AjaxAdd", "Admin", new { targetPage = "User" }, FormMethod.Post, new { @id = "myForm" }))
 {
     @Html.AntiForgeryToken()
 

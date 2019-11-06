@@ -24,6 +24,16 @@ namespace ERPortal.Core.Models
         [Display(Name = "Field Name")]
         public string FieldName { get; set; }
 
+        [Display(Name ="Type of Hydrocarbon")]
+        [Required(ErrorMessage = "Valid Hydrocarbon Type is required")]
+        public HydrocarbonType HydrocarbonType { get; set; }
+
+        public string UHCProductionMethodId { get; set; }
+        [Display(Name = "UHC Production Method")]
+        public virtual UHCProductionMethod UHCProductionMethod { get; set; }
+
+        public Nullable<ImplementaionType> ImplementaionType { get; set; }
+
         [Display(Name = "Date of Discovery")]
         [DataType(DataType.Date)]
         public DateTime DateOfDiscovery { get; set; }
@@ -90,4 +100,22 @@ namespace ERPortal.Core.Models
         BAU,
         Decreasing
     }
+
+    public enum HydrocarbonType
+    {
+        Oil,
+        Gas,
+        UHC
+    }
+
+    public enum ImplementaionType
+    {
+        [Display(Name = "EOR Method")]
+        EORMethod,
+        [Display(Name = "EGR Method")]
+        EGRMethod,
+        [Display(Name = "UHC Extraction")]
+        UHCMethod
+    }
+
 }

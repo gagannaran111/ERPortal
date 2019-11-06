@@ -54,6 +54,7 @@
     <Compile Include="Models\FieldType.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Organisation.cs" />
+    <Compile Include="Models\UHCProductionMethod.cs" />
     <Compile Include="Models\UserAccount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AdminManageViewModel.cs" />

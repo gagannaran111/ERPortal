@@ -21,7 +21,7 @@
                     <div class="form-group row">
                         @Html.LabelFor(model => model.ERApplications.FieldType, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                         <div class="col-sm-6 d-flex align-items-center">
-                            @Html.DropDownListFor(model => model.ERApplications.FieldType, new SelectList(Model.FieldTypes, "Id", "Type"), new { @class = "form -control" })
+                            @Html.DropDownListFor(model => model.ERApplications.FieldType, new SelectList(Model.FieldTypes, "Id", "Type"), "Select Type", new { @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.ERApplications.FieldType, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -156,7 +156,7 @@
                     </div>
                     <div class="form-group row justify-content-center">
 
-                        <input type="submit" value="Submit" class="btn btn-primary" />
+                        <input type="submit" value="Submit" class="btn btn-primary" disabled/>
 
                     </div>
                 </div>

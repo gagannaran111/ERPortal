@@ -5,7 +5,7 @@
 }
 
 
-@using (Html.BeginForm("AjaxAddOrganisation", "Admin", FormMethod.Post, new { @id = "myForm" }))
+@using (Html.BeginForm("AjaxAdd", "Admin", new { targetPage = "Organisation" }, FormMethod.Post, new { @id = "myForm" }))
 {
     @Html.AntiForgeryToken()
 

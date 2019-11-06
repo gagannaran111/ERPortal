@@ -1,6 +1,7 @@
 ﻿@model ERPortal.Core.ViewModels.AdminManageViewModel
 
 <div class="accordion" id="accordionAdmin">
+
     <div class="card">
         <div class="card-header bg-gradient-info" id="headingOne">
             <h2 class="mb-0">
@@ -48,10 +49,11 @@
                 }
                 <br />
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="AjaxAddUser" data-title="User">Add new User</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="User" data-title="User">Add new User</button>
             </div>
         </div>
     </div>
+
     <div class="card">
         <div class="card-header bg-gradient-info" id="headingTwo">
             <h2 class="mb-0">
@@ -68,7 +70,8 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th scope="col">Organization</th>
+                                    <th scope="col">Organisation</th>
+                                    <th scope="col">Type</th>
                                     <th scope="col" class="text-center">Manage</th>
                                 </tr>
                             </thead>
@@ -77,6 +80,7 @@
                                 {
                                     <tr id="row_@Organisation.Id">
                                         <td>@Organisation.Name</td>
+                                        <td>@Organisation.Type</td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-warning" value="@Organisation.Id">Edit</button>
                                             <button type="button" class="btn btn-danger" value="@Organisation.Id">Delete</button>
@@ -93,10 +97,11 @@
                 }
                 <br />
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="AjaxAddOrganisation" data-title="Organisation">Add new Organisation</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="Organisation" data-title="Organisation">Add new Organisation</button>
             </div>
         </div>
     </div>
+
     <div class="card">
         <div class="card-header bg-gradient-info" id="headingThree">
             <h2 class="mb-0">
@@ -138,10 +143,60 @@
                 }
                 <br />
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="AjaxAddFieldType" data-title="Field Type">Add new Field Type</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="FieldType" data-title="Field Type">Add new Field Type</button>
             </div>
         </div>
     </div>
+
+    <div class="card">
+        <div class="card-header bg-gradient-info" id="headingFour">
+            <h2 class="mb-0">
+                <button class="btn btn-link collapsed text-white" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    <h5>Manage UHC Production Methods</h5>
+                </button>
+            </h2>
+        </div>
+
+        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionAdmin">
+            <div class="card-body">
+                @{
+                    if (Model.UHCProductionMethods.Count() != 0)
+                    {
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Method Name</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col" class="text-center">Manage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var UHCProductionMethod in Model.UHCProductionMethods)
+                                {
+                                    <tr id="row_@UHCProductionMethod.Id">
+                                        <td>@UHCProductionMethod.Name</td>
+                                        <td>@UHCProductionMethod.Description</td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-warning" value="@UHCProductionMethod.Id">Edit</button>
+                                            <button type="button" class="btn btn-danger" value="@UHCProductionMethod.Id">Delete</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <h4>No Production method data available</h4>
+                    }
+                }
+                <br />
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="UHCProductionMethod" data-title="UHC Production Method">Add new UHC Production Method</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
@@ -176,10 +231,10 @@
             var targetPage = button.data('page'); // Extract page redirection from data-* attributes
             var modalTitle = button.data('title');// Extract Modal title from data-* attributes
             // Initiate an AJAX request here (and then updating in a callback)
+            $("#formModalLabel").html("Add " + modalTitle);
             $.ajax({
-                url: "/Admin/" + targetPage,
+                url: "/Admin/AjaxAdd?targetPage=" + targetPage,
                 success: function (result) {
-                    $("#formModalLabel").html("Add " + modalTitle);
                     $('#modalContent').html(result);
                     if ($("#saveButton").is(":hidden")) {
                         $('#saveButton').show();

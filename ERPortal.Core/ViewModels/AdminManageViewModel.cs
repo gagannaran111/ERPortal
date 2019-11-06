@@ -12,6 +12,7 @@ namespace ERPortal.Core.ViewModels
         public List<UserAccount> UserAccounts { get; set; }
         public List<FieldType> FieldTypes { get; set; }
         public List<Organisation> Organisations { get; set; }
+        public List<UHCProductionMethod> UHCProductionMethods { get; set; }
              
     }
 }

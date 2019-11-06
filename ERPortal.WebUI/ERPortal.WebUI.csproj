@@ -294,9 +294,10 @@
     <Content Include="Views\Operator\SubmitERProposal.cshtml" />
     <Content Include="Views\Operator\Index.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Admin\AjaxAddUser.cshtml" />
-    <Content Include="Views\Admin\AjaxAddOrganisation.cshtml" />
-    <Content Include="Views\Admin\AjaxAddFieldType.cshtml" />
+    <Content Include="Views\Admin\User.cshtml" />
+    <Content Include="Views\Admin\Organisation.cshtml" />
+    <Content Include="Views\Admin\FieldType.cshtml" />
+    <Content Include="Views\Admin\UHCProductionMethod.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

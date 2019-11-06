@@ -1,4 +1,5 @@
-﻿using ERPortal.Core.Models;
+﻿using ERPortal.Core.Contracts;
+using ERPortal.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

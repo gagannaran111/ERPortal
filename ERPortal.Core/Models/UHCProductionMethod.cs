@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace ERPortal.Core.Models
 {
-    public class FieldType : BaseEntity
+    public class UHCProductionMethod : BaseEntity
     {
-        public string Type { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 }

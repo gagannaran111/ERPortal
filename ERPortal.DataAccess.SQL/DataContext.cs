@@ -23,6 +23,7 @@ namespace ERPortal.DataAccess.SQL
         {
             //base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ERApplication>().HasOptional(a => a.ERScreeningDetail);
+            modelBuilder.Entity<ERApplication>().HasOptional(a => a.UHCProductionMethod);
             modelBuilder.Entity<ERApplication>().HasRequired(a => a.Organisation).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<ERApplication>().HasRequired(a => a.FieldType).WithMany().WillCascadeOnDelete(false);
 
