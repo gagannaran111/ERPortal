@@ -54,6 +54,7 @@ namespace ERPortal.WebUI
             container.RegisterType<IRepository<ERScreeningInstitute>, SQLRepository<ERScreeningInstitute>>();
             container.RegisterType<IRepository<Organisation>, SQLRepository<Organisation>>();
             container.RegisterType<IRepository<UserAccount>, SQLRepository<UserAccount>>();
+            container.RegisterType<IRepository<UploadFile>, SQLRepository<UploadFile>>();
             container.RegisterType<IRepository<UHCProductionMethod>, SQLRepository<UHCProductionMethod>>();
         }
     }

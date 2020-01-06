@@ -1,167 +1,677 @@
 ﻿@model ERPortal.Core.ViewModels.OperatorERProposalViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 <div class="d-flex justify-content-center">
-    @using (Html.BeginForm())
+    @using (Ajax.BeginForm("SubmitERProposal", "Operator", new AjaxOptions
     {
+        HttpMethod = "POST",
+        OnSuccess = "OnSuccess(data)",
+        OnFailure = "OnFailure(data)",
+        //LoadingElementId = "progress"
+    }, new { id = "operatorform" }))
+    {
+
         @Html.AntiForgeryToken()
-
-        <div class="card border-success mb-3" style="min-width:55rem;">
-            <div class="card-header bg-gradient-success text-white"><h4>Submit ER Proposal</h4></div>
-            <div class="card-body" style="padding-left:50px;">
-                <div class="form-horizontal">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                        <div class="col-sm-6 d-flex align-items-center">
-                            @Html.EditorFor(model => model.ERApplications.Organisation.Name, new { htmlAttributes = new { @class = "form-control disabled", @readonly = "readonly" } })
-                            @Html.ValidationMessageFor(model => model.ERApplications.Organisation, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.FieldType, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                        <div class="col-sm-6 d-flex align-items-center">
-                            @Html.DropDownListFor(model => model.ERApplications.FieldType, new SelectList(Model.FieldTypes, "Id", "Type"), "Select Type", new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.ERApplications.FieldType, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.DateOfDiscovery, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                        <div class="col-sm-6 d-flex align-items-center">
-                            @Html.EditorFor(model => model.ERApplications.DateOfDiscovery, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ERApplications.DateOfDiscovery, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.DateOfInitialCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                        <div class="col-sm-6 d-flex align-items-center">
-                            @Html.EditorFor(model => model.ERApplications.DateOfInitialCommercialProduction, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ERApplications.DateOfInitialCommercialProduction, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.DateOfLastCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                        <div class="col-sm-6 d-flex align-items-center">
-                            @Html.EditorFor(model => model.ERApplications.DateOfLastCommercialProduction, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ERApplications.DateOfLastCommercialProduction, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.PresentlyUnderProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                        <div class="col-sm-6 d-flex align-items-center">
-                            <div class="form-check form-check-inline">
-                                @Html.RadioButtonFor(model => model.ERApplications.PresentlyUnderProduction, true, new { @class = "form-check-input" })
-                                @Html.LabelFor(model => model.ERApplications.PresentlyUnderProduction, "Yes", new { @class = "form-check-label" })
-                            </div>
-                            <div class="form-check form-check-inline">
-                                @Html.RadioButtonFor(model => model.ERApplications.PresentlyUnderProduction, false, new { @class = "form-check-input" })
-                                @Html.LabelFor(model => model.ERApplications.PresentlyUnderProduction, "No", new { @class = "form-check-label" })
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.ERScreeningStatus, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                        <div class="col-sm-6 d-flex align-items-center">
-                            <div class="form-check form-check-inline">
-                                @Html.RadioButtonFor(model => model.ERApplications.ERScreeningStatus, true, new { @class = "form-check-input" })
-                                @Html.LabelFor(model => model.ERApplications.ERScreeningStatus, "Yes", new { @class = "form-check-label" })
-                            </div>
-                            <div class="form-check form-check-inline">
-                                @Html.RadioButtonFor(model => model.ERApplications.ERScreeningStatus, false, new { @class = "form-check-input" })
-                                @Html.LabelFor(model => model.ERApplications.ERScreeningStatus, "No", new { @class = "form-check-label" })
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.FieldOIIP, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                        <div class="col-sm-6 d-flex align-items-center">
-                            <div class="input-group mb-3">
-                                @Html.EditorFor(model => model.ERApplications.FieldOIIP, new { htmlAttributes = new { @class = "form-control", aria_describedby = "basic-addon1" } })
-                                <div class="input-group-append">
-                                    <span class="input-group-text" id="basic-addon1">MMbbl</span>
-                                </div>
-                            </div>
-
-                            @Html.ValidationMessageFor(model => model.ERApplications.FieldOIIP, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.FieldGIIP, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                        <div class="col-sm-6 d-flex align-items-center">
-                            <div class="input-group mb-3">
-                                @Html.EditorFor(model => model.ERApplications.FieldGIIP, new { htmlAttributes = new { @class = "form-control", aria_describedby = "basic-addon2" } })
-                                <div class="input-group-append">
-                                    <span class="input-group-text" id="basic-addon2">TCF</span>
-                                </div>
-                            </div>
-                            @Html.ValidationMessageFor(model => model.ERApplications.FieldGIIP, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.PilotDesign, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                        <div class="col-sm-6 d-flex align-items-center">
-                            <div class="form-check form-check-inline">
-                                @Html.RadioButtonFor(model => model.ERApplications.PilotDesign, true, new { @class = "form-check-input" })
-                                @Html.LabelFor(model => model.ERApplications.PilotDesign, "Yes", new { @class = "form-check-label" })
-                            </div>
-                            <div class="form-check form-check-inline">
-                                @Html.RadioButtonFor(model => model.ERApplications.PilotDesign, false, new { @class = "form-check-input" })
-                                @Html.LabelFor(model => model.ERApplications.PilotDesign, "No", new { @class = "form-check-label" })
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.TechnicallyCompatible, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                        <div class="col-sm-6 d-flex align-items-center">
-                            <div class="form-check form-check-inline">
-                                @Html.RadioButtonFor(model => model.ERApplications.TechnicallyCompatible, true, new { @class = "form-check-input" })
-                                @Html.LabelFor(model => model.ERApplications.TechnicallyCompatible, "Yes", new { @class = "form-check-label" })
-                            </div>
-                            <div class="form-check form-check-inline">
-                                @Html.RadioButtonFor(model => model.ERApplications.TechnicallyCompatible, false, new { @class = "form-check-input" })
-                                @Html.LabelFor(model => model.ERApplications.TechnicallyCompatible, "No", new { @class = "form-check-label" })
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.EconomicViability, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                        <div class="col-sm-6 d-flex align-items-center">
-                            <div class="form-check form-check-inline">
-                                @Html.RadioButtonFor(model => model.ERApplications.EconomicViability, true, new { @class = "form-check-input" })
-                                @Html.LabelFor(model => model.ERApplications.EconomicViability, "Positive", new { @class = "form-check-label" })
-                            </div>
-                            <div class="form-check form-check-inline">
-                                @Html.RadioButtonFor(model => model.ERApplications.EconomicViability, false, new { @class = "form-check-input" })
-                                @Html.LabelFor(model => model.ERApplications.EconomicViability, "Negative", new { @class = "form-check-label" })
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        @Html.LabelFor(model => model.ERApplications.AdditonalRemarks, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                        <div class="col-sm-6 d-flex align-items-center">
-                            @Html.EditorFor(model => model.ERApplications.AdditonalRemarks, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ERApplications.AdditonalRemarks, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group row justify-content-center">
-
-                        <input type="submit" value="Submit" class="btn btn-primary" disabled/>
-
-                    </div>
+        @Html.HiddenFor(model => model.ERApplications.ERScreeningDetailId)
+        @Html.HiddenFor(model => model.ERApplications.AppId)
+        <div class="alert alert-success alert-dismissible showmsg d-none statussuccess">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+        <div class="card border-success mb-3">
+            <div class="card-header bg-gradient-success text-white">
+                <div class="row">
+                    <div class="col-lg-6"><h4>Submit ER Proposal</h4></div>
+                    <div class="col-lg-6 "><a href="#" class="btn btn-outline-light float-right GeneratePDF" id="printapp">Print</a></div>
                 </div>
+            </div>
+            <div class="card-body ml-lg-5">
+                <fieldset id="disabledForm">
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                @Html.EditorFor(model => model.ERApplications.Organisation.Name, new { htmlAttributes = new { @class = "form-control disabled", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.ERApplications.Organisation, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.FieldType, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                @Html.DropDownListFor(model => model.ERApplications.FieldTypeId, new SelectList(Model.FieldTypes, "Id", "Type"), "Select Field Type", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ERApplications.FieldTypeId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.FieldName, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                @Html.EditorFor(model => model.ERApplications.FieldName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.ERApplications.FieldName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.HydrocarbonType, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                @Html.EnumDropDownListFor(model => model.ERApplications.HydrocarbonType, "Choose...", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ERApplications.HydrocarbonType, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row" id="uhcProdnMethodDiv" style="display: none">
+                            @Html.LabelFor(model => model.ERApplications.UHCProductionMethod, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                @Html.DropDownListFor(model => model.ERApplications.UHCProductionMethodId, new SelectList(Model.UHCProductionMethods, "Id", "Name"), "Select Method", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ERApplications.UHCProductionMethod, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.DateOfDiscovery, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                @Html.EditorFor(model => model.ERApplications.DateOfDiscovery, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.ERApplications.DateOfDiscovery, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.ImplementaionType, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                @Html.EnumDropDownListFor(model => model.ERApplications.ImplementaionType, "Choose...", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ERApplications.ImplementaionType, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.DateOfInitialCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                @Html.EditorFor(model => model.ERApplications.DateOfInitialCommercialProduction, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.ERApplications.DateOfInitialCommercialProduction, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.PresentlyUnderProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(model => model.ERApplications.PresentlyUnderProduction, true, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.ERApplications.PresentlyUnderProduction, "Yes", new { @class = "form-check-label" })
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(model => model.ERApplications.PresentlyUnderProduction, false, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.ERApplications.PresentlyUnderProduction, "No", new { @class = "form-check-label" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row" id="DateOfLastCommercialProductionDiv" style="display:none">
+                            @Html.LabelFor(model => model.ERApplications.DateOfLastCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                @Html.EditorFor(model => model.ERApplications.DateOfLastCommercialProduction, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.ERApplications.DateOfLastCommercialProduction, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row" id="ErScreeningRadioDiv">
+                            @Html.LabelFor(model => model.ERApplications.ERScreeningStatus, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(model => model.ERApplications.ERScreeningStatus, true, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.ERApplications.ERScreeningStatus, "Yes", new { @class = "form-check-label lblers" })
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(model => model.ERApplications.ERScreeningStatus, false, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.ERApplications.ERScreeningStatus, "No", new { @class = "form-check-label lblers" })
+
+                                    <a href="#" id="ERScreeningDetailViewLink" class="ViewDetails btn btn-primary btn-sm " style="display:none" data-toggle="modal" data-target="#formDetailModal" data-page="ERScreeningDetailView" data-title="ERScreening Detail"><i class="fas fa-eye"></i> View ERScreening Detail</a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.FieldOIIP, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                <div class="input-group mb-3">
+                                    @Html.EditorFor(model => model.ERApplications.FieldOIIP, new { htmlAttributes = new { @class = "form-control", aria_describedby = "basic-addon1" } })
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="basic-addon1">MMbbl</span>
+                                    </div>
+                                </div>
+
+                                @Html.ValidationMessageFor(model => model.ERApplications.FieldOIIP, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.FieldGIIP, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                <div class="input-group mb-3">
+                                    @Html.EditorFor(model => model.ERApplications.FieldGIIP, new { htmlAttributes = new { @class = "form-control", aria_describedby = "basic-addon2", disabled = true } })
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="basic-addon2">TCF</span>
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.ERApplications.FieldGIIP, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.PilotDesign, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                <div class="pilotmandatory" data-toggle="tooltip" title="If OIIP < 25 MMBBL Or GIIP < 0.25 TCF then Not Mandatory otherwise Mandatory">
+                                    <div class="form-check form-check-inline">
+                                        @Html.RadioButtonFor(model => model.ERApplications.PilotDesign, true, new { @class = "form-check-input" })
+                                        @Html.LabelFor(model => model.ERApplications.PilotDesign, "Yes", new { @class = "form-check-label" })
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        @Html.RadioButtonFor(model => model.ERApplications.PilotDesign, false, new { @class = "form-check-input" })
+                                        @Html.LabelFor(model => model.ERApplications.PilotDesign, "No", new { @class = "form-check-label" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.PilotProductionProfile, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+
+                            <div class="col-sm-6 d-flex align-items-center pilotmandatory" data-toggle="tooltip" title="If OIIP < 25 MMBBL Or GIIP < 0.25 TCF then Not Mandatory otherwise Mandatory">
+
+                                @Html.EnumDropDownListFor(model => model.ERApplications.PilotProductionProfile, "Choose...", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ERApplications.PilotProductionProfile, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.TechnicallyCompatible, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(model => model.ERApplications.TechnicallyCompatible, true, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.ERApplications.TechnicallyCompatible, "Yes", new { @class = "form-check-label" })
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(model => model.ERApplications.TechnicallyCompatible, false, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.ERApplications.TechnicallyCompatible, "No", new { @class = "form-check-label" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.EconomicViability, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(model => model.ERApplications.EconomicViability, true, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.ERApplications.EconomicViability, "Positive", new { @class = "form-check-label" })
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(model => model.ERApplications.EconomicViability, false, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.ERApplications.EconomicViability, "Negative", new { @class = "form-check-label" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.AdditonalRemarks, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                @Html.EditorFor(model => model.ERApplications.AdditonalRemarks, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.ERApplications.AdditonalRemarks, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row justify-content-center">   
+                                    @*<input type="submit" value="Submit" class="btn btn-warning" id="ERAppSubmit">*@
+                            <button type="submit" class="btn btn-primary" id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>
+                              @*<button class="btn btn-success"  id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>*@
+                            
+                               
+                                 @*<div style="position: relative">
+                                     <i class="icon-pencil" style="position: absolute;left: 0.5em; top:0.25em"></i>
+                                     <input class="btn" type="submit" value="&#xf19e; Submit" style="padding-left: 20px" />
+                                 </div>*@
+                        </div>
+                    </div>
+                </fieldset>
             </div>
         </div>
 
     }
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btnclose " data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+                <button type="submit" form="myForm" class="btn btn-success" id="saveButton"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal  fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content ">
+            <div class="modal-header alert-danger">
+                <h5 class="modal-title" id="exampleModalLongTitle">Alert</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalContentAlert">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-check"></i> Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button type="button" style="display:none" id="opertor1" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="ERScreeningDetail" data-title="ERScreening Detail"></button>
+<button type="button" class="btn btn-primary d-none" id="btnalertmodal" data-toggle="modal" data-target="#exampleModalCenter"></button>
+<script type="text/javascript">
+    function OnSuccess(response) {
+        alertModal(response);
+       // $('#disabledForm').attr('disabled', 'disabled')       
+       $('#operatorform').find('input,select,radio').prop('disabled', true);
+        $('#ERAppSubmit').hide();
+        $('.statussuccess').append('Application Ref. No. : ' + response).removeClass('d-none');
+    }
+
+      function OnFailure() {
+            alertModal("Try Again Error Occured.");
+        }
+    $(document).ready(function () {
+
+        $('[data-toggle="tooltip"]').tooltip();
+        if ($('#ERApplications_AppId').val() != "") {
+            erscreeninglinkshowhideonload();
+          //  $('#disabledForm').attr('disabled','disabled')
+           $('#operatorform').find('input,select,radio').prop('disabled', true);
+            $('#ERAppSubmit').hide();
+            $('.statussuccess').append('Application Ref. No. : '+$('#ERApplications_AppId').val()).removeClass('d-none');
+        }
+
+        $(document.body).on('change', '#ERApplications_HydrocarbonType', function () {
+            var selectedOption = $(this).children(":selected").text();
+            var actionDiv = $("#uhcProdnMethodDiv");
+            if ("UHC" == selectedOption && actionDiv.is(":hidden")) {
+                actionDiv.val('').fadeIn("slow");
+                 $('#ERApplications_FieldGIIP').prop('disabled', false);
+                $('#ERApplications_FieldOIIP').prop('disabled',false);
+            } else if (actionDiv.is(":visible")) {
+                actionDiv.val('').fadeOut("slow");
+                $("#uhcProdnMethodDiv option[value='']").attr('selected', true);
+            }
+            if ($('#ERApplications_HydrocarbonType option:selected').val() == '0') {
+                $('#ERApplications_FieldGIIP').prop('disabled', true);
+                $('#ERApplications_FieldGIIP').val('');
+                $('#ERApplications_FieldOIIP').prop('disabled',false);
+            }
+            else if ($('#ERApplications_HydrocarbonType option:selected').val() == '1') {
+                $('#ERApplications_FieldGIIP').prop('disabled', false);
+                $('#ERApplications_FieldOIIP').prop('disabled', true);
+                $('#ERApplications_FieldOIIP').val('');
+            }
+        });
+
+        $(document).on("change", "input[name='ERApplications.ERScreeningStatus']", function () {
+            var actionDiv = $('#FileDiv');
+
+            if ($(this).val() == "True" ) {
+                $("#opertor1").click();
+                actionDiv.val('').fadeIn("slow");
+            } else if (actionDiv.is(":visible")) {
+                actionDiv.val('').fadeOut("slow");
+                $("#FileDiv option[value='']").attr('selected', true);
+            }
+        });
+        $(document).on('click', '.UploadFile', function (e) {
+            e.preventDefault();
+            var refid = $(this).attr('filerefid');
+            var sendData = function () {
+                var data = new FormData();
+                data.append("file", $("#txtFile").get(0).files[0]);
+                data.append("RefId", refid);
+                return data;
+            }();
+             $.ajax({
+                url: "@Url.Action("LoadUploadFile","Operator")",
+                type: 'POST',
+                 data: sendData,
+                 contentType: false,
+                processData: false,
+                 success: function (result) {
+                     if (result == "File upload Success") {
+                         $("input[type='file']").val("");
+                         GetUploadFilesData("#UploadFilesData",refid );
+                     }
+                },
+                 error: function () {
+
+                    alert( "Something Went Wrong. Try Again");
+                },
+                fail: function (xhr, textStatus, errorThrown) {
+
+                }
+            });
+        });
+
+         $('#formModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var targetPage = button.data('page'); // Extract page redirection from data-* attributes
+            var modalTitle = button.data('title');// Extract Modal title from data-* attributes
+            // Initiate an AJAX request here (and then updating in a callback)
+            $("#formModalLabel").html("Add " + modalTitle);
+            $.ajax({
+                url: "/Operator/AjaxAdd?targetPage=" + targetPage,
+                success: function (result) {
+                    $('#modalContent').html(result);
+                    if ($("#saveButton").is(":hidden")) {
+                        $('#saveButton').show();
+                    }
+                },
+                error: function () {
+                    $('#modalContent').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
+                    if ($("#saveButton").is(":visible")) {
+                        $('#saveButton').fadeOut();
+                    }
+                },
+                fail: function (xhr, textStatus, errorThrown) {
+                    $('#modalContent').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
+                    if ($("#saveButton").is(":visible")) {
+                        $('#saveButton').fadeOut();
+                    }
+                }
+            });
+         });
+        $('#formDetailModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var targetPage = button.data('page'); // Extract page redirection from data-* attributes
+            var modalTitle = button.data('title');// Extract Modal title from data-* attributes
+            var RefId = button.attr('form-ref-id');
+            // Initiate an AJAX request here (and then updating in a callback)
+            $("#formModalLabelView").html(modalTitle);
+            $.ajax({
+                url: "/Operator/AjaxViewDetails?targetPage=" + targetPage+"&&RefId="+RefId,
+                success: function (result) {
+                    $('#modalContentView').html(result);
+                    if (targetPage == "ERScreeningDetailView") {
+
+                        GetUploadFilesData('#DetailViewFile', $('#eRScreeningDetail_ReportDocumentPath').val());
+                        setTimeout(function () {
+                            $('.fileDelete').remove();
+                        }, 500);
+                    }
+                },
+                error: function () {
+                    $('#modalContentView').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
+
+                },
+                fail: function (xhr, textStatus, errorThrown) {
+                    $('#modalContentView').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
+
+                }
+            });
+        });
+
+         $(document).on('submit', '#myForm', function (e) {
+            // stop default form submission
+             e.preventDefault();
+
+            var formUrl = $('#myForm').attr('action');
+            $.ajax({
+                url: formUrl,
+                type: 'POST',
+                data: $('#myForm').serialize(),
+                success: function (result) {
+                    var res =result.split(",");
+                    if ('Success' == res[0]) {
+                        if (res[2] == "ERScreeningDetail") {
+
+                            $('#ERApplications_ERScreeningDetailId').val(res[1]);
+                            //erlinkid.attr('form-detail-name', res[2]);
+                            erscreeninglinkshowhideonload();
+
+                        }
+
+                        $('#modalContent').html('<div class="alert alert-success" role="alert"> Successfully Added </div >');
+                        if ($("#saveButton").is(":visible")) {
+                            $('#saveButton').fadeOut();
+                        }
+                    } else {
+                        $('#modalContent').html(result);
+                    }
+                },
+                error: function (result) {
+
+                      $('#modalContent').html(result);
+                },
+                fail: function (xhr, textStatus, errorThrown) {
+                    $('#modalContent').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
+                    if ($("#saveButton").is(":visible")) {
+                        $('#saveButton').fadeOut();
+                    }
+                }
+
+
+             });
+
+         });
+        //$(document).on('click', '.ViewDetails', function (e) {
+        //    e.preventDefault();
+        //});
+
+        $(document).on("change", "input[name='ERApplications.PresentlyUnderProduction']", function (e) {
+            var actionDiv = $("#DateOfLastCommercialProductionDiv");
+            if ($('#ERApplications_DateOfInitialCommercialProduction').val() != '') {
+                if ($(this).val() == "False") {
+                    actionDiv.val('').fadeIn("slow");
+                } else if ($(this).val() == "True") {
+                    CheckERScreeningEligibility();
+                    actionDiv.val('').fadeOut("slow");
+                    $('input[name="ERApplications.DateOfLastCommercialProduction"]').val('');
+                }
+            }
+            else {
+
+                alertModal("Select Date of Commencement of Commercial Production");
+               // alert('Select Date of Commencement of Commercial Production')
+                $(this).prop("checked", false);;
+            }
+        });
+
+        $(document).on('keypress','input[type="date"]',function (event) {
+             event.preventDefault();
+        });
+
+        $(document).on('change', 'input[name="ERApplications.DateOfLastCommercialProduction"]', function () {
+
+            CheckERScreeningEligibility();
+        });
+         $(document).on('change', 'input[name="ERApplications.FieldOIIP"]', function () {
+
+            checkMandatoryPilot();
+         });
+         $(document).on('change', 'input[name="ERApplications.FieldGIIP"]', function () {
+
+            checkMandatoryPilot();
+        });
+        $('#ERAppSubmit').click(function () {
+            
+            stcheck = false;
+            if ($('input[name="ERApplications.PilotDesign"]:eq(0)').prop('checked') == true) {
+
+                stcheck = true;
+            }
+            else {
+                alertModal("Pilot Design Mandatory");
+                stcheck = false;
+            }
+            return stcheck;
+
+        });
+    });
+
+    function alertModal(msg) {
+         $('#btnalertmodal').click();
+         $('#modalContentAlert').html("<strong>"+msg+"</strong>");
+    }
+
+    function erscreeninglinkshowhideonload() {
+        var erscreenid = $('#ERApplications_ERScreeningDetailId');
+        if (erscreenid.val() != '') {
+
+            var erlinkid = $('#ERScreeningDetailViewLink');
+            erlinkid.is(':hidden');
+            erlinkid.fadeIn('slow');
+            erlinkid.attr('form-ref-id', erscreenid.val());
+            $('input[name="ERApplications.ERScreeningStatus"]').addClass('d-none');
+            $('.lblers').addClass('d-none');
+        }
+    }
+    function checkMandatoryPilot() {
+
+         var FieldOIIP = $('#ERApplications_FieldOIIP');
+         var FieldGIIP = $('#ERApplications_FieldGIIP');
+        var pilotprodprofile = $('#ERApplications_PilotProductionProfile');
+        var pilotdesign = $('input[name="ERApplications.PilotDesign"]:eq(0)');
+
+        if (FieldGIIP.val() != '' && $('#ERApplications_HydrocarbonType option:selected').val() == '1') {
+
+            if (parseFloat(FieldGIIP.val()) < 0.25) {
+                $('.pilotmandatory').attr('data-original-title', 'Not Mandatory');
+                pilotprodprofile.removeAttr('required');
+
+            }
+            else {
+                $('.pilotmandatory').attr('data-original-title', 'Mandatory');
+                pilotprodprofile.attr('required', 'required');
+                pilotdesign.prop("checked", true);
+            }
+        }
+        else if (FieldOIIP.val() != '' && $('#ERApplications_HydrocarbonType option:selected').val() == '0') {
+            if (parseFloat(FieldOIIP.val()) < 25) {
+                $('.pilotmandatory').attr('data-original-title', 'Not Mandatory');
+                 pilotprodprofile.removeAttr('required');
+
+            }
+            else {
+                $('.pilotmandatory').attr('data-original-title', 'Mandatory');
+                pilotprodprofile.attr('required', 'required');
+                    pilotdesign.prop("checked", true);
+
+            }
+        }
+        else {
+             $('.pilotmandatory').attr('data-original-title', 'If OIIP < 25 MMBBL Or GIIP < 0.25 TCF then Not Mandatory otherwise Mandatory');
+        }
+
+
+    }
+
+    function GetUploadFilesData(divId, refid) {
+        $(divId).html("No files attached");
+            var sendData = { RefId:refid };
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                url: '@Url.Action("GetUploadFiles", "Operator")',
+                data: JSON.stringify(sendData),
+                datatype: 'json',
+                success: function (data) {
+                    if (data) {
+                        var txt = "";
+                        if (data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                txt += "<div class='badge badge-warning mr-2 mb-2'><a class='text-dark' href='@Url.Content("~/Content/UploadedFiles/")" +
+                                    data[i].FileName + "' target='_blank'>" + data[i].FileName + "</a><a class='fileDelete small text-danger' data-fileid='" +
+                                    data[i].Id + "' data-fileref='"+ data[i].FIleRef+"' data-divid ='"+divId+"'  href='#'><i class='ml-1 fa fa-times'></i></a></div>";
+                            }
+                            $(divId).html(txt);
+                            $(divId).fadeIn("slow");
+                        }
+                    }
+                },
+                 error: function () {
+                    alertModal( "Something Went Wrong. Try Again");
+                },
+            })
+
+    }
+    $(document).on("click",'.fileDelete',function (e) {
+         e.preventDefault();
+        RemoveUploadFile($(this).attr('data-divid'),$(this).attr('data-fileid'),$(this).attr('data-fileref'));
+    });
+
+     function RemoveUploadFile(divId,fileid,refid) {
+            var sendData = { FileId:fileid };
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                url: '@Url.Action("RemoveUploadFile", "Operator")',
+                data: JSON.stringify(sendData),
+                datatype: 'json',
+                success: function (data) {
+                    alertModal(data);
+                    GetUploadFilesData(divId,refid);
+                },
+                 error: function () {
+                    alertModal( "Something Went Wrong. Try Again");
+                },
+            })
+
+    }
+
+    function CheckERScreeningEligibility() {
+
+        var dateofinitial = $('#ERApplications_DateOfInitialCommercialProduction').val();
+        var dateoflastsubmission = $('#ERApplications_DateOfLastCommercialProduction').val();
+        var initialdatesplit = dateofinitial.split("-");
+        var currentdate = new Date();
+        var diffYear = "";
+        var diffmonth = "";
+        var diffdate = "";
+
+        if (dateoflastsubmission != '') {
+            var lastdatesplit = dateoflastsubmission.split("-");
+            diffYear = parseInt(lastdatesplit[0]) - parseInt(initialdatesplit[0]);
+            diffmonth = parseInt(lastdatesplit[1]) - parseInt(initialdatesplit[1]);
+            diffdate = parseInt(lastdatesplit[2]) - parseInt(initialdatesplit[2]);
+        }
+        else {
+
+             diffYear = currentdate.getFullYear() - parseInt(initialdatesplit[0]);
+            diffmonth = parseInt((currentdate.getMonth() + 1)) - parseInt(initialdatesplit[1]);
+            diffdate = parseInt(currentdate.getDate()) - parseInt(initialdatesplit[2]);
+        }
+        if (diffYear > 3) {
+            alertModal('ERScreening Details Mandatory');
+        }
+        else if (diffYear == 3) {
+            if (diffmonth >= 0) {
+                if (diffdate >= 0) {
+                    alertModal('ERScreening Details Mandatory');
+                }
+                else {
+                    alertModal('ERScreening Details Not Mandatory');
+                }
+            }
+            else {
+                alertModal('ERScreening Details Not Mandatory');
+            }
+        }
+        else {
+            alertModal('ERScreening Details Not Mandatory')
+        }
+    }
+
+</script>

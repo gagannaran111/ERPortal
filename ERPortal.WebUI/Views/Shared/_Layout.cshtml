@@ -15,10 +15,19 @@
     @Scripts.Render("~/bundles/modernizr")
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/CustomFiles/excludechar.js"></script>
+    @Scripts.Render("~/bundles/popper")
     @*<script>window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>*@
     @Scripts.Render("~/bundles/bootstrap")
 
     @RenderSection("css", required: false)
+<script src="~/Scripts/CustomFiles/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/CustomFiles/printThis.js"></script>
+
+    <link href="~/Content/fontawesome-all.min.css" rel="stylesheet" />
+    <script src="~/Scripts/fontawesome/all.min.js"></script>
+
 
     <style>
         .bd-placeholder-img {
@@ -48,7 +57,7 @@
 
 </head>
 <body class="bg-light">
-    <nav class="shadow navbar navbar-expand-md navbar-dark fixed-top bg-custom-3" >
+    <nav class="shadow navbar navbar-expand-md navbar-dark fixed-top bg-custom-3">
         <a class="navbar-brand" href="#"><img src="~/Content/img/Icon_Design_trans_white.png" class="d-inline-block align-top" alt="" style="max-height:35px;"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -81,11 +90,47 @@
         </div>
     </nav>
 
-    <main role="main" class="container">
+    <main role="main" class="container-fluid">
 
         @RenderBody()
 
     </main><!-- /.container -->
     @RenderSection("scripts", required: false)
+    <!-- Modal -->
+    <div class="modal fade" id="formDetailModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg  modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="formModalLabelView">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalContentView">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
+<script>
+      $(document).on("click", ".GeneratePDF", function (e) {
+        e.preventDefault();
+        var cssfile = "";  
+          cssfile = "/Content/css/PrintingData.css";
+
+        $(".container-fluid").printThis({
+            importCSS: true,
+            importStyle: true,
+            printContainer: false,
+            copyTagClasses: true,
+            pageTitle: "",
+            loadCSS: cssfile
+        });
+    });
+
+</script>

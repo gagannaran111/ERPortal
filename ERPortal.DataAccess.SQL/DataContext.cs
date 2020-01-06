@@ -13,10 +13,10 @@ namespace ERPortal.DataAccess.SQL
         public DataContext():
             base("name=DefaultConnection"){
             //Remove in Production
-            Database.SetInitializer<DataContext>(new DropCreateDatabaseIfModelChanges<DataContext>());
+          //  Database.SetInitializer<DataContext>(new DropCreateDatabaseIfModelChanges<DataContext>());
 
             // Disable initializer in Production
-            // Database.SetInitializer<DataContext>(null);
+             Database.SetInitializer<DataContext>(null);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -47,6 +47,7 @@ namespace ERPortal.DataAccess.SQL
         public DbSet<Organisation> Organisations { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<UploadFile> UploadFiles { get; set; }
 
     }
 }

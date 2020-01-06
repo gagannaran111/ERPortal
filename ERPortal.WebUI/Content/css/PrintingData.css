@@ -1,0 +1,13 @@
+﻿@media print {
+    body {
+        background-color: #ffffff !important;
+    }     
+    .btn {
+        display: none;
+    }
+    .bg-light {
+        background-color: #ffffff !important;
+    }
+    
+    
+}

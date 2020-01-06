@@ -15,13 +15,14 @@ namespace ERPortal.WebUI.Controllers
         IRepository<Organisation> OrganisationContext;
         IRepository<UserAccount> UserAccountContext;
         IRepository<UHCProductionMethod> UHCProductionMethodContext;
-
-        public AdminController(IRepository<FieldType> _FieldTypeContext, IRepository<Organisation> _OrganisationContext, IRepository<UserAccount> _UserAccountContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext)
+        IRepository<ERScreeningInstitute> ERScreeningInstituteContext;
+        public AdminController(IRepository<FieldType> _FieldTypeContext, IRepository<Organisation> _OrganisationContext, IRepository<UserAccount> _UserAccountContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext)
         {
             FieldTypeContext = _FieldTypeContext;
             OrganisationContext = _OrganisationContext;
             UserAccountContext = _UserAccountContext;
             UHCProductionMethodContext = _UHCProductionMethodContext;
+            ERScreeningInstituteContext = _ERScreeningInstituteContext;
 
         }
         // GET: Admin
@@ -34,7 +35,7 @@ namespace ERPortal.WebUI.Controllers
             adminManageViewModel.UserAccounts = UserAccountContext.Collection().ToList();
             adminManageViewModel.Organisations = OrganisationContext.Collection().ToList();
             adminManageViewModel.UHCProductionMethods = UHCProductionMethodContext.Collection().ToList();
-
+            adminManageViewModel.ERScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
             return View(adminManageViewModel);
         }
 
@@ -58,6 +59,9 @@ namespace ERPortal.WebUI.Controllers
                     break;
                 case "UHCProductionMethod":
                     _genericObject = new UHCProductionMethod();
+                    break;
+                case "ERScreeningInstitute":
+                    _genericObject = new ERScreeningInstitute();
                     break;
                 default:
                     _genericObject = null;
@@ -150,6 +154,25 @@ namespace ERPortal.WebUI.Controllers
                     else
                     {
                         _genericObject = uHCProductionMethod;
+                    }
+                    break;
+                case "ERScreeningInstitute":
+                    ERScreeningInstitute ERScreeningInstitute = new ERScreeningInstitute()
+                    {
+                        InstituteName = collection["InstituteName"],
+                        ContactPerson = collection["ContactPerson"],
+                        Address = collection["Address"],
+                        EmailID = collection["EmailID"]
+                    };
+                    modelIsValid = TryValidateModel(ERScreeningInstitute);
+                    if (modelIsValid)
+                    {
+                        ERScreeningInstituteContext.Insert(ERScreeningInstitute);
+                        ERScreeningInstituteContext.Commit();
+                    }
+                    else
+                    {
+                        _genericObject = ERScreeningInstitute;
                     }
                     break;
                 default:

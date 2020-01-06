@@ -5,23 +5,27 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using ERPortal.Core.CustomValidation;
 namespace ERPortal.Core.Models
 {
     public class ERApplication : BaseEntity
     {
-        // Operator Section
+        #region  // Operator Section  
+        [Display(Name = "Application Ref. No.")]
+        public string AppId { get; set; }
         public string OrganisationId { get; set; }
         [Display(Name = "Operator Name")]
         [Required(ErrorMessage = "Valid Operator Name is required")]
         public virtual Organisation Organisation { get; set; }
-
+        [Required(ErrorMessage = "Choose Field Type")]
+      
         public string FieldTypeId { get; set; }
         [Display(Name = "Field Type")]
-        [Required(ErrorMessage = "Valid Field Type is required")]
         public virtual FieldType FieldType { get; set; }
 
         [Display(Name = "Field Name")]
+        [Required(ErrorMessage = "Valid Field Type is required")]       
+        [CustomValidationClass("/.,!@#$%",ErrorMessage ="Invalid Data")]
         public string FieldName { get; set; }
 
         [Display(Name ="Type of Hydrocarbon")]
@@ -32,9 +36,12 @@ namespace ERPortal.Core.Models
         [Display(Name = "UHC Production Method")]
         public virtual UHCProductionMethod UHCProductionMethod { get; set; }
 
-        public Nullable<ImplementaionType> ImplementaionType { get; set; }
+        [Display(Name = "Incentive Sought for Implementation")]
+        [Required(ErrorMessage = "Valid Implementaion Type is required")]
+        public ImplementaionType ImplementaionType { get; set; }
 
         [Display(Name = "Date of Discovery")]
+        [Required(ErrorMessage = "Valid Date Of Discovery is required")]
         [DataType(DataType.Date)]
         public DateTime DateOfDiscovery { get; set; }
 
@@ -44,6 +51,7 @@ namespace ERPortal.Core.Models
 
         [Display(Name = "Date of most recent Commercial Production")]
         [DataType(DataType.Date)]
+       
         public DateTime? DateOfLastCommercialProduction { get; set; }
 
         [Display(Name = "Presently Under Production")]
@@ -77,8 +85,8 @@ namespace ERPortal.Core.Models
         [Display(Name = "Any Additional remarks")]
         public string AdditonalRemarks { get; set; }
         public DateTime? SubmissionDate { get; set; }
-
-        // DGH Section
+        #endregion
+        #region   // DGH Section
         public Boolean? EligibleForFiscalIncentive { get; set; }
         public Boolean? DGHApprovalStatus { get; set; }
         public DateTime? DGHApprovalDate { get; set; }
@@ -88,6 +96,7 @@ namespace ERPortal.Core.Models
         public string DGHFileAttachmentForPilot { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
+        #endregion
         // ER Committee Section
         // Add fields
 
