@@ -55,6 +55,11 @@ namespace ERPortal.WebUI.Models
         public string Email { get; set; }
 
         [Required]
+        [Display(Name = "UserName")]
+
+        public string UserName { get; set; }
+
+        [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
@@ -93,6 +98,10 @@ namespace ERPortal.WebUI.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "UserRoles")]
+        public string UserRoles { get; set; }
     }
 
     public class ResetPasswordViewModel

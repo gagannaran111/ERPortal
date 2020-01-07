@@ -40,7 +40,7 @@
     <link href="~/Content/css/signin.css" rel="stylesheet">
 </head>
 <body class="text-center">
-    @Html.BeginForm("Login", "Account",new { returnUrl= Url.Action("Index","Operator") }, FormMethod.Post, new
+    @Html.BeginForm("Login", "Account", new { returnUrl = Url.Action("Index", "Operator") }, FormMethod.Post, new
 {
     @class = "card form-signin",
     style = "background-color:rgba(245, 245, 245, 0.7);"
@@ -49,6 +49,9 @@
     @Html.AntiForgeryToken()
     <img class="mb-4" src="~/Content/img/Icon_Design_trans.png" alt="" width="300">
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <label for="inputUserName" class="sr-only"></label>
+    <input type="text" id="UserName" name="UserName" class="form-control" placeholder="UserName " required autofocus>
+    <br />
     <label for="inputEmail" class="sr-only">Email address</label>
     <input type="email" id="Email" name="Email" class="form-control" placeholder="Email address" required autofocus>
     <br />
@@ -63,6 +66,6 @@
     <p class="mt-5 mb-3 text-muted">&copy; 2019 DGH</p>
 
     }
-    
+
 </body>
 </html>
