@@ -9,7 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ERPortal.WebUI.Models;
-
+using System.Data.Entity;
 namespace ERPortal.WebUI.Controllers
 {
     [Authorize]
@@ -147,7 +147,24 @@ namespace ERPortal.WebUI.Controllers
             ViewBag.Name = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
                                     .ToList(), "Name", "Name");
 
-            ViewBag.UserList = context.Users.ToList<ApplicationUser>();
+            ViewBag.UserList = (from user in context.Users
+                                select new
+                                {
+                                    UserId = user.Id,
+                                    Username = user.UserName,
+                                    Email = user.Email,
+                                    RoleNames = (from userRole in user.Roles
+                                                 join role in context.Roles on userRole.RoleId
+                                                 equals role.Id
+                                                 select role.Name).ToList()
+                                }).ToList().Select(p => new Users_in_Role_ViewModel()
+
+                                {
+                                    UserId = p.UserId,
+                                    Username = p.Username,
+                                    Email = p.Email,
+                                    Role = string.Join(",", p.RoleNames)
+                                });            
             return View();
         }
 
@@ -160,7 +177,7 @@ namespace ERPortal.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email , Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -172,8 +189,26 @@ namespace ERPortal.WebUI.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
                     await this.UserManager.AddToRoleAsync(user.Id, model.UserRoles);
-                  
-                    return Json(context.Users.ToList<ApplicationUser>(), JsonRequestBehavior.AllowGet);                    
+
+                   var response= (from user1 in context.Users
+                     select new
+                     {
+                         UserId = user1.Id,
+                         Username = user1.UserName,
+                         Email = user1.Email,
+                         RoleNames = (from userRole in user1.Roles
+                                      join role in context.Roles on userRole.RoleId
+                                      equals role.Id
+                                      select role.Name).ToList()
+                     }).ToList().Select(p => new Users_in_Role_ViewModel()
+
+                     {
+                         UserId = p.UserId,
+                         Username = p.Username,
+                         Email = p.Email,
+                         Role = string.Join(",", p.RoleNames)
+                     });
+                    return Json(response, JsonRequestBehavior.AllowGet);                    
                 }
                ViewBag.Name = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
                                   .ToList(), "Name", "Name");
