@@ -9,7 +9,8 @@
     {
         HttpMethod = "POST",
         OnSuccess = "OnSuccess(data)",
-        OnFailure = "OnFailure(data)",
+        OnFailure = "OnFailure(data)"
+
         //LoadingElementId = "progress"
     }, new { id = "operatorform" }))
     {
@@ -283,7 +284,7 @@
        // $('#disabledForm').attr('disabled', 'disabled')       
        $('#operatorform').find('input,select,radio').prop('disabled', true);
         $('#ERAppSubmit').hide();
-        $('.statussuccess').append('Application Ref. No. : ' + response).removeClass('d-none');
+        $('.statussuccess').empty().append(response).removeClass('d-none');
     }
 
       function OnFailure() {
@@ -297,7 +298,7 @@
           //  $('#disabledForm').attr('disabled','disabled')
            $('#operatorform').find('input,select,radio').prop('disabled', true);
             $('#ERAppSubmit').hide();
-            $('.statussuccess').append('Application Ref. No. : '+$('#ERApplications_AppId').val()).removeClass('d-none');
+            $('.statussuccess').empty().append('Application Ref. No. : ' + $('#ERApplications_AppId').val()).removeClass('d-none');
         }
 
         $(document.body).on('change', '#ERApplications_HydrocarbonType', function () {
@@ -504,21 +505,7 @@
          $(document).on('change', 'input[name="ERApplications.FieldGIIP"]', function () {
 
             checkMandatoryPilot();
-        });
-        $('#ERAppSubmit').click(function () {
-            
-            stcheck = false;
-            if ($('input[name="ERApplications.PilotDesign"]:eq(0)').prop('checked') == true) {
-
-                stcheck = true;
-            }
-            else {
-                alertModal("Pilot Design Mandatory");
-                stcheck = false;
-            }
-            return stcheck;
-
-        });
+        });        
     });
 
     function alertModal(msg) {
@@ -550,25 +537,26 @@
             if (parseFloat(FieldGIIP.val()) < 0.25) {
                 $('.pilotmandatory').attr('data-original-title', 'Not Mandatory');
                 pilotprodprofile.removeAttr('required');
-
+                $('input[name="ERApplications.PilotDesign"]').removeAttr('disabled');
             }
             else {
                 $('.pilotmandatory').attr('data-original-title', 'Mandatory');
                 pilotprodprofile.attr('required', 'required');
                 pilotdesign.prop("checked", true);
+                $('input[name="ERApplications.PilotDesign"]').attr('disabled','disabled' );
             }
         }
         else if (FieldOIIP.val() != '' && $('#ERApplications_HydrocarbonType option:selected').val() == '0') {
             if (parseFloat(FieldOIIP.val()) < 25) {
                 $('.pilotmandatory').attr('data-original-title', 'Not Mandatory');
                  pilotprodprofile.removeAttr('required');
-
+                 $('input[name="ERApplications.PilotDesign"]').removeAttr('disabled');
             }
             else {
                 $('.pilotmandatory').attr('data-original-title', 'Mandatory');
                 pilotprodprofile.attr('required', 'required');
                     pilotdesign.prop("checked", true);
-
+                $('input[name="ERApplications.PilotDesign"]').attr('disabled','disabled' );
             }
         }
         else {

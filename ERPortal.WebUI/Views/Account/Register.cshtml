@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Register";
 }
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-5">
@@ -79,7 +80,7 @@
                         <thead class="bg-gradient-light">
                             <tr>
                                 <th>Name</th>
-                                <th>Eamil</th>
+                                @*<th>Eamil</th>*@
                                 <th>Role</th>
                                 <th>Delete</th>
                                 <th>Edit</th>
@@ -91,7 +92,7 @@
                                 <tr>
 
                                     <td>@x.Username</td>
-                                    <td>@x.Email</td>
+                                    @*<td>@x.Email</td>*@
                                     <td>@x.Role</td>
                                     <td>
                                         <button class="btn btn-danger" data-UserId="@x.UserId"><i class="fas fa-trash"></i></button>
@@ -131,7 +132,7 @@
             $('#usertable').DataTable().destroy();
             var td = "";
             $.each(response, function (index, element) {
-                td += "<tr><td>" + response[index].Username + "</td><td>" + response[index].Email + "</td><td>" + response[index].Role + "</td> <td>"
+                td += "<tr><td>" + response[index].Username + "</td><td>" + response[index].Role + "</td> <td>"
 
                     + "<button class='btn btn-danger' data-UserId=" + response[index].UserId + "><i class='fas fa-trash'></i></button></td><td><button class='btn btn-primary' data-UserId=" + response[index].UserId + "><i class='fas fa-edit'></i></button></td></tr>"
 

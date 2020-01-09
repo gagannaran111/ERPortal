@@ -600,11 +600,12 @@
     <Content Include="webfonts\fa-brands-400.woff" />
     <Content Include="webfonts\fa-brands-400.ttf" />
     <Content Include="webfonts\fa-brands-400.eot" />
+    <Content Include="Views\DGH\Index.cshtml" />
+    <Content Include="Views\DGH\AppRecToDgh.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\UploadedFiles\" />
-    <Folder Include="Views\DGH\" />
     <Folder Include="Views\ERCommittee\" />
   </ItemGroup>
   <ItemGroup>

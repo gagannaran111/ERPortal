@@ -32,7 +32,7 @@
 
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/DataTables/dataTables.bootstrap4.min.js"></script>
-
+   
 
     <style>
         .bd-placeholder-img {
@@ -71,13 +71,19 @@
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    @Html.ActionLink("Home", "Index", null, new { @class = "nav-link" })
+                    @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    @Html.ActionLink("Operator", "Index", "Operator", null, new { @class = "nav-link" })
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    @Html.ActionLink("DGH", "Index", "DGH", null, new { @class = "nav-link" })
+                </li>
+                @*<li class="nav-item">
+                    @Html.ActionLink("ERCommitee", "Index", "ERCommitee", null, new { @class = "nav-link" })
+                </li>*@
+                <li class="nav-item">
+                    @Html.ActionLink("Account", "Register", "Account", null, new { @class = "nav-link" })
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
@@ -92,7 +98,7 @@
                     {
                         @Html.AntiForgeryToken()
                         <input type="submit" class="btn btn-info" value="LogOff" />
-                    }              
+                    }
 
                 </li>
             </ul>

@@ -10,7 +10,8 @@ namespace ERPortal.WebUI.Controllers
     {
         public ActionResult Index()
         {
-            return RedirectToAction("Login","Account");
+            //return RedirectToAction("Login","Account");
+            return View();
         }
 
         public ActionResult About()

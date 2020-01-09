@@ -86,13 +86,21 @@ namespace ERPortal.Core.Models
         public string AdditonalRemarks { get; set; }
         public DateTime? SubmissionDate { get; set; }
         #endregion
-        #region   // DGH Section
+        #region   
+        // DGH Section
+        [Display(Name = "Eligible For Fiscal Incentive")]
         public Boolean? EligibleForFiscalIncentive { get; set; }
+        [Display(Name = "DGH Approval Status")]
         public Boolean? DGHApprovalStatus { get; set; }
+        [Display(Name = "DGH Approval Date")]
         public DateTime? DGHApprovalDate { get; set; }
+        [Display(Name = "DGH File Attachment")]
         public string DGHFileAttachment { get; set; }
+        [Display(Name = "Pilot Mandatory")]
         public Boolean? PilotMandatory { get; set; }
+        [Display(Name = "Pilot Report Approval Status")]
         public Boolean? PilotReportApprovalStatus { get; set; }
+        [Display(Name = "DGH File Attachment For Pilot")]
         public string DGHFileAttachmentForPilot { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
