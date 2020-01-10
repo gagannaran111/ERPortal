@@ -28,7 +28,7 @@ namespace ERPortal.WebUI.Controllers
             ERScreeningInstituteContext = _ERScreeningInstituteContext;
         }
 
-        
+
 
         // GET: DGH
         public ActionResult Index()
@@ -39,23 +39,54 @@ namespace ERPortal.WebUI.Controllers
         public ActionResult AppRecToDgh(string appid)
         {
             //ViewBag.Title = "Submit Proposal";
+
             DGHERProposalViewModel viewModel = new DGHERProposalViewModel();
 
             if (!string.IsNullOrEmpty(appid))
             {
                 ERApplication erapp = ERApplicationContext.Collection().Where(x => x.AppId == appid).FirstOrDefault();
                 viewModel.ERApplications = erapp;
+                if (!string.IsNullOrEmpty(erapp.ERScreeningDetailId))
+                {
+                    ViewBag.ERFiles = UploadFileContext.Collection().Where(y => y.FIleRef == erapp.ERScreeningDetail.ReportDocumentPath).ToList();
+                }
+                viewModel.FieldTypes = FieldTypeContext.Collection();
+                viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection();
+                return View(viewModel);
             }
             else
             {
+                return RedirectToAction("Index");
                 //viewModel.ERApplications = new ERApplication();
             }
-            viewModel.FieldTypes = FieldTypeContext.Collection();
-            viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection();
+           
             //viewModel.UploadFiles = UploadFileContext.Collection();
 
-            return View(viewModel);
            
+
+        }
+
+        [HttpPost]
+        public JsonResult DGHFormSubmit(DGHERProposalViewModel dGHERProposalViewModel)
+        {
+           // ERApplication erapp = new ERApplication();
+            ERApplication erapp = ERApplicationContext.Collection().Where(x=>x.AppId == dGHERProposalViewModel.ERApplications.AppId).FirstOrDefault();          
+            erapp.ERScreeningDetail.ApprovalStatus = dGHERProposalViewModel.ERApplications.ERScreeningDetail.ApprovalStatus;
+            erapp.ERScreeningDetail.ApprovalStatus = dGHERProposalViewModel.ERApplications.ERScreeningDetail.ApprovalStatus;
+            erapp.ERScreeningDetail.DateOfSubmission = dGHERProposalViewModel.ERApplications.ERScreeningDetail.DateOfSubmission;
+            erapp.ERScreeningDetail.DateOfLastApproval = dGHERProposalViewModel.ERApplications.ERScreeningDetail.DateOfLastApproval;
+            erapp.PilotMandatory = dGHERProposalViewModel.ERApplications.PilotMandatory;
+            erapp.PilotReportApprovalStatus = dGHERProposalViewModel.ERApplications.PilotReportApprovalStatus;
+            erapp.DGHFileAttachmentForPilot = dGHERProposalViewModel.ERApplications.DGHFileAttachmentForPilot;
+            erapp.DGHFileAttachment = dGHERProposalViewModel.ERApplications.DGHFileAttachment;
+            erapp.FinalApprovalStatus = dGHERProposalViewModel.ERApplications.FinalApprovalStatus;
+            erapp.EligibleForFiscalIncentive = dGHERProposalViewModel.ERApplications.EligibleForFiscalIncentive;
+            erapp.DGHApprovalStatus = dGHERProposalViewModel.ERApplications.DGHApprovalStatus;
+            erapp.DGHApprovalDate = dGHERProposalViewModel.ERApplications.DGHApprovalDate;
+            ERApplicationContext.Update(erapp);
+            ERApplicationContext.Commit();
+
+            return Json(erapp, JsonRequestBehavior.AllowGet);
         }
     }
 }

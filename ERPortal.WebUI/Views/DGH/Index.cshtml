@@ -5,7 +5,7 @@
 }
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-6">
             <div class="card shadow-lg">
                 <div class="card-header bg-gradient-info text-light">
                     <h5><i class="fas fa-table"></i> ER Proposal</h5>
@@ -27,10 +27,10 @@
                             {
                                string appid = !String.IsNullOrEmpty(x.AppId)?x.AppId:"Not Found";
                                 <tr>
-                                    <td>@Html.ActionLink(appid, "AppRecToDgh", "DGH") </td>                                   @*<td>@x.Email</td>*@
+                                    <td>@Html.ActionLink(appid, "AppRecToDgh", "DGH",new { appid=appid},null) </td>                                   @*<td>@x.Email</td>*@
                                     <td>@x.CreatedAt</td>
                                     <td>
-                                        <button class="btn btn-danger" data-UserId="@x.AppId"><i class="fas fa-trash"></i></button>
+                                        <button class="btn btn-danger userdelete" data-UserId="@x.AppId"><i class="fas fa-trash"></i></button>
                                     </td>
                                     <td>
                                         <button class="btn btn-primary" data-UserId="@x.AppId"><i class="fas fa-edit"></i></button>
@@ -43,6 +43,10 @@
                     </table>
                 </div>
             </div>
+        </div>
+        <div class="col-md-6" id="dghform">
+
+
         </div>
     </div>
 </div>
@@ -58,5 +62,13 @@
                 //processing: true,
                 // deferLoading: 5
             });
+     $('.userdelete').click(function () {
+
+
+
+     });
+     $('#dghform').html();
+
+
  });
     </script>
