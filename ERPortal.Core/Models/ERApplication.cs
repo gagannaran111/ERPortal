@@ -39,10 +39,10 @@ namespace ERPortal.Core.Models
         [Display(Name = "Incentive Sought for Implementation")]
         [Required(ErrorMessage = "Valid Implementaion Type is required")]
         public ImplementaionType ImplementaionType { get; set; }
-
+      
         [Display(Name = "Date of Discovery")]
-        [Required(ErrorMessage = "Valid Date Of Discovery is required")]
-        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Valid Date Of Discovery is required")]      
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}",ApplyFormatInEditMode = true)]
         public DateTime DateOfDiscovery { get; set; }
 
         [Display(Name = "Date of Commencement of Commercial Production")]

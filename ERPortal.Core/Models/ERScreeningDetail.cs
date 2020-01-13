@@ -32,8 +32,11 @@ namespace ERPortal.Core.Models
         [Display(Name = "Approval Status")]
         public Boolean? ApprovalStatus { get; set; }
         [Display(Name = "Date of Submission")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? DateOfSubmission { get; set; }
+
         [Display(Name = "Date of Last Approval")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? DateOfLastApproval { get; set; }
     }
 }

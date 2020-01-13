@@ -88,7 +88,7 @@
                                                     <div class="form-group row">
                                                         @Html.LabelFor(model => model.ERApplications.DateOfDiscovery, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                                         <div class="col-sm-6 d-flex align-items-center">
-                                                            @Html.EditorFor(model => model.ERApplications.DateOfDiscovery, new { htmlAttributes = new { @class = "form-control" } })
+                                                            @Html.EditorFor(model => model.ERApplications.DateOfDiscovery, "{0:dd-MM-yyyy}", new { htmlAttributes = new { @class = "form-control", @type = "text" } })
                                                             @Html.ValidationMessageFor(model => model.ERApplications.DateOfDiscovery, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
@@ -102,7 +102,7 @@
                                                     <div class="form-group row">
                                                         @Html.LabelFor(model => model.ERApplications.DateOfInitialCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                                         <div class="col-sm-6 d-flex align-items-center">
-                                                            @Html.EditorFor(model => model.ERApplications.DateOfInitialCommercialProduction, new { htmlAttributes = new { @class = "form-control " } })
+                                                            @Html.EditorFor(model => model.ERApplications.DateOfInitialCommercialProduction, new { htmlAttributes = new { @class = "form-control ", @type = "text" } })
                                                             @Html.ValidationMessageFor(model => model.ERApplications.DateOfInitialCommercialProduction, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
@@ -119,14 +119,16 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row" id="DateOfLastCommercialProductionDiv" style="display:none">
-                                                        @Html.LabelFor(model => model.ERApplications.DateOfLastCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                                                        <div class="col-sm-6 d-flex align-items-center">
-                                                            @Html.EditorFor(model => model.ERApplications.DateOfLastCommercialProduction, new { htmlAttributes = new { @class = "form-control" } })
-                                                            @Html.ValidationMessageFor(model => model.ERApplications.DateOfLastCommercialProduction, "", new { @class = "text-danger" })
+                                                    @if (Model.ERApplications.PresentlyUnderProduction == true)
+                                                    {
+                                                        <div class="form-group row" id="DateOfLastCommercialProductionDiv" style="display:none">
+                                                            @Html.LabelFor(model => model.ERApplications.DateOfLastCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                                                            <div class="col-sm-6 d-flex align-items-center">
+                                                                @Html.EditorFor(model => model.ERApplications.DateOfLastCommercialProduction, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                                @Html.ValidationMessageFor(model => model.ERApplications.DateOfLastCommercialProduction, "", new { @class = "text-danger" })
+                                                            </div>
                                                         </div>
-                                                    </div>
-
+                                                    }
                                                     <div class="form-group row" id="ErScreeningRadioDiv">
                                                         @Html.LabelFor(model => model.ERApplications.ERScreeningStatus, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                                         <div class="col-sm-6 d-flex align-items-center">
@@ -345,6 +347,69 @@
                                                 <div class="form-horizontal">
 
                                                     <div class="form-group row">
+                                                        @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.DateOfSubmission, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                                                        <div class="col-sm-6 d-flex align-items-center">
+                                                            @Html.EditorFor(model => model.ERApplications.ERScreeningDetail.DateOfSubmission, new { htmlAttributes = new { @class = "form-control" } })
+                                                            @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.DateOfSubmission, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row" id="">
+                                                        @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.DateOfLastApproval, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                                                        <div class="col-sm-6 d-flex align-items-center">
+                                                            @Html.EditorFor(model => model.ERApplications.ERScreeningDetail.DateOfLastApproval, new { htmlAttributes = new { @class = "form-control" } })
+                                                            @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.DateOfLastApproval, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        @Html.LabelFor(model => model.ERApplications.EligibleForFiscalIncentive, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                                                        <div class="col-sm-6 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+                                                                @Html.RadioButtonFor(model => model.ERApplications.EligibleForFiscalIncentive, true, new { @class = "form-check-input" })
+                                                                @Html.LabelFor(model => model.ERApplications.EligibleForFiscalIncentive, "Yes", new { @class = "form-check-label" })
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                @Html.RadioButtonFor(model => model.ERApplications.EligibleForFiscalIncentive, false, new { @class = "form-check-input" })
+                                                                @Html.LabelFor(model => model.ERApplications.EligibleForFiscalIncentive, "No", new { @class = "form-check-label" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="fiscalIncentive d-none">
+                                                        <h6 class="text-primary">If Yes, Then Evaluation of ER Screening Report</h6>
+                                                        <div class="form-group row">
+                                                            @Html.LabelFor(model => model.ERApplications.PilotMandatory, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                                                            <div class="col-sm-6 d-flex align-items-center">
+                                                                <div class="form-check form-check-inline">
+                                                                    @Html.RadioButtonFor(model => model.ERApplications.PilotMandatory, true, new { @class = "form-check-input" })
+                                                                    @Html.LabelFor(model => model.ERApplications.PilotMandatory, "Yes", new { @class = "form-check-label lblers" })
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    @Html.RadioButtonFor(model => model.ERApplications.PilotMandatory, false, new { @class = "form-check-input" })
+                                                                    @Html.LabelFor(model => model.ERApplications.PilotMandatory, "No", new { @class = "form-check-label lblers" })
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            @Html.LabelFor(model => model.ERApplications.PilotReportApprovalStatus, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                                                            <div class="col-sm-6 d-flex align-items-center">
+                                                                <div class="pilotmandatory" data-toggle="tooltip" title="If OIIP < 25 MMBBL Or GIIP < 0.25 TCF then Not Mandatory otherwise Mandatory">
+                                                                    <div class="form-check form-check-inline">
+                                                                        @Html.RadioButtonFor(model => model.ERApplications.PilotReportApprovalStatus, true, new { @class = "form-check-input" })
+                                                                        @Html.LabelFor(model => model.ERApplications.PilotReportApprovalStatus, "Yes", new { @class = "form-check-label" })
+                                                                    </div>
+                                                                    <div class="form-check form-check-inline">
+                                                                        @Html.RadioButtonFor(model => model.ERApplications.PilotReportApprovalStatus, false, new { @class = "form-check-input" })
+                                                                        @Html.LabelFor(model => model.ERApplications.PilotReportApprovalStatus, "No", new { @class = "form-check-label" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
                                                         @Html.LabelFor(model => model.ERApplications.DGHApprovalStatus, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                                         <div class="col-sm-6 d-flex align-items-center">
                                                             <div class="form-check form-check-inline">
@@ -357,41 +422,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
-
-                                                    <div class="form-group row">
-                                                        @Html.LabelFor(model => model.ERApplications.PilotMandatory, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                                                        <div class="col-sm-6 d-flex align-items-center">
-                                                            <div class="form-check form-check-inline">
-                                                                @Html.RadioButtonFor(model => model.ERApplications.PilotMandatory, true, new { @class = "form-check-input" })
-                                                                @Html.LabelFor(model => model.ERApplications.PilotMandatory, "Yes", new { @class = "form-check-label lblers" })
-                                                            </div>
-                                                            <div class="form-check form-check-inline">
-                                                                @Html.RadioButtonFor(model => model.ERApplications.PilotMandatory, false, new { @class = "form-check-input" })
-                                                                @Html.LabelFor(model => model.ERApplications.PilotMandatory, "No", new { @class = "form-check-label lblers" })
-
-                                                                <a href="#" id="ERScreeningDetailViewLink" class="ViewDetails btn btn-primary btn-sm " style="display:none" data-toggle="modal" data-target="#formDetailModal" data-page="ERScreeningDetailView" data-title="ERScreening Detail"><i class="fas fa-eye"></i> View ERScreening Detail</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                    <div class="form-group row">
-                                                        @Html.LabelFor(model => model.ERApplications.PilotReportApprovalStatus, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                                                        <div class="col-sm-6 d-flex align-items-center">
-                                                            <div class="pilotmandatory" data-toggle="tooltip" title="If OIIP < 25 MMBBL Or GIIP < 0.25 TCF then Not Mandatory otherwise Mandatory">
-                                                                <div class="form-check form-check-inline">
-                                                                    @Html.RadioButtonFor(model => model.ERApplications.PilotReportApprovalStatus, true, new { @class = "form-check-input" })
-                                                                    @Html.LabelFor(model => model.ERApplications.PilotReportApprovalStatus, "Yes", new { @class = "form-check-label" })
-                                                                </div>
-                                                                <div class="form-check form-check-inline">
-                                                                    @Html.RadioButtonFor(model => model.ERApplications.PilotReportApprovalStatus, false, new { @class = "form-check-input" })
-                                                                    @Html.LabelFor(model => model.ERApplications.PilotReportApprovalStatus, "No", new { @class = "form-check-label" })
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
                                                     <div class="form-group row">
                                                         @Html.LabelFor(model => model.ERApplications.DGHFileAttachmentForPilot, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                                         <div class="col-sm-6 d-flex align-items-center">
@@ -422,12 +452,40 @@
 
 }
 <script>
-     function OnSuccess(response) {
-        alert(response);     
-      
+    function OnSuccess(response) {
+        alert(response.AppId);
     }
+    function OnFailure() {
+        alert("Try Again Error Occured.");
+    }
+    $(document).ready(function () {
+       
 
-      function OnFailure() {
-            alert("Try Again Error Occured.");
+    });
+     $(document).on('change', 'input[name="ERApplications.EligibleForFiscalIncentive"]', function (e) {
+
+         if ($(this).val() == 'True') {
+             $('.fiscalIncentive').removeClass('d-none');
+              //  alert("Yes");
+               }
+         else {
+              $('.fiscalIncentive').addClass('d-none');
+                alert("Submit to ERC");
+            }
+
+     });
+
+    $(document).on('change', 'input[name="ERApplications.PilotMandatory"]'), function () {
+
+        if ($(this).val() == 'True') {
+
+
         }
+        else {
+
+
+        }
+    });
+      
+
 </script>

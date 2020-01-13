@@ -48,6 +48,7 @@ namespace ERPortal.WebUI.Controllers
                 viewModel.ERApplications = erapp;
                 if (!string.IsNullOrEmpty(erapp.ERScreeningDetailId))
                 {
+                    
                     ViewBag.ERFiles = UploadFileContext.Collection().Where(y => y.FIleRef == erapp.ERScreeningDetail.ReportDocumentPath).ToList();
                 }
                 viewModel.FieldTypes = FieldTypeContext.Collection();
@@ -70,11 +71,14 @@ namespace ERPortal.WebUI.Controllers
         public JsonResult DGHFormSubmit(DGHERProposalViewModel dGHERProposalViewModel)
         {
            // ERApplication erapp = new ERApplication();
-            ERApplication erapp = ERApplicationContext.Collection().Where(x=>x.AppId == dGHERProposalViewModel.ERApplications.AppId).FirstOrDefault();          
-            erapp.ERScreeningDetail.ApprovalStatus = dGHERProposalViewModel.ERApplications.ERScreeningDetail.ApprovalStatus;
-            erapp.ERScreeningDetail.ApprovalStatus = dGHERProposalViewModel.ERApplications.ERScreeningDetail.ApprovalStatus;
-            erapp.ERScreeningDetail.DateOfSubmission = dGHERProposalViewModel.ERApplications.ERScreeningDetail.DateOfSubmission;
-            erapp.ERScreeningDetail.DateOfLastApproval = dGHERProposalViewModel.ERApplications.ERScreeningDetail.DateOfLastApproval;
+            ERApplication erapp = ERApplicationContext.Collection().Where(x=>x.AppId == dGHERProposalViewModel.ERApplications.AppId).FirstOrDefault();
+
+            if (erapp.ERScreeningDetailId != null)
+            {
+                erapp.ERScreeningDetail.ApprovalStatus = dGHERProposalViewModel.ERApplications.ERScreeningDetail.ApprovalStatus;               
+                erapp.ERScreeningDetail.DateOfSubmission = dGHERProposalViewModel.ERApplications.ERScreeningDetail.DateOfSubmission;
+                erapp.ERScreeningDetail.DateOfLastApproval = dGHERProposalViewModel.ERApplications.ERScreeningDetail.DateOfLastApproval;
+            }
             erapp.PilotMandatory = dGHERProposalViewModel.ERApplications.PilotMandatory;
             erapp.PilotReportApprovalStatus = dGHERProposalViewModel.ERApplications.PilotReportApprovalStatus;
             erapp.DGHFileAttachmentForPilot = dGHERProposalViewModel.ERApplications.DGHFileAttachmentForPilot;
