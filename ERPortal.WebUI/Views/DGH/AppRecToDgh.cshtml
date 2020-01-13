@@ -432,7 +432,7 @@
 
                                                     <div class="form-group row justify-content-center">
 
-                                                        <button type="submit" class="btn btn-primary" id=""><i class="fas fa-save"></i> Submit</button>
+                                                        <button type="submit" class="btn btn-primary" id="btnSubmit"><i class="fas fa-save"></i> Submit</button>
 
 
                                                     </div>
@@ -451,41 +451,55 @@
 
 
 }
+
+
 <script>
     function OnSuccess(response) {
-        alert(response.AppId);
+        alertModal(response.AppId);
     }
     function OnFailure() {
-        alert("Try Again Error Occured.");
+        alertModal("Try Again Error Occured.");
     }
     $(document).ready(function () {
-       
+
+
 
     });
-     $(document).on('change', 'input[name="ERApplications.EligibleForFiscalIncentive"]', function (e) {
 
-         if ($(this).val() == 'True') {
-             $('.fiscalIncentive').removeClass('d-none');
-              //  alert("Yes");
-               }
-         else {
-              $('.fiscalIncentive').addClass('d-none');
-                alert("Submit to ERC");
-            }
-
-     });
-
-    $(document).on('change', 'input[name="ERApplications.PilotMandatory"]'), function () {
+    $(document).on('change', '#ERApplications_EligibleForFiscalIncentive', function (e) {
 
         if ($(this).val() == 'True') {
-
+            $('.fiscalIncentive').removeClass('d-none');
 
         }
         else {
+            $('.fiscalIncentive').addClass('d-none');
 
+            alertModal("Reason(s) Submit to ERC");
+            $('#btnCommentModal').click();
+         
+
+        }
+
+    });
+    $(document).on('change', 'input[name="ERApplications.PilotMandatory"]', function () {
+
+        if ($(this).val() == 'True') {
+            alertModal("Last Date Of Submission of Pilot Report");
+        }
+        else {
 
         }
     });
-      
+    $(document).on('change', 'input[name="ERApplications.PilotReportApprovalStatus"]', function () {
+
+        if ($(this).val() == 'True') {
+            alertModal("Submit to ERC");
+
+        }
+        else {
+            alertModal("Reason(s) then Submit to ERC");
+        }
+    });
 
 </script>

@@ -185,6 +185,7 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\DGHController.cs" />
     <Compile Include="Controllers\ERCommitteeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -602,11 +603,13 @@
     <Content Include="webfonts\fa-brands-400.eot" />
     <Content Include="Views\DGH\Index.cshtml" />
     <Content Include="Views\DGH\AppRecToDgh.cshtml" />
+    <Content Include="Views\ERCommittee\Index.cshtml" />
+    <Content Include="Views\ERCommittee\AppRecDGHToERC.cshtml" />
+    <Content Include="Views\Comment\Comment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\UploadedFiles\" />
-    <Folder Include="Views\ERCommittee\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

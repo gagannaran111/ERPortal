@@ -56,6 +56,7 @@ namespace ERPortal.WebUI
             container.RegisterType<IRepository<UserAccount>, SQLRepository<UserAccount>>();
             container.RegisterType<IRepository<UploadFile>, SQLRepository<UploadFile>>();
             container.RegisterType<IRepository<UHCProductionMethod>, SQLRepository<UHCProductionMethod>>();
+            container.RegisterType<IRepository<Comment>, SQLRepository<Comment>>();
         }
     }
 }

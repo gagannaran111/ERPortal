@@ -257,27 +257,10 @@
         </div>
     </div>
 </div>
-<div class="modal  fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content ">
-            <div class="modal-header alert-danger">
-                <h5 class="modal-title" id="exampleModalLongTitle">Alert</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="modalContentAlert">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-check"></i> Ok</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <button type="button" style="display:none" id="opertor1" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="ERScreeningDetail" data-title="ERScreening Detail"></button>
-<button type="button" class="btn btn-primary d-none" id="btnalertmodal" data-toggle="modal" data-target="#exampleModalCenter"></button>
+
 <script type="text/javascript">
     function OnSuccess(response) {
         alertModal(response);
@@ -508,10 +491,7 @@
         });        
     });
 
-    function alertModal(msg) {
-         $('#btnalertmodal').click();
-         $('#modalContentAlert').html("<strong>"+msg+"</strong>");
-    }
+   
 
     function erscreeninglinkshowhideonload() {
         var erscreenid = $('#ERApplications_ERScreeningDetailId');

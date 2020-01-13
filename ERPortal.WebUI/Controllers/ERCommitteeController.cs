@@ -13,5 +13,9 @@ namespace ERPortal.WebUI.Controllers
         {
             return View();
         }
+        public ActionResult AppRecDGHToERC()
+        {
+            return View();
+        }
     }
 }

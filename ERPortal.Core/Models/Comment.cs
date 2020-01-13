@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.ComponentModel.DataAnnotations;
 namespace ERPortal.Core.Models
 {
     public class Comment : BaseEntity
@@ -13,10 +13,12 @@ namespace ERPortal.Core.Models
         public string UserAccountId { get; set; }
         public virtual UserAccount UserAccount { get; set; }
 
+        [Display(Name = "APPID")]
         public string ERApplicationId { get; set; }
         public virtual ERApplication ERApplication { get; set; }
 
         public CommentType Type { get; set; }
+        [Display(Name ="Comments")]
         public string Text { get; set; }
     }
 

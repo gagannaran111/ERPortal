@@ -83,6 +83,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AdminManageViewModel.cs" />
     <Compile Include="ViewModels\DGHERProposalViewModel.cs" />
+    <Compile Include="ViewModels\ERCViewModel.cs" />
     <Compile Include="ViewModels\ERScreeningDetailViewModel.cs" />
     <Compile Include="ViewModels\OperatorERProposalViewModel.cs" />
     <Compile Include="ViewModels\UserOrganisationViewModel.cs" />

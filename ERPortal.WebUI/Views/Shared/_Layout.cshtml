@@ -32,7 +32,7 @@
 
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/DataTables/dataTables.bootstrap4.min.js"></script>
-   
+
 
     <style>
         .bd-placeholder-img {
@@ -80,8 +80,8 @@
                     @Html.ActionLink("DGH", "Index", "DGH", null, new { @class = "nav-link" })
                 </li>
                 @*<li class="nav-item">
-                    @Html.ActionLink("ERCommitee", "Index", "ERCommitee", null, new { @class = "nav-link" })
-                </li>*@
+                        @Html.ActionLink("ERCommitee", "Index", "ERCommitee", null, new { @class = "nav-link" })
+                    </li>*@
                 <li class="nav-item">
                     @Html.ActionLink("Account", "Register", "Account", null, new { @class = "nav-link" })
                 </li>
@@ -120,13 +120,15 @@
         <div class="modal-dialog modal-lg  modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="formModalLabelView">Modal title</h5>
+                    <h5 class="modal-title" id="formModalLabelView">Add Comments</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body" id="modalContentView">
-                    ...
+
+
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -134,12 +136,50 @@
             </div>
         </div>
     </div>
+    <div class="modal  fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content ">
+                <div class="modal-header alert-danger">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Alert</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalContentAlert">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-check"></i> Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="CommentModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg  modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="CommentModalLabel">Add Comments</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalContentComment">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="btnCommentSave">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary d-none" id="btnalertmodal" data-toggle="modal" data-target="#exampleModalCenter"></button>
+    <button type="button" style="display:none" id="btnCommentModal" class="btn btn-primary" data-toggle="modal" data-target="#CommentModal" data-page="Comment" data-title="Comments"></button>
 </body>
 </html>
 <script>
       $(document).on("click", ".GeneratePDF", function (e) {
         e.preventDefault();
-        var cssfile = "";  
+        var cssfile = "";
           cssfile = "/Content/css/PrintingData.css";
 
         $(".container-fluid").printThis({
@@ -150,6 +190,63 @@
             pageTitle: "",
             loadCSS: cssfile
         });
+
+      });
+     function alertModal(msg) {
+         $('#btnalertmodal').click();
+         $('#modalContentAlert').html("<strong>"+msg+"</strong>");
+    }
+    $('#btnCommentModal').click(function () {
+         $.ajax({
+                url: "@Url.Action("Comment","Comment")",
+                success: function (result) {
+                    $('#modalContentComment').html(result);
+                },
+                error: function () {
+                    $('#modalContentComment').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
+
+                },
+                fail: function (xhr, textStatus, errorThrown) {
+                    $('#modalContentComment').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
+
+                }
+            });
+
     });
+    $('#btnCommentSave').click(function () {
+         var formUrl = $('#myCommentForm').attr('action');
+            $.ajax({
+                url: formUrl,
+                type: 'POST',
+                data: $('#myCommentForm').serialize(),
+                success: function (result) {
+                  
+                    if ('Success' == result) {
+                       
+                        $('#modalContentComment').html('<div class="alert alert-success" role="alert"> Successfully Added </div >');
+                        if ($("#btnCommentSave").is(":visible")) {
+                            $('#btnCommentSave').fadeOut();
+                        }
+                    } else {
+                        $('#modalContentComment').html(result);
+                    }
+                },
+                error: function (result) {
+
+                      $('#modalContentComment').html(result);
+                },
+                fail: function (xhr, textStatus, errorThrown) {
+                    $('#modalContentComment').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
+                    if ($("#btnCommentSave").is(":visible")) {
+                        $('#btnCommentSave').fadeOut();
+                    }
+                }
+
+
+             });
+
+    });
+
+
 
 </script>
