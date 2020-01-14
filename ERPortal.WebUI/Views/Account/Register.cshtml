@@ -55,7 +55,16 @@
                             @Html.Label("User Role", new { @class = "col-md-4 control-label" })
                             <div class="col-md-8">
                                 @*@Html.DropDownList("Name")*@
-                                @Html.DropDownList("UserRoles", (SelectList)ViewBag.Name, "Choose...", new { @class = "dropdown" })
+                                @Html.DropDownList("UserRoles", (SelectList)ViewBag.Role, "Choose...", new { @class = "dropdown" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.Label("Organisation Name", new { @class = "col-md-4 control-label" })
+                            <div class="col-md-8">
+                                @*@Html.DropDownList("Name")*@
+
+                                @Html.DropDownListFor(m => m.OrganisationId, new SelectList(Model.Organisations, "Id", "Type"), "Select Field Type", new { @class = "form-control" })
+
                             </div>
                         </div>
                         <div class="form-group row">

@@ -13,7 +13,7 @@ namespace ERPortal.Core.ViewModels
         public ERApplication ERApplications { get; set; }
         public IEnumerable<UHCProductionMethod> UHCProductionMethods { get; set; }
         public IEnumerable<FieldType> FieldTypes { get; set; }
-
+        public IEnumerable<Organisation> organisationTypes { get; set; }
         // ER Screening Details
         public ERScreeningDetail eRScreeningDetail { get; set; }
         [Display(Name = "ER Screening Institute")]

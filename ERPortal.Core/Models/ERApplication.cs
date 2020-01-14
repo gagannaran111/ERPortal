@@ -13,9 +13,10 @@ namespace ERPortal.Core.Models
         #region  // Operator Section  
         [Display(Name = "Application Ref. No.")]
         public string AppId { get; set; }
+        [Required(ErrorMessage = "Valid Operator Name is required")]
         public string OrganisationId { get; set; }
         [Display(Name = "Operator Name")]
-        [Required(ErrorMessage = "Valid Operator Name is required")]
+      
         public virtual Organisation Organisation { get; set; }
         [Required(ErrorMessage = "Choose Field Type")]
       

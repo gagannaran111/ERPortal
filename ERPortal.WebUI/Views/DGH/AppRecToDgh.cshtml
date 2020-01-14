@@ -31,6 +31,7 @@
                                     @Html.AntiForgeryToken()
                                     @Html.HiddenFor(model => model.ERApplications.ERScreeningDetailId)
                                     @Html.HiddenFor(model => model.ERApplications.AppId)
+                                    @Html.HiddenFor(model => model.ERApplications.Id)
                                     <div class="alert alert-success alert-dismissible showmsg d-none statussuccess">
                                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                                     </div>
@@ -467,7 +468,7 @@
     });
 
     $(document).on('change', '#ERApplications_EligibleForFiscalIncentive', function (e) {
-
+        var x = $('#ERApplications_Id').val();
         if ($(this).val() == 'True') {
             $('.fiscalIncentive').removeClass('d-none');
 
@@ -476,7 +477,9 @@
             $('.fiscalIncentive').addClass('d-none');
 
             alertModal("Reason(s) Submit to ERC");
-            $('#btnCommentModal').click();
+             $('#btnCommentModal').attr('appid', x);
+            $('#btnCommentModal').click();            
+           
          
 
         }

@@ -1,6 +1,6 @@
 ﻿
 @model ERPortal.Core.Models.Comment
-@using (Html.BeginForm("CommentSubmit", "Comment", new { targetPage = "Comment", FileRef = ViewBag.RefId }, FormMethod.Post, new { @id = "myCommentForm" }))
+@using (Html.BeginForm("CommentSubmit", "Comment", new {appid=Model.ERApplicationId , FileRef = ViewBag.RefId }, FormMethod.Post, new { @id = "myCommentForm" }))
 {
     @Html.AntiForgeryToken()
 

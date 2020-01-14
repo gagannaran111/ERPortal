@@ -10,6 +10,10 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ERPortal.WebUI.Models;
 using System.Data.Entity;
+using ERPortal.Core.Models;
+using ERPortal.Core.Contracts;
+using Unity;
+
 namespace ERPortal.WebUI.Controllers
 {
     [Authorize]
@@ -18,17 +22,25 @@ namespace ERPortal.WebUI.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         ApplicationDbContext context;
-
-        public AccountController()
+        IRepository<UserAccount> userAccountContext;
+        IRepository<Organisation> OrganisationContext;
+        [InjectionConstructor]
+        public AccountController(IRepository<Organisation> _OrganisationContext, IRepository<UserAccount> _userAccountContext)
         {
+            OrganisationContext = _OrganisationContext;
+            userAccountContext = _userAccountContext;
+            //var rr = org.Collection().ToList();
+            // OrganisationContext = org;
             context = new ApplicationDbContext();
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IRepository<UserAccount> _userAccountContext, IRepository<Organisation> _OrganisationContext)
         {
             UserManager = userManager;
             SignInManager = signInManager;
             context = new ApplicationDbContext();
+            userAccountContext = _userAccountContext;
+            OrganisationContext = _OrganisationContext;
         }
 
         public ApplicationSignInManager SignInManager
@@ -37,9 +49,9 @@ namespace ERPortal.WebUI.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -64,10 +76,10 @@ namespace ERPortal.WebUI.Controllers
         }
 
 
-       //POST: /Account/Login
-       [HttpPost]
-       [AllowAnonymous]
-       [ValidateAntiForgeryToken]
+        //POST: /Account/Login
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -124,7 +136,7 @@ namespace ERPortal.WebUI.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -143,8 +155,7 @@ namespace ERPortal.WebUI.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            
-            ViewBag.Name = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
+            ViewBag.Role = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
                                     .ToList(), "Name", "Name");
 
             ViewBag.UserList = (from user in context.Users
@@ -164,7 +175,11 @@ namespace ERPortal.WebUI.Controllers
                                     Username = p.Username,
                                     Email = p.Email,
                                     Role = string.Join(",", p.RoleNames)
-                                });            
+                                });
+
+
+            RegisterViewModel registerViewModel = new RegisterViewModel();
+            registerViewModel.Organisations = OrganisationContext.Collection().ToList(); ;
             return View();
         }
 
@@ -177,11 +192,11 @@ namespace ERPortal.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email , Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
@@ -190,31 +205,42 @@ namespace ERPortal.WebUI.Controllers
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
                     await this.UserManager.AddToRoleAsync(user.Id, model.UserRoles);
 
-                   var response= (from user1 in context.Users
-                     select new
-                     {
-                         UserId = user1.Id,
-                         Username = user1.UserName,
-                         Email = user1.Email,
-                         RoleNames = (from userRole in user1.Roles
-                                      join role in context.Roles on userRole.RoleId
-                                      equals role.Id
-                                      select role.Name).ToList()
-                     }).ToList().Select(p => new Users_in_Role_ViewModel()
+                    var response = (from user1 in context.Users
+                                    select new
+                                    {
+                                        UserId = user1.Id,
+                                        Username = user1.UserName,
+                                        Email = user1.Email,
+                                        RoleNames = (from userRole in user1.Roles
+                                                     join role in context.Roles on userRole.RoleId
+                                                     equals role.Id
+                                                     select role.Name).ToList()
+                                    }).ToList().Select(p => new Users_in_Role_ViewModel()
 
-                     {
-                         UserId = p.UserId,
-                         Username = p.Username,
-                         Email = p.Email,
-                         Role = string.Join(",", p.RoleNames)
-                     });
-                    return Json(response, JsonRequestBehavior.AllowGet);                    
+                                    {
+                                        UserId = p.UserId,
+                                        Username = p.Username,
+                                        Email = p.Email,
+                                        Role = string.Join(",", p.RoleNames)
+                                    });
+                    UserAccount userAccount = new UserAccount();
+
+                    userAccount.Id = user.Id;
+                    userAccount.EmailID = model.Email;
+                    userAccount.FirstName = model.FirstName;
+                    userAccount.LastName = model.LastName;
+                    userAccount.OrganisationId = model.OperatorName.Id;
+                    
+                    userAccountContext.Insert(userAccount);
+                    userAccountContext.Commit();
+
+                    return Json(response, JsonRequestBehavior.AllowGet);
                 }
-               ViewBag.Name = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
-                                  .ToList(), "Name", "Name");
+                ViewBag.Role = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
+                                   .ToList(), "Name", "Name");
                 AddErrors(result);
             }
-
+            ViewBag.Organisations = OrganisationContext.Collection().ToList(); 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -529,6 +555,6 @@ namespace ERPortal.WebUI.Controllers
         }
         #endregion
 
-        
+
     }
 }

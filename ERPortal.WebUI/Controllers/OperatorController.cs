@@ -18,7 +18,8 @@ namespace ERPortal.WebUI.Controllers
         IRepository<UploadFile> UploadFileContext;
         IRepository<ERScreeningDetail> ERScreeningDetailContext;
         IRepository<ERScreeningInstitute> ERScreeningInstituteContext;
-        public OperatorController(IRepository<ERApplication> _ERApplicationContext, IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext)
+        IRepository<Organisation> OrganisationContext;
+        public OperatorController(IRepository<ERApplication> _ERApplicationContext, IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<Organisation> _OrganisationContext)
         {
             ERApplicationContext = _ERApplicationContext;
             FieldTypeContext = _FieldTypeContext;
@@ -26,6 +27,7 @@ namespace ERPortal.WebUI.Controllers
             UploadFileContext = _UploadFileContext;
             ERScreeningDetailContext = _ERScreeningDetailContext;
             ERScreeningInstituteContext = _ERScreeningInstituteContext;
+            OrganisationContext = _OrganisationContext;
         }
 
         // GET: Operator
@@ -51,6 +53,7 @@ namespace ERPortal.WebUI.Controllers
             }
             viewModel.FieldTypes = FieldTypeContext.Collection();
             viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection();
+            viewModel.organisationTypes = OrganisationContext.Collection();
             //viewModel.UploadFiles = UploadFileContext.Collection();
 
             return View(viewModel);

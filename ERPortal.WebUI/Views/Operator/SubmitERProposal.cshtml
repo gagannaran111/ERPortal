@@ -33,11 +33,18 @@
                     <div class="form-horizontal">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                        <div class="form-group row">
+                        @*<div class="form-group row">
                             @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                             <div class="col-sm-6 d-flex align-items-center">
                                 @Html.EditorFor(model => model.ERApplications.Organisation.Name, new { htmlAttributes = new { @class = "form-control disabled", @readonly = "readonly" } })
                                 @Html.ValidationMessageFor(model => model.ERApplications.Organisation, "", new { @class = "text-danger" })
+                            </div>
+                        </div>*@
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                @Html.DropDownListFor(model => model.ERApplications.OrganisationId, new SelectList(Model.organisationTypes, "Id", "Name"), "Select Organisation Type", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ERApplications.OrganisationId, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group row">
@@ -218,16 +225,16 @@
                                 @Html.ValidationMessageFor(model => model.ERApplications.AdditonalRemarks, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                        <div class="form-group row justify-content-center">   
-                                    @*<input type="submit" value="Submit" class="btn btn-warning" id="ERAppSubmit">*@
+                        <div class="form-group row justify-content-center">
+                            @*<input type="submit" value="Submit" class="btn btn-warning" id="ERAppSubmit">*@
                             <button type="submit" class="btn btn-primary" id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>
-                              @*<button class="btn btn-success"  id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>*@
-                            
-                               
-                                 @*<div style="position: relative">
-                                     <i class="icon-pencil" style="position: absolute;left: 0.5em; top:0.25em"></i>
-                                     <input class="btn" type="submit" value="&#xf19e; Submit" style="padding-left: 20px" />
-                                 </div>*@
+                            @*<button class="btn btn-success"  id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>*@
+
+
+                            @*<div style="position: relative">
+                <i class="icon-pencil" style="position: absolute;left: 0.5em; top:0.25em"></i>
+                <input class="btn" type="submit" value="&#xf19e; Submit" style="padding-left: 20px" />
+            </div>*@
                         </div>
                     </div>
                 </fieldset>

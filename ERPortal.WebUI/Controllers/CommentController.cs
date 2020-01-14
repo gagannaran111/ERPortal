@@ -6,14 +6,17 @@ using System.Web.Mvc;
 using ERPortal.Core.Contracts;
 using ERPortal.Core.Models;
 using ERPortal.Core.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace ERPortal.WebUI.Controllers
 {
     public class CommentController : Controller
     {
         IRepository<Comment> commentContext;
-        public CommentController(IRepository<Comment> _commentContext)
+         IRepository<ERApplication> eRApplicationContext;
+        public CommentController(IRepository<Comment> _commentContext, IRepository<ERApplication> _eRApplicationContext)
         {
+            eRApplicationContext = eRApplicationContext;
             commentContext = _commentContext;
         }
         // GET: Comment
@@ -21,17 +24,22 @@ namespace ERPortal.WebUI.Controllers
         {
             return View();
         }
-        public ActionResult Comment()
+        public ActionResult Comment(string appid)
         {
-            return View();
+            Comment obj = new Comment();
+            obj.ERApplicationId = appid;
+
+            return View(obj);
         }
         [HttpPost]
-        public JsonResult CommentSubmit(Comment comment)
+        public JsonResult CommentSubmit(Comment comment,string appid)
         {
+            comment.ERApplicationId = appid;
+        // comment.UserAccountId=  
             if (ModelState.IsValid)
             {
-               // commentContext.Insert(comment);
-               // commentContext.Commit();
+                commentContext.Insert(comment);
+                commentContext.Commit();
                 return Json("Success", JsonRequestBehavior.AllowGet);
             }
             else {

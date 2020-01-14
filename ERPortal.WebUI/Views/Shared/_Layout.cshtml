@@ -126,9 +126,6 @@
                     </button>
                 </div>
                 <div class="modal-body" id="modalContentView">
-
-
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -197,8 +194,9 @@
          $('#modalContentAlert').html("<strong>"+msg+"</strong>");
     }
     $('#btnCommentModal').click(function () {
+        var y = $(this).attr('appid');
          $.ajax({
-                url: "@Url.Action("Comment","Comment")",
+                url: "/Comment/Comment?appid=" + y,
                 success: function (result) {
                     $('#modalContentComment').html(result);
                 },

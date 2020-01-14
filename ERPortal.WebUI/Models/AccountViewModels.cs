@@ -79,10 +79,12 @@ namespace ERPortal.WebUI.Models
         [Display(Name = "Last Name")]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} character long.", MinimumLength = 1)]
         public string LastName { get; set; }
+        [Display(Name = "Organisation Id")]
+        public string OrganisationId { get; set; }
 
         [Display(Name = "Organisation")]
         public virtual Organisation OperatorName { get; set; }
-
+        public IEnumerable<Organisation> Organisations { get; set; }
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
