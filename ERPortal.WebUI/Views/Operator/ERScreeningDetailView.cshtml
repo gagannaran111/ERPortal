@@ -1,28 +1,30 @@
 ﻿@model ERPortal.Core.ViewModels.ERScreeningDetailViewModel
+@{
+    Layout = null;
+}
 
+<table class="table table-hover table-responsive-lg table-striped">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.eRScreeningDetail.ERScreeningInstitute.InstituteName)</th>
+        <td>@Html.DisplayFor(model => model.eRScreeningDetail.ERScreeningInstitute.InstituteName)</td>
+    </tr>
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.eRScreeningDetail.FirstOrderScreening)</th>
+        <td>@Html.DisplayFor(model => model.eRScreeningDetail.FirstOrderScreening)</td>
+    </tr>
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.eRScreeningDetail.SecondOrderScreening)</th>
+        <td>@Html.DisplayFor(model => model.eRScreeningDetail.SecondOrderScreening)</td>
+    </tr>
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.eRScreeningDetail.ThirdOrderScreening)</th>
+        <td>@Html.DisplayFor(model => model.eRScreeningDetail.ThirdOrderScreening)</td>
+    </tr>
 
-    <table class="table table-hover table-responsive-lg table-striped">
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.eRScreeningDetail.ERScreeningInstitute.InstituteName)</th>
-            <td>@Html.DisplayFor(model => model.eRScreeningDetail.ERScreeningInstitute.InstituteName)</td>
-        </tr>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.eRScreeningDetail.FirstOrderScreening)</th>
-            <td>@Html.DisplayFor(model => model.eRScreeningDetail.FirstOrderScreening)</td>
-        </tr>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.eRScreeningDetail.SecondOrderScreening)</th>
-            <td>@Html.DisplayFor(model => model.eRScreeningDetail.SecondOrderScreening)</td>
-        </tr>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.eRScreeningDetail.ThirdOrderScreening)</th>
-            <td>@Html.DisplayFor(model => model.eRScreeningDetail.ThirdOrderScreening)</td>
-        </tr>
-      
-        <tr>
-            <td colspan="2"><div id="DetailViewFile" style="display:none"></div></td>
-        </tr>
-        @Html.HiddenFor(model => model.eRScreeningDetail.ReportDocumentPath)
-    </table>
+    <tr>
+        <td colspan="2"><div id="DetailViewFile" style="display:none"></div></td>
+    </tr>
+    @Html.HiddenFor(model => model.eRScreeningDetail.ReportDocumentPath)
+</table>
 
 

@@ -14,6 +14,7 @@ using ERPortal.Core.Models;
 using ERPortal.Core.Contracts;
 using Unity;
 
+
 namespace ERPortal.WebUI.Controllers
 {
     [Authorize]
@@ -91,9 +92,13 @@ namespace ERPortal.WebUI.Controllers
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             // var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: true);
             var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
+            //var current_User = _userManager.GetUserAsync(HttpContext.User);
+            // var userdata = SignInManager.UserManager.FindAsync(model.UserName, model.Password);
+            Session["userId"] = SignInManager.AuthenticationManager.AuthenticationResponseGrant.Identity.GetUserId();
 
             switch (result)
             {
+
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
@@ -180,7 +185,7 @@ namespace ERPortal.WebUI.Controllers
 
             RegisterViewModel registerViewModel = new RegisterViewModel();
             registerViewModel.Organisations = OrganisationContext.Collection().ToList(); ;
-            return View();
+            return View(registerViewModel);
         }
 
         //
@@ -204,7 +209,7 @@ namespace ERPortal.WebUI.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
                     await this.UserManager.AddToRoleAsync(user.Id, model.UserRoles);
-
+                   
                     var response = (from user1 in context.Users
                                     select new
                                     {
@@ -229,8 +234,8 @@ namespace ERPortal.WebUI.Controllers
                     userAccount.EmailID = model.Email;
                     userAccount.FirstName = model.FirstName;
                     userAccount.LastName = model.LastName;
-                    userAccount.OrganisationId = model.OperatorName.Id;
-                    
+                    userAccount.OrganisationId = model.OrganisationId;
+
                     userAccountContext.Insert(userAccount);
                     userAccountContext.Commit();
 
@@ -240,7 +245,7 @@ namespace ERPortal.WebUI.Controllers
                                    .ToList(), "Name", "Name");
                 AddErrors(result);
             }
-            ViewBag.Organisations = OrganisationContext.Collection().ToList(); 
+            ViewBag.Organisations = OrganisationContext.Collection().ToList();
             // If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -465,7 +470,7 @@ namespace ERPortal.WebUI.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //

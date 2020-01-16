@@ -380,6 +380,7 @@
     <Content Include="Content\img\Icon_Design_trans.png" />
     <Content Include="Content\img\Icon_Design_trans.svg" />
     <Content Include="Content\img\Icon_Design_trans_white.png" />
+    <Content Include="Content\jquery.datetimepicker.css" />
     <Content Include="Content\regular.css" />
     <Content Include="Content\regular.min.css" />
     <Content Include="Content\solid.css" />
@@ -518,6 +519,7 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\CustomFiles\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.datetimepicker.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />

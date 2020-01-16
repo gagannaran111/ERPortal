@@ -17,8 +17,8 @@
                                 <th>AppId</th>
                                 @*<th>Eamil</th>*@
                             <th>Created Date</th>
-                                <th>Delete</th>
-                                <th>Edit</th>
+                                @*<th>Delete</th>
+                                <th>Edit</th>*@
                             </tr>
                         </thead>
                         <tbody>
@@ -29,12 +29,12 @@
                                 <tr>
                                     <td>@Html.ActionLink(appid, "AppRecToDgh", "DGH",new { appid=appid},null) </td>                                   @*<td>@x.Email</td>*@
                                     <td>@x.CreatedAt</td>
-                                    <td>
+                                    @*<td>
                                         <button class="btn btn-danger userdelete" data-UserId="@x.AppId"><i class="fas fa-trash"></i></button>
                                     </td>
                                     <td>
                                         <button class="btn btn-primary" data-UserId="@x.AppId"><i class="fas fa-edit"></i></button>
-                                    </td>
+                                    </td>*@
                                 </tr>
 
                             }
@@ -68,7 +68,5 @@
 
      });
      $('#dghform').html();
-
-
  });
     </script>

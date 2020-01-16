@@ -18,5 +18,6 @@ namespace ERPortal.Core.ViewModels
         public ERScreeningDetail eRScreeningDetail { get; set; }
         [Display(Name = "ER Screening Institute")]
         public IEnumerable<ERScreeningInstitute> eRScreeningInstitutes { get; set; }
+        public IEnumerable<Comment> comment { get; set; }
     }
 }

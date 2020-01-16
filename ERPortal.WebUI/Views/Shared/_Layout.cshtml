@@ -32,8 +32,8 @@
 
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/DataTables/dataTables.bootstrap4.min.js"></script>
-
-
+    <link href="~/Content/jquery.datetimepicker.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.datetimepicker.js"></script>
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -97,7 +97,7 @@
                     @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
                     {
                         @Html.AntiForgeryToken()
-                        <input type="submit" class="btn btn-info" value="LogOff" />
+                        <input type="submit" class="btn btn-info" id="LogOff" value="LogOff" />
                     }
 
                 </li>
@@ -116,7 +116,7 @@
     </main><!-- /.container -->
     @RenderSection("scripts", required: false)
     <!-- Modal -->
-    <div class="modal fade" id="formDetailModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal fade" id="formDetailModal" tabindex="-1" role="dialog" aria-labelledby="formDetailLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg  modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -151,7 +151,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="CommentModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal fade" id="CommentModal"  role="dialog" aria-labelledby="CommentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg  modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -194,11 +194,13 @@
          $('#modalContentAlert').html("<strong>"+msg+"</strong>");
     }
     $('#btnCommentModal').click(function () {
+
         var y = $(this).attr('appid');
          $.ajax({
                 url: "/Comment/Comment?appid=" + y,
                 success: function (result) {
-                    $('#modalContentComment').html(result);
+                    $('#modalContentComment').html(result);                 
+                   
                 },
                 error: function () {
                     $('#modalContentComment').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
@@ -222,9 +224,7 @@
                     if ('Success' == result) {
                        
                         $('#modalContentComment').html('<div class="alert alert-success" role="alert"> Successfully Added </div >');
-                        if ($("#btnCommentSave").is(":visible")) {
-                            $('#btnCommentSave').fadeOut();
-                        }
+                        
                     } else {
                         $('#modalContentComment').html(result);
                     }
@@ -235,15 +235,103 @@
                 },
                 fail: function (xhr, textStatus, errorThrown) {
                     $('#modalContentComment').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
-                    if ($("#btnCommentSave").is(":visible")) {
-                        $('#btnCommentSave').fadeOut();
-                    }
+                   
                 }
 
 
              });
 
     });
+      $(document).on('click', '.UploadFile', function (e) {
+            e.preventDefault();
+         var refid = $(this).attr('filerefid');
+         var divid = $(this).attr('divid');
+         var inputfile = $(this).attr('inputfile');
+            var sendData = function () {
+                var data = new FormData();
+                data.append("file", $("#"+inputfile).get(0).files[0]);
+                data.append("RefId", refid);
+                return data;
+            }();
+             $.ajax({
+                url: "@Url.Action("LoadUploadFile","Comment")",
+                type: 'POST',
+                 data: sendData,
+                 contentType: false,
+                processData: false,
+                 success: function (result) {
+                     if (result == "File upload Success") {
+                         $("input[type='file']").val("");
+                         GetUploadFilesData("#"+divid,refid );
+                     }
+                },
+                 error: function () {
+
+                    alert( "Something Went Wrong. Try Again");
+                },
+                fail: function (xhr, textStatus, errorThrown) {
+
+                 }
+                
+             });
+           e.stopImmediatePropagation();
+    return false;
+     });
+     
+    $(document).on("click",'.fileDelete',function (e) {
+        e.preventDefault();
+        var divId = $(this).attr('data-divid');
+        var fileid = $(this).attr('data-fileid');
+        var refid = $(this).attr('data-fileref');
+          var sendData = { FileId:fileid };
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            url: '@Url.Action("RemoveUploadFile", "Comment")',
+            data: JSON.stringify(sendData),
+            datatype: 'json',
+            async: false,
+            success: function (data) {
+               // alertModal(data);
+                GetUploadFilesData(divId, refid);
+            },
+            error: function () {
+                alertModal("Something Went Wrong. Try Again");
+            },
+        });
+          e.stopImmediatePropagation();
+    return false;
+    });
+
+   function GetUploadFilesData(divId, refid) {
+        $(divId).html("No files attached");
+            var sendData = { RefId:refid };
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                url: '@Url.Action("GetUploadFiles", "Comment")',
+                data: JSON.stringify(sendData),
+                datatype: 'json',                
+                success: function (data) {
+                    if (data) {
+                        var txt = "";
+                        if (data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                txt += "<div class='badge badge-warning mr-2 mb-2'><a class='text-dark' href='@Url.Content("~/Content/UploadedFiles/")" +
+                                    data[i].FileName + "' target='_blank'>" + data[i].FileName + "</a><a class='fileDelete small text-danger' data-fileid='" +
+                                    data[i].Id + "' data-fileref='"+ data[i].FIleRef+"' data-divid ='"+divId+"'  href='#'><i class='ml-1 fa fa-times'></i></a></div>";
+                            }
+                            $(divId).html(txt);
+                            $(divId).fadeIn("slow");
+                        }
+                    }
+                },
+                 error: function () {
+                    alertModal( "Something Went Wrong. Try Again");
+                },
+            })
+          
+    }
 
 
 

@@ -17,8 +17,9 @@ namespace ERPortal.WebUI.Controllers
         IRepository<UploadFile> UploadFileContext;
         IRepository<ERScreeningDetail> ERScreeningDetailContext;
         IRepository<ERScreeningInstitute> ERScreeningInstituteContext;
+        IRepository<Comment> CommentContext;
 
-        public DGHController(IRepository<ERApplication> _ERApplicationContext, IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext)
+        public DGHController(IRepository<ERApplication> _ERApplicationContext, IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<Comment> _CommentContext)
         {
             ERApplicationContext = _ERApplicationContext;
             FieldTypeContext = _FieldTypeContext;
@@ -26,6 +27,7 @@ namespace ERPortal.WebUI.Controllers
             UploadFileContext = _UploadFileContext;
             ERScreeningDetailContext = _ERScreeningDetailContext;
             ERScreeningInstituteContext = _ERScreeningInstituteContext;
+            CommentContext = _CommentContext;
         }
 
 
@@ -53,6 +55,10 @@ namespace ERPortal.WebUI.Controllers
                 }
                 viewModel.FieldTypes = FieldTypeContext.Collection();
                 viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection();
+                viewModel.comment = CommentContext.Collection().Where(x => x.ERApplicationId == erapp.Id);
+
+                viewModel.ERApplications.DGHFileAttachment = erapp.DGHFileAttachment == null? Guid.NewGuid().ToString(): erapp.DGHFileAttachment;
+                viewModel.ERApplications.DGHFileAttachmentForPilot = erapp.DGHFileAttachmentForPilot==null? Guid.NewGuid().ToString(): erapp.DGHFileAttachmentForPilot;
                 return View(viewModel);
             }
             else
@@ -86,7 +92,7 @@ namespace ERPortal.WebUI.Controllers
             erapp.FinalApprovalStatus = dGHERProposalViewModel.ERApplications.FinalApprovalStatus;
             erapp.EligibleForFiscalIncentive = dGHERProposalViewModel.ERApplications.EligibleForFiscalIncentive;
             erapp.DGHApprovalStatus = dGHERProposalViewModel.ERApplications.DGHApprovalStatus;
-            erapp.DGHApprovalDate = dGHERProposalViewModel.ERApplications.DGHApprovalDate;
+            erapp.DGHApprovalDate = DateTime.Now; //dGHERProposalViewModel.ERApplications.DGHApprovalDate;
             ERApplicationContext.Update(erapp);
             ERApplicationContext.Commit();
 

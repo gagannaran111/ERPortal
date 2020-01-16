@@ -325,36 +325,7 @@
                 $("#FileDiv option[value='']").attr('selected', true);
             }
         });
-        $(document).on('click', '.UploadFile', function (e) {
-            e.preventDefault();
-            var refid = $(this).attr('filerefid');
-            var sendData = function () {
-                var data = new FormData();
-                data.append("file", $("#txtFile").get(0).files[0]);
-                data.append("RefId", refid);
-                return data;
-            }();
-             $.ajax({
-                url: "@Url.Action("LoadUploadFile","Operator")",
-                type: 'POST',
-                 data: sendData,
-                 contentType: false,
-                processData: false,
-                 success: function (result) {
-                     if (result == "File upload Success") {
-                         $("input[type='file']").val("");
-                         GetUploadFilesData("#UploadFilesData",refid );
-                     }
-                },
-                 error: function () {
-
-                    alert( "Something Went Wrong. Try Again");
-                },
-                fail: function (xhr, textStatus, errorThrown) {
-
-                }
-            });
-        });
+     
 
          $('#formModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget); // Button that triggered the modal
@@ -550,59 +521,6 @@
              $('.pilotmandatory').attr('data-original-title', 'If OIIP < 25 MMBBL Or GIIP < 0.25 TCF then Not Mandatory otherwise Mandatory');
         }
 
-
-    }
-
-    function GetUploadFilesData(divId, refid) {
-        $(divId).html("No files attached");
-            var sendData = { RefId:refid };
-            $.ajax({
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                url: '@Url.Action("GetUploadFiles", "Operator")',
-                data: JSON.stringify(sendData),
-                datatype: 'json',
-                success: function (data) {
-                    if (data) {
-                        var txt = "";
-                        if (data.length > 0) {
-                            for (var i = 0; i < data.length; i++) {
-                                txt += "<div class='badge badge-warning mr-2 mb-2'><a class='text-dark' href='@Url.Content("~/Content/UploadedFiles/")" +
-                                    data[i].FileName + "' target='_blank'>" + data[i].FileName + "</a><a class='fileDelete small text-danger' data-fileid='" +
-                                    data[i].Id + "' data-fileref='"+ data[i].FIleRef+"' data-divid ='"+divId+"'  href='#'><i class='ml-1 fa fa-times'></i></a></div>";
-                            }
-                            $(divId).html(txt);
-                            $(divId).fadeIn("slow");
-                        }
-                    }
-                },
-                 error: function () {
-                    alertModal( "Something Went Wrong. Try Again");
-                },
-            })
-
-    }
-    $(document).on("click",'.fileDelete',function (e) {
-         e.preventDefault();
-        RemoveUploadFile($(this).attr('data-divid'),$(this).attr('data-fileid'),$(this).attr('data-fileref'));
-    });
-
-     function RemoveUploadFile(divId,fileid,refid) {
-            var sendData = { FileId:fileid };
-            $.ajax({
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                url: '@Url.Action("RemoveUploadFile", "Operator")',
-                data: JSON.stringify(sendData),
-                datatype: 'json',
-                success: function (data) {
-                    alertModal(data);
-                    GetUploadFilesData(divId,refid);
-                },
-                 error: function () {
-                    alertModal( "Something Went Wrong. Try Again");
-                },
-            })
 
     }
 
