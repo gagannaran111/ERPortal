@@ -22,7 +22,7 @@ namespace ERPortal.WebUI
             routes.MapRoute(
                 name: "Operator",
                 url: "{controller}/{id}",
-                defaults: new { controller = "Operator", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Account", action = "Login", id = UrlParameter.Optional }
             );
         }
     }
