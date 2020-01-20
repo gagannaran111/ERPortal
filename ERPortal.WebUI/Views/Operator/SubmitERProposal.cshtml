@@ -82,7 +82,7 @@
                         <div class="form-group row">
                             @Html.LabelFor(model => model.ERApplications.DateOfDiscovery, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                             <div class="col-sm-6 d-flex align-items-center">
-                                @Html.EditorFor(model => model.ERApplications.DateOfDiscovery, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.ERApplications.DateOfDiscovery, new { htmlAttributes = new { @class = "form-control datetimetext", @type="text" ,@Value ="" } })
                                 @Html.ValidationMessageFor(model => model.ERApplications.DateOfDiscovery, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                         <div class="form-group row">
                             @Html.LabelFor(model => model.ERApplications.DateOfInitialCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                             <div class="col-sm-6 d-flex align-items-center">
-                                @Html.EditorFor(model => model.ERApplications.DateOfInitialCommercialProduction, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.EditorFor(model => model.ERApplications.DateOfInitialCommercialProduction, new { htmlAttributes = new { @class = "form-control datetimetext", @type="text" } })
                                 @Html.ValidationMessageFor(model => model.ERApplications.DateOfInitialCommercialProduction, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -116,7 +116,7 @@
                         <div class="form-group row" id="DateOfLastCommercialProductionDiv" style="display:none">
                             @Html.LabelFor(model => model.ERApplications.DateOfLastCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                             <div class="col-sm-6 d-flex align-items-center">
-                                @Html.EditorFor(model => model.ERApplications.DateOfLastCommercialProduction, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.ERApplications.DateOfLastCommercialProduction, new { htmlAttributes = new { @class = "form-control datetimetext",@type="text" } })
                                 @Html.ValidationMessageFor(model => model.ERApplications.DateOfLastCommercialProduction, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -280,8 +280,7 @@
       function OnFailure() {
             alertModal("Try Again Error Occured.");
         }
-    $(document).ready(function () {
-
+    $(document).ready(function () {       
         $('[data-toggle="tooltip"]').tooltip();
         if ($('#ERApplications_AppId').val() != "") {
             erscreeninglinkshowhideonload();

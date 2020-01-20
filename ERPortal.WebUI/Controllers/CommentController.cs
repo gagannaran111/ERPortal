@@ -39,7 +39,7 @@ namespace ERPortal.WebUI.Controllers
         [HttpPost]
         public JsonResult CommentSubmit(Comment comment, string appid)
         {
-            string userid = Session["userId"] == null ? null : Session["userId"].ToString();
+            string userid =  Session["userId"] == null ? null : Session["userId"].ToString();
             if (userid == null)
             {
                 return Json("ERROR", JsonRequestBehavior.AllowGet);
@@ -51,6 +51,7 @@ namespace ERPortal.WebUI.Controllers
                     ERApplicationId = appid,
                     UserAccountId = userid,// "62c5216e-0155-4fe3-8e9d-06dd66f1ad21",
                     Text = comment.Text,
+                    Type = comment.Type,
                 };
 
                 // comment.UserAccountId=  

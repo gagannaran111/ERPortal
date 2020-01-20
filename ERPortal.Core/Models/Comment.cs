@@ -9,6 +9,7 @@ namespace ERPortal.Core.Models
 {
     public class Comment : BaseEntity
     {
+      
         // Link to users table
         public string UserAccountId { get; set; }
         public virtual UserAccount UserAccount { get; set; }
@@ -16,7 +17,6 @@ namespace ERPortal.Core.Models
         [Display(Name = "APPID")]
         public string ERApplicationId { get; set; }
         public virtual ERApplication ERApplication { get; set; }
-
         public CommentType Type { get; set; }
         [Display(Name ="Comments")]
         public string Text { get; set; }
@@ -24,10 +24,19 @@ namespace ERPortal.Core.Models
 
     public enum CommentType
     {
+        [Display(Name = "DGH Comment For Application")]
         DGHCommentForApplication,
+
+        [Display(Name = "DGH Comment For Pilot")]
         DGHCommentForPilot,
+
+        [Display(Name = "ERC Comment For Application")]
         ERCCommentForApplication,
+
+        [Display(Name = "ERC Comment for Pilot")]
         ERCCommentforPilot,
+
+        [Display(Name = "Others")]
         Others
     }
 }

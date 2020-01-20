@@ -27,13 +27,15 @@
 
     <link href="~/Content/fontawesome-all.min.css" rel="stylesheet" />
     <script src="~/Scripts/fontawesome/all.min.js"></script>
+    <link href="~/Content/jquery.datetimepicker.css" rel="stylesheet" />
+    
+    <script src="~/Scripts/jquery.datetimepicker.js"></script>
 
     <link href="~/Content/DataTables/css/dataTables.bootstrap4.css" rel="stylesheet" />
 
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/DataTables/dataTables.bootstrap4.min.js"></script>
-    <link href="~/Content/jquery.datetimepicker.css" rel="stylesheet" />
-    <script src="~/Scripts/jquery.datetimepicker.js"></script>
+
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -78,6 +80,9 @@
                 </li>
                 <li class="nav-item">
                     @Html.ActionLink("DGH", "Index", "DGH", null, new { @class = "nav-link" })
+                </li>
+                <li class="nav-item">
+                    @Html.ActionLink("ER Committee", "Index", "ERCommittee", null, new { @class = "nav-link" })
                 </li>
                 @*<li class="nav-item">
                         @Html.ActionLink("ERCommitee", "Index", "ERCommitee", null, new { @class = "nav-link" })
@@ -151,7 +156,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="CommentModal"  role="dialog" aria-labelledby="CommentModalLabel" aria-hidden="true">
+    <div class="modal fade" id="CommentModal" role="dialog" aria-labelledby="CommentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg  modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -168,12 +173,24 @@
                 </div>
             </div>
         </div>
+        
     </div>
     <button type="button" class="btn btn-primary d-none" id="btnalertmodal" data-toggle="modal" data-target="#exampleModalCenter"></button>
     <button type="button" style="display:none" id="btnCommentModal" class="btn btn-primary" data-toggle="modal" data-target="#CommentModal" data-page="Comment" data-title="Comments"></button>
+    <button type="button" style="display:none" id="btnCommentView" class="btn btn-primary" data-toggle="modal" data-target="#formDetailModal" data-page="Comment" data-title="View Comment"></button>
+
 </body>
 </html>
 <script>
+    $(document).on('click', '.ViewComment', function (e) {
+        e.preventDefault();
+        var comText = $(this).attr('commenttext');
+        var comType = $(this).attr('commentType');
+        var comdate = $(this).attr('commentdate');
+        $('#formModalLabelView').html('View Comment');
+        $('#modalContentView').html('<div class=row><div class="col-lg-6 text-success font-weight-bold">Type : ' + comType + ' </div><div class="col-lg-6 text-success font-weight-bold">Date : ' + comdate + ' </div><div class="col-sm-12 mt-3 border-top "><h6 class="text-info">Comment :</h6> <p class="mt-3">' + comText + '</p></div></div>');
+        $('#btnCommentView').click();
+    });
       $(document).on("click", ".GeneratePDF", function (e) {
         e.preventDefault();
         var cssfile = "";
@@ -193,14 +210,19 @@
          $('#btnalertmodal').click();
          $('#modalContentAlert').html("<strong>"+msg+"</strong>");
     }
+    $(document).ready(function () {
+
+         $(".datetimetext").datetimepicker();
+
+    });
     $('#btnCommentModal').click(function () {
 
         var y = $(this).attr('appid');
          $.ajax({
                 url: "/Comment/Comment?appid=" + y,
                 success: function (result) {
-                    $('#modalContentComment').html(result);                 
-                   
+                    $('#modalContentComment').html(result);
+
                 },
                 error: function () {
                     $('#modalContentComment').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
@@ -220,11 +242,11 @@
                 type: 'POST',
                 data: $('#myCommentForm').serialize(),
                 success: function (result) {
-                  
+
                     if ('Success' == result) {
-                       
+
                         $('#modalContentComment').html('<div class="alert alert-success" role="alert"> Successfully Added </div >');
-                        
+
                     } else {
                         $('#modalContentComment').html(result);
                     }
@@ -235,13 +257,14 @@
                 },
                 fail: function (xhr, textStatus, errorThrown) {
                     $('#modalContentComment').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
-                   
+
                 }
 
 
              });
 
     });
+  
       $(document).on('click', '.UploadFile', function (e) {
             e.preventDefault();
          var refid = $(this).attr('filerefid');
@@ -272,12 +295,11 @@
                 fail: function (xhr, textStatus, errorThrown) {
 
                  }
-                
+
              });
-           e.stopImmediatePropagation();
-    return false;
+         
      });
-     
+
     $(document).on("click",'.fileDelete',function (e) {
         e.preventDefault();
         var divId = $(this).attr('data-divid');
@@ -299,8 +321,7 @@
                 alertModal("Something Went Wrong. Try Again");
             },
         });
-          e.stopImmediatePropagation();
-    return false;
+        
     });
 
    function GetUploadFilesData(divId, refid) {
@@ -311,7 +332,7 @@
                 contentType: 'application/json; charset=utf-8',
                 url: '@Url.Action("GetUploadFiles", "Comment")',
                 data: JSON.stringify(sendData),
-                datatype: 'json',                
+                datatype: 'json',
                 success: function (data) {
                     if (data) {
                         var txt = "";
@@ -330,7 +351,7 @@
                     alertModal( "Something Went Wrong. Try Again");
                 },
             })
-          
+
     }
 
 

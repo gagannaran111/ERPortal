@@ -47,12 +47,12 @@ namespace ERPortal.Core.Models
         public DateTime DateOfDiscovery { get; set; }
 
         [Display(Name = "Date of Commencement of Commercial Production")]
-        [DataType(DataType.Date)]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? DateOfInitialCommercialProduction { get; set; }
 
         [Display(Name = "Date of most recent Commercial Production")]
-        [DataType(DataType.Date)]
-       
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+
         public DateTime? DateOfLastCommercialProduction { get; set; }
 
         [Display(Name = "Presently Under Production")]
@@ -99,6 +99,10 @@ namespace ERPortal.Core.Models
         public string DGHFileAttachment { get; set; }
         [Display(Name = "Pilot Mandatory")]
         public Boolean? PilotMandatory { get; set; }
+       
+        [Display(Name = "DGH Pilot Report Submission Date")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        public DateTime? DGHPilotReportSubmissionDate { get; set; }
         [Display(Name = "Pilot Report Approval Status")]
         public Boolean? PilotReportApprovalStatus { get; set; }
         [Display(Name = "DGH File Attachment For Pilot")]
@@ -108,7 +112,7 @@ namespace ERPortal.Core.Models
         #endregion
         // ER Committee Section
         // Add fields
-
+        [Display(Name = "Final Approval Status")]
         public Boolean? FinalApprovalStatus { get; set; }
     }
 

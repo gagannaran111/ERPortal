@@ -1,6 +1,6 @@
 ﻿@model ERPortal.Core.ViewModels.DGHERProposalViewModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "AppRecToDGH";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
@@ -145,9 +145,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            @if (Model.ERApplications.PresentlyUnderProduction == true)
+                                            @if (Model.ERApplications.PresentlyUnderProduction == false)
                                             {
-                                                <div class="form-group row" id="DateOfLastCommercialProductionDiv" style="display:none">
+                                                <div class="form-group row" id="DateOfLastCommercialProductionDiv">
                                                     @Html.LabelFor(model => model.ERApplications.DateOfLastCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                                     <div class="col-sm-6 d-flex align-items-center">
                                                         @Html.EditorFor(model => model.ERApplications.DateOfLastCommercialProduction, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
@@ -413,6 +413,13 @@
 
                                                     </div>
                                                 </div>
+                                                <div class="form-group row d-none dghreportforpilot" >
+                                                    @Html.LabelFor(model => model.ERApplications.DGHPilotReportSubmissionDate, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+                                                        @Html.EditorFor(model => model.ERApplications.DGHPilotReportSubmissionDate, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text" } })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.DGHPilotReportSubmissionDate, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="form-group row">
                                                 @Html.LabelFor(model => model.ERApplications.DGHApprovalStatus, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
@@ -439,6 +446,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row d-none dghreportforpilot">
+                                               
                                                 @Html.LabelFor(model => model.ERApplications.DGHFileAttachmentForPilot, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                                 <div class="col-sm-6 d-flex align-items-center">
                                                     @Html.TextBox("file", "", new { type = "file", id = "txtFilePilot" })
@@ -489,15 +497,18 @@
                                                         <th>Type Of Comment</th>
                                                         <th>Comment Text</th>
                                                         <th>Comment Created Date</th>
+                                                        <th>Comment View</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @foreach (var x in Model.comment)
                                                     {
                                                         <tr>
+
                                                             <td>@x.Type</td>
                                                             <td class="text-truncate" style="max-width: 200px;">@x.Text</td>
                                                             <td>@x.CreatedAt.DateTime</td>
+                                                            <td><button class="btn btn-sm btn-primary ViewComment" commenttext="@x.Text" commentdate="@x.CreatedAt.DateTime" commentType="@x.Type" type="button"><i class="fas fa-eye"></i> View</button></td>
                                                         </tr>
                                                     }
                                                 </tbody>
@@ -542,11 +553,9 @@
 
                 $('#ERProposalTab,#ERScreeningTab').find('input,select,radio').prop('disabled', true);
                // $('#btnSubmit').hide();
-
-                        $(".datetimetext").datetimepicker();
             }
             else {
-                $('#DGHform').find('input,select,radio,button').prop('disabled', true);
+                 $('#ERProposalTab,#ERScreeningTab,#DGHTab').find('input,select,radio,button').prop('disabled', true);
                  setTimeout(function () {
                     $('.fileDelete ').addClass('d-none')
                 }, 1000);
@@ -586,7 +595,7 @@
     $(document).on('change', 'input[name="ERApplications.PilotMandatory"]', function () {
 
         if ($(this).val() == 'True') {
-            alertModal("Last Date Of Submission of Pilot Report");
+          //  alertModal("Last Date Of Submission of Pilot Report");
               $('.dghreportforpilot').removeClass('d-none');
         }
         else {
@@ -597,12 +606,12 @@
     $(document).on('change', 'input[name="ERApplications.PilotReportApprovalStatus"]', function () {
 
         if ($(this).val() == 'True') {
-            alertModal("Submit to ERC");
-
+            //alertModal("Submit to ERC");
+              $('.dghreportforpilot').removeClass('d-none');
         }
         else {
-            alertModal("Reason(s) then Submit to ERC");
-
+          //  alertModal("Reason(s) then Submit to ERC");
+             $('.dghreportforpilot').addClass('d-none');
         }
     });
 

@@ -35,7 +35,7 @@ namespace ERPortal.WebUI.Controllers
         // GET: DGH
         public ActionResult Index()
         {
-            ViewBag.ApplicationData = ERApplicationContext.Collection();
+            ViewBag.ApplicationData = ERApplicationContext.Collection().ToList();
             return View();
         }
         public ActionResult AppRecToDgh(string appid)
