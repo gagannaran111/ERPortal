@@ -14,7 +14,7 @@
 {
     HttpMethod = "POST",
     OnSuccess = "OnSuccess(data)",
-    OnFailure = "OnFailure(data)",
+    OnFailure = "OnFailure(data)"
     //LoadingElementId = "progress"
 }, new { id = "DGHform" }))
 {
@@ -490,8 +490,8 @@
                                         </div>
                                     </div>
                                     <div class="card-body ml-lg-5">
-                                        <div class="col-sm-12 mt-3 d-flex">
-                                            <table class="table tblComment ">
+                                        <div class="col-sm-12 mt-3">
+                                            <table class="table table-striped table-bordered tblComment ">
                                                 <thead>
                                                     <tr>
                                                         <th>Type Of Comment</th>
@@ -532,7 +532,7 @@
 <script>
     function OnSuccess(response) {
         console.log(response);
-        alertModal(response.AppId);
+        alertModal(response);
           $('#DGHform').find('input,select,radio').prop('disabled', true);
         $('#btnSubmit').hide();
        // $('.statussuccess').empty().append(response).removeClass('d-none');
@@ -571,7 +571,6 @@
 
         }
 
-        $('.tblComment').DataTable();
           $('.btnCommentView').click(function () {
             $('a[href="#CommentTab"]').click();
         });

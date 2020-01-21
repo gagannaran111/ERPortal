@@ -96,7 +96,7 @@ namespace ERPortal.WebUI.Controllers
             ERApplicationContext.Update(erapp);
             ERApplicationContext.Commit();
 
-            return Json(erapp, JsonRequestBehavior.AllowGet);
+            return Json("Submit To ER Committee Successfully", JsonRequestBehavior.AllowGet);
         }
     }
 }

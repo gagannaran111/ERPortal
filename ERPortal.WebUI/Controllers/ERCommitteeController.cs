@@ -77,7 +77,7 @@ namespace ERPortal.WebUI.Controllers
                 erapp.FinalApprovalStatus = eRCViewModel.ERApplications.FinalApprovalStatus;
                 ERApplicationContext.Update(erapp);
                 ERApplicationContext.Commit();
-                return Json(erapp, JsonRequestBehavior.AllowGet);
+                return Json("Submit To DGH Successfully", JsonRequestBehavior.AllowGet);
             }
             else {
                 return Json("ERROR", JsonRequestBehavior.AllowGet);
