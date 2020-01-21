@@ -4,7 +4,7 @@
 }
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card shadow-lg">
                 <div class="card-header bg-gradient-info text-light">
                     <h5><i class="fas fa-table"></i> ERC ER Proposal</h5>
@@ -18,9 +18,10 @@
                                 <th>Created Date</th>
                                 <th>Organisation</th>
                                 <th>DGH Approved Status</th>
+                                <th>ERC Approved Status</th>
 
                                 @*<th>Delete</th>
-        <th>Edit</th>*@
+                                    <th>Edit</th>*@
                             </tr>
                         </thead>
                         <tbody>
@@ -28,26 +29,38 @@
                             @foreach (var x in ViewBag.ApplicationData)
                             {
                                 string appid = !String.IsNullOrEmpty(x.AppId) ? x.AppId : "Not Found";
-                            <tr>
-                                <td>@Html.ActionLink(appid, "AppRecDGHToERC", "ERCommittee", new { appid = appid }, null) </td>
-                                <td>@x.CreatedAt.DateTime</td>
-                                <td>@x.Organisation.Name</td>
-                                @if (x.DGHApprovalStatus == true)
-                                {
-                                    <td>Approved</td>
-                                }
-                                else
-                                {
-                                    <td>Not Apporved</td>
-                                }
+                                <tr>
+                                    <td>@Html.ActionLink(appid, "AppRecDGHToERC", "ERCommittee", new { appid = appid }, null) </td>
+                                    <td>@x.CreatedAt.DateTime</td>
+                                    <td>@x.Organisation.Name</td>
+                                    @if (x.DGHApprovalStatus == true)
+                                    {
+                                        <td>Approved</td>
+                                    }
+                                    else
+                                    {
+                                        <td>Not Apporved</td>
+                                    }
+                                    @if (x.FinalApprovalStatus == true)
+                                    {
+                                        <td>Approved</td>
+                                    }
+                                    else if (x.FinalApprovalStatus == false)
+                                    {
+                                        <td>Not Apporved</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
 
-                                @*<td>
-            <button class="btn btn-danger userdelete" data-UserId="@x.AppId"><i class="fas fa-trash"></i></button>
-        </td>
-        <td>
-            <button class="btn btn-primary" data-UserId="@x.AppId"><i class="fas fa-edit"></i></button>
-        </td>*@
-                            </tr>
+                                    @*<td>
+                                            <button class="btn btn-danger userdelete" data-UserId="@x.AppId"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary" data-UserId="@x.AppId"><i class="fas fa-edit"></i></button>
+                                        </td>*@
+                                </tr>
 
                             }
 

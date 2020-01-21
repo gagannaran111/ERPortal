@@ -49,8 +49,8 @@ namespace ERPortal.WebUI.Controllers
 
                     ViewBag.ERFiles = UploadFileContext.Collection().Where(y => y.FIleRef == erapp.ERScreeningDetail.ReportDocumentPath).ToList();
                 }
-                viewModel.FieldTypes = FieldTypeContext.Collection();
-                viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection();
+                viewModel.FieldTypes = FieldTypeContext.Collection().ToList();
+                viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection().ToList();
                 viewModel.comment = CommentContext.Collection().Where(x => x.ERApplicationId == erapp.Id);
 
                 viewModel.ERApplications.DGHFileAttachment = erapp.DGHFileAttachment == null ? Guid.NewGuid().ToString() : erapp.DGHFileAttachment;

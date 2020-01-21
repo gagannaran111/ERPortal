@@ -51,9 +51,9 @@ namespace ERPortal.WebUI.Controllers
             {
                 viewModel.ERApplications = new ERApplication();
             }
-            viewModel.FieldTypes = FieldTypeContext.Collection();
-            viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection();
-            viewModel.organisationTypes = OrganisationContext.Collection();
+            viewModel.FieldTypes = FieldTypeContext.Collection().ToList();
+            viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection().ToList();
+            viewModel.organisationTypes = OrganisationContext.Collection().ToList();
             //viewModel.UploadFiles = UploadFileContext.Collection();
 
             return View(viewModel);
@@ -133,7 +133,7 @@ namespace ERPortal.WebUI.Controllers
                 case "ERScreeningDetail":
                     ERScreeningDetailViewModel viewModel = new ERScreeningDetailViewModel();
                     viewModel.eRScreeningDetail = new ERScreeningDetail();
-                    viewModel.eRScreeningInstitutes = ERScreeningInstituteContext.Collection();
+                    viewModel.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
                     ViewBag.RefId = Guid.NewGuid().ToString();
                     _genericObject = viewModel;
                     break;
@@ -192,7 +192,7 @@ namespace ERPortal.WebUI.Controllers
             else
             {
                 ERScreeningDetailViewModel viewModel = new ERScreeningDetailViewModel();
-                viewModel.eRScreeningInstitutes = ERScreeningInstituteContext.Collection();
+                viewModel.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
                 viewModel.eRScreeningDetail = (ERScreeningDetail)_genericObject;
                
                 return View(targetPage, viewModel);

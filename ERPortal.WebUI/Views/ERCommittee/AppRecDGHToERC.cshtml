@@ -486,12 +486,15 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
+                                            @if (Model.ERApplications.FinalApprovalStatus == null)
+                                            {
+                                            <div class="form-group row approvedstatus">
                                                 <div class="col-sm-6 offset-sm-5 d-flex">
                                                     <button type="button" class="btn btn-outline-secondary btnComment"><i class="fas fa-comment"></i> Click To Add Comment</button>
+                                                    <button type="button" class="btn btn-outline-info btnCommentView ml-2"><i class="fas fa-eye"></i> Click Here To View Comments</button>
                                                 </div>
                                             </div>
-
+                                            }
                                             <div class="form-group row justify-content-center">
 
                                                 <button type="submit" class="btn btn-success" id="btnSubmit"><i class="fas fa-save"></i> Submit</button>
@@ -515,7 +518,7 @@
                                 <div class="card border-success mb-3">
                                     <div class="card-header bg-gradient-success text-white">
                                         <div class="row">
-                                            <div class="col-lg-6"><h4><i class="fas fa-edit"></i> DGH COMMENTS</h4></div>
+                                            <div class="col-lg-6"><h4><i class="fas fa-edit"></i> COMMENTS</h4></div>
                                             <div class="col-lg-6 "><a href="#" class="btn btn-outline-light float-right GeneratePDF" >Print</a></div>
                                         </div>
                                     </div>
@@ -524,7 +527,6 @@
                                             <table class="table tblComment ">
                                                 <thead>
                                                     <tr>
-                                                       
                                                         <th>Type Of Comment</th>
                                                         <th>Comment Text</th>
                                                         <th>Comment Created Date</th>
@@ -535,8 +537,7 @@
                                                     @foreach (var x in Model.comment)
                                                     {
                                                        
-                                                    <tr>
-                                                        
+                                                    <tr>                                                       
                                                         <td>@x.Type</td>
                                                         <td class="text-truncate" style="max-width: 200px;">@x.Text</td>
                                                         <td>@x.CreatedAt.DateTime</td>
@@ -566,7 +567,7 @@
     function OnSuccess(response) {
         console.log(response);
         alertModal(response.AppId);
-          $('#ERCform').find('input,select,radio').prop('disabled', true);
+        $('#ERProposalTab,#ERScreeningTab,#ERCTab,#DGHTab').find('input,select,radio,button').prop('disabled', true);
         $('#btnSubmit').hide();
        // $('.statussuccess').empty().append(response).removeClass('d-none');
     }
@@ -574,7 +575,10 @@
         alertModal("Try Again Error Occured.");
     }
     $(document).ready(function () {
-
+        $('.btnCommentView').click(function () {
+            $('a[href="#CommentTab"]').click();
+        });
+     $('.tblComment').DataTable();
         if ("@Model.ERApplications.AppId" != null) {
             if ($('#ERApplications_EligibleForFiscalIncentive:checked').val() == 'True') {
                 $('.fiscalIncentive').removeClass('d-none');

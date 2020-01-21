@@ -5,7 +5,7 @@
 }
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-12">
             <div class="card shadow-lg">
                 <div class="card-header bg-gradient-info text-light">
                     <h5><i class="fas fa-table"></i> DGH ER Proposal</h5>
@@ -19,25 +19,38 @@
                                 <th>Created Date</th>
                                 <th>Organisation</th>
                                 @*<th>Delete</th>
-        <th>Edit</th>*@
+                                    <th>Edit</th>*@
+                                <th>DGH Approved Status</th>
                             </tr>
                         </thead>
                         <tbody>
 
                             @foreach (var x in ViewBag.ApplicationData)
                             {
-                               string appid = !String.IsNullOrEmpty(x.AppId)?x.AppId:"Not Found";
-                            <tr>
-                                <td>@Html.ActionLink(appid, "AppRecToDgh", "DGH", new { appid = appid }, null) </td>                                   @*<td>@x.Email</td>*@
-                                <td>@x.CreatedAt.DateTime</td>
-                                <td>@x.Organisation.Name</td>
-                                @*<td>
-            <button class="btn btn-danger userdelete" data-UserId="@x.AppId"><i class="fas fa-trash"></i></button>
-        </td>
-        <td>
-            <button class="btn btn-primary" data-UserId="@x.AppId"><i class="fas fa-edit"></i></button>
-        </td>*@
-                            </tr>
+                                string appid = !String.IsNullOrEmpty(x.AppId) ? x.AppId : "Not Found";
+                                <tr>
+                                    <td>@Html.ActionLink(appid, "AppRecToDgh", "DGH", new { appid = appid }, null) </td>                                   @*<td>@x.Email</td>*@
+                                    <td>@x.CreatedAt.DateTime</td>
+                                    <td>@x.Organisation.Name</td>
+                                    @if (x.DGHApprovalStatus == true)
+                                    {
+                                        <td>Approved</td>
+                                    }
+                                    else if (x.DGHApprovalStatus == false)
+                                    {
+                                        <td>Not Apporved</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    @*<td>
+                                            <button class="btn btn-danger userdelete" data-UserId="@x.AppId"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary" data-UserId="@x.AppId"><i class="fas fa-edit"></i></button>
+                                        </td>*@
+                                </tr>
 
                             }
 
@@ -53,7 +66,7 @@
     </div>
 </div>
 <script>
- $(document).ready(function () {
+    $(document).ready(function () {
         $('#usertable').DataTable(
             {
                 scrollY: '50vh',
@@ -64,11 +77,11 @@
                 //processing: true,
                 // deferLoading: 5
             });
-     $('.userdelete').click(function () {
+        $('.userdelete').click(function () {
 
 
 
-     });
-     $('#dghform').html();
- });
-    </script>
+        });
+        $('#dghform').html();
+    });
+</script>
