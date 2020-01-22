@@ -40,11 +40,11 @@
     <link href="~/Content/css/signin.css" rel="stylesheet">
 </head>
 <body class="text-center">
-    @Html.BeginForm("Login", "Account", new { returnUrl = Url.Action("Index", "Operator") }, FormMethod.Post, new
+    @using (Html.BeginForm("Login", "Account", new { returnUrl = Url.Action("Index", "Operator") }, FormMethod.Post, new
 {
     @class = "card form-signin",
     style = "background-color:rgba(245, 245, 245, 0.7);"
-})
+}))
     {
     @Html.AntiForgeryToken()
     <img class="mb-4" src="~/Content/img/Icon_Design_trans.png" alt="" width="300">

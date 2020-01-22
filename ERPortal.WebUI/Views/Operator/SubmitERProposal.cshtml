@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="d-flex justify-content-center">
+<div class="justify-content-center">
     @using (Ajax.BeginForm("SubmitERProposal", "Operator", new AjaxOptions
     {
         HttpMethod = "POST",
@@ -21,7 +21,7 @@
         <div class="alert alert-success alert-dismissible showmsg d-none statussuccess">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
         </div>
-        <div class="card border-success mb-3">
+        <div class="card border-success shadow-lg mb-3">
             <div class="card-header bg-gradient-success text-white">
                 <div class="row">
                     <div class="col-lg-6"><h4>Submit ER Proposal</h4></div>

@@ -17,9 +17,9 @@
                         OnSuccess = "OnSuccess(data)",
                         OnFailure = "OnFailure(data)",
                         //LoadingElementId = "progress"
-                    }))
+                    },new { id="RegistrationForm" }))
                     {
-                        @Html.AntiForgeryToken()
+                       // @Html.AntiForgeryToken()
 
                         <div class="form-group row">
                             @Html.LabelFor(m => m.FirstName, new { @class = "col-md-4 control-label" })
@@ -42,7 +42,7 @@
                         <div class="form-group row">
                             @Html.LabelFor(m => m.Password, new { @class = "col-md-4 control-label" })
                             <div class="col-md-8">
-                                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control",autocomplete="new-password" })
                             </div>
                         </div>
                         <div class="form-group row">
@@ -123,8 +123,40 @@
     </div>
 </div>
 
-<script>
+<script type="text/javascript">  
+   
+    function OnSuccess(data) {
+        if (data.length > 0) {
+            $('#usertable').DataTable().destroy();
+            var td = "";
+            $.each(data, function (index, element) {
+                td += "<tr><td>" + data[index].FirstName + "</td><td>" + data[index].Username + "</td><td>" + data[index].Role + "</td> <td>"
+
+                    + "<button class='btn btn-danger' data-UserId=" + data[index].UserId + "><i class='fas fa-trash'></i></button></td><td><button class='btn btn-primary' data-UserId=" + data[index].UserId + "><i class='fas fa-edit'></i></button></td></tr>"
+
+            });
+            console.log(data);
+            $('#usertable tbody').html(td);
+            $('#usertable').DataTable(
+                {
+                    scrollY: '50vh',
+                    scrollCollapse: true,
+                    paging: true,
+                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
+
+                });
+            $('#RegistrationForm').find('input,select').val('');
+        }
+        else {
+            alertModal('Something Went Wrong!');
+        }
+    }
+
+    function OnFailure(data) {
+        alertModal("Try Again Error Occured. "+data);
+    }
     $(document).ready(function () {
+           
         $('#usertable').DataTable(
             {
                 scrollY: '50vh',
@@ -135,36 +167,6 @@
                 //processing: true,
                 // deferLoading: 5
             });
+            
     });
-    function OnSuccess(response) {
-        if (response.length > 0) {
-            $('#usertable').DataTable().destroy();
-            var td = "";
-            $.each(response, function (index, element) {
-                td += "<tr><td>" + response[index].Username + "</td><td>" + response[index].Role + "</td> <td>"
-
-                    + "<button class='btn btn-danger' data-UserId=" + response[index].UserId + "><i class='fas fa-trash'></i></button></td><td><button class='btn btn-primary' data-UserId=" + response[index].UserId + "><i class='fas fa-edit'></i></button></td></tr>"
-
-            });
-            console.log(response);
-            $('#usertable tbody').html(td);
-            $('#usertable').DataTable(
-                {
-                    scrollY: '50vh',
-                    scrollCollapse: true,
-                    paging: true,
-                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
-
-                });
-        }
-        else {
-            alert('Something Went Wrong!');
-        }
-    }
-
-    function OnFailure() {
-        alertModal("Try Again Error Occured.");
-    }
-
-
 </script>

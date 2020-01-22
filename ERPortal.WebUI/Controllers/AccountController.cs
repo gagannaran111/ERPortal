@@ -13,6 +13,7 @@ using System.Data.Entity;
 using ERPortal.Core.Models;
 using ERPortal.Core.Contracts;
 using Unity;
+using System.Collections.Generic;
 
 
 namespace ERPortal.WebUI.Controllers
@@ -162,25 +163,68 @@ namespace ERPortal.WebUI.Controllers
         {
             ViewBag.Role = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
                                     .ToList(), "Name", "Name");
+            //IEnumerable<UserAccount> userlist = userAccountContext.Collection().ToList();
 
-            ViewBag.UserList = (from user in context.Users
-                                select new
-                                {
-                                    UserId = user.Id,
-                                    Username = user.UserName,
-                                    Email = user.Email,
-                                    RoleNames = (from userRole in user.Roles
-                                                 join role in context.Roles on userRole.RoleId
-                                                 equals role.Id
-                                                 select role.Name).ToList()
-                                }).ToList().Select(p => new Users_in_Role_ViewModel()
+            //IEnumerable<Users_in_Role_ViewModel> users = (from user1 in context.Users
+            //             select new
+            //             {
+            //                 UserId = user1.Id,
+            //                 Username = user1.UserName,
+            //                 Email = user1.Email,
+            //                 RoleNames = (from userRole in user1.Roles
+            //                              join role in context.Roles on userRole.RoleId
+            //                              equals role.Id
+            //                              select role.Name).ToList()
+            //             }).ToList().Select(p => new Users_in_Role_ViewModel()
+            //             {
+            //                 UserId = p.UserId,
+            //                 Username = p.Username,
+            //                 Email = p.Email,
+            //                 Role = string.Join(",", p.RoleNames)
+            //             }).ToList();
 
-                                {
-                                    UserId = p.UserId,
-                                    Username = p.Username,
-                                    Email = p.Email,
-                                    Role = string.Join(",", p.RoleNames)
-                                });
+            //var Temp = userAccountContext.Collection().AsEnumerable().Select(i => new
+            //{
+            //    UserId =i.Id,
+            //    FirstName = i.FirstName,
+            //    LastName = i.LastName,
+            //    OrganisationId = i.OrganisationId
+            //}).ToList();
+
+            //IEnumerable<Users_in_Role_ViewModel> TotalScore = Temp.Join(users, x => x.UserId,y=>y.,
+            //       (x, y) => new
+            //       {
+            //           Sender = x.Sender,
+            //           ExamResult = x.ExamResult,
+            //           StudentName = y.StudentName
+            //       }).GroupBy(x => new { x.Sender, x.StudentName })
+            //               .Select(s => new SmsResult()
+            //               {
+            //                   NoOfExam = s.Count(p => p.Sender != null),
+            //                   ExamResult = s.Sum(b => Convert.ToInt32(b.ExamResult)),
+            //                   Sender = s.Key.Sender,
+            //                   StudentName = s.Key.StudentName
+            //               }).ToList();
+
+            ViewBag.UserList = (from user1 in context.Users
+                            select new
+                            {
+                                UserId = user1.Id,
+                                Username = user1.UserName,
+                                Email = user1.Email,
+                                RoleNames = (from userRole in user1.Roles
+                                             join role in context.Roles on userRole.RoleId
+                                             equals role.Id
+                                             select role.Name).ToList()
+                            }).ToList().Select(p => new Users_in_Role_ViewModel()
+                            {
+                                UserId = p.UserId,
+                                Username = p.Username,
+                                Email = p.Email,
+                                Role = string.Join(",", p.RoleNames)
+                            });
+
+
 
 
             RegisterViewModel registerViewModel = new RegisterViewModel();
@@ -192,7 +236,7 @@ namespace ERPortal.WebUI.Controllers
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -209,7 +253,6 @@ namespace ERPortal.WebUI.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
                     await this.UserManager.AddToRoleAsync(user.Id, model.UserRoles);
-                   
                     var response = (from user1 in context.Users
                                     select new
                                     {
@@ -221,7 +264,6 @@ namespace ERPortal.WebUI.Controllers
                                                      equals role.Id
                                                      select role.Name).ToList()
                                     }).ToList().Select(p => new Users_in_Role_ViewModel()
-
                                     {
                                         UserId = p.UserId,
                                         Username = p.Username,
@@ -241,11 +283,12 @@ namespace ERPortal.WebUI.Controllers
 
                     return Json(response, JsonRequestBehavior.AllowGet);
                 }
-                ViewBag.Role = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
-                                   .ToList(), "Name", "Name");
-                AddErrors(result);
+                //ViewBag.Role = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
+                //              .ToList(), "Name", "Name");
+                //AddErrors(result);
             }
-            ViewBag.Organisations = OrganisationContext.Collection().ToList();
+
+            //ViewBag.Organisations = OrganisationContext.Collection().ToList();
             // If we got this far, something failed, redisplay form
             return View(model);
         }

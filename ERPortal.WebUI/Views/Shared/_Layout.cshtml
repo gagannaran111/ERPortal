@@ -65,55 +65,55 @@
 </head>
 <body class="bg-light">
     <nav class="shadow navbar navbar-expand-md navbar-dark fixed-top bg-custom-1">
-            <a class="navbar-brand" href="#"><img src="~/Content/img/Icon_Design_trans_white.png" class="d-inline-block align-top" alt="" style="max-height:35px;"></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <a class="navbar-brand" href="#"><img src="~/Content/img/Icon_Design_trans_white.png" class="d-inline-block align-top" alt="" style="max-height:35px;"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
-                    </li>
-                    <li class="nav-item">
-                        @Html.ActionLink("Operator", "Index", "Operator", null, new { @class = "nav-link" })
-                    </li>
-                    <li class="nav-item">
-                        @Html.ActionLink("DGH", "Index", "DGH", null, new { @class = "nav-link" })
-                    </li>
-                    <li class="nav-item">
-                        @Html.ActionLink("ER Committee", "Index", "ERCommittee", null, new { @class = "nav-link" })
-                    </li>
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
+                </li>
+                <li class="nav-item">
+                    @Html.ActionLink("Operator", "Index", "Operator", null, new { @class = "nav-link" })
+                </li>
+                <li class="nav-item">
+                    @Html.ActionLink("DGH", "Index", "DGH", null, new { @class = "nav-link" })
+                </li>
+                <li class="nav-item">
+                    @Html.ActionLink("ER Committee", "Index", "ERCommittee", null, new { @class = "nav-link" })
+                </li>
 
-                    <li class="nav-item">
-                        @Html.ActionLink("Account", "Register", "Account", null, new { @class = "nav-link" })
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-                            <input type="submit" class="btn btn-info" id="LogOff" value="LogOff" />
-                        }
+                <li class="nav-item">
+                    @Html.ActionLink("Account", "Register", "Account", null, new { @class = "nav-link" })
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="submit" class="btn btn-info" id="LogOff" value="LogOff" />
+                    }
 
-                    </li>
-                </ul>
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                </form>
-            </div>
-        </nav>
- 
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+
     <div class="page-wrapper chiller-theme toggled">
-        <a id="show-sidebar" class="btn btn-sm  " style="background-color:#212529;"  href="#">
+        <a id="show-sidebar" class="btn btn-sm  " style="background-color:#212529;" href="#">
             <i class="fas fa-bars text-light"></i>
         </a>
         @Html.Partial("SideNavBar")
@@ -187,7 +187,33 @@
 
 </body>
 </html>
-<script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".datetimetext").datetimepicker({
+             format:'Y/m/d',
+              timepicker:false
+        });
+        $(".sidebar-dropdown > a").click(function () {
+            $(".sidebar-submenu").slideUp(200);
+            if ($(this).parent().hasClass("active")) {
+                $(".sidebar-dropdown").removeClass("active");
+                $(this).parent().removeClass("active");
+            }
+            else {
+                $(".sidebar-dropdown").removeClass("active");
+                $(this).next(".sidebar-submenu").slideDown(200);
+                $(this).parent().addClass("active");
+            }
+        });
+        $("#close-sidebar").click(function () {
+            $(".page-wrapper").removeClass("toggled");
+        });
+        $("#show-sidebar").click(function () {
+            $(".page-wrapper").addClass("toggled");
+        });
+    });
+
     $(document).on('click', '.ViewComment', function (e) {
         e.preventDefault();
         var comText = $(this).attr('commenttext');
@@ -197,11 +223,11 @@
         $('#modalContentView').html('<div class=row><div class="col-lg-6 text-success font-weight-bold">Type : ' + comType + ' </div><div class="col-lg-6 text-success font-weight-bold">Date : ' + comdate + ' </div><div class="col-sm-12 mt-3 border-top "><h6 class="text-info">Comment :</h6> <p class="mt-3">' + comText + '</p></div></div>');
         $('#btnCommentViewModal').click();
     });
-      $(document).on("click", ".GeneratePDF", function (e) {
+
+    $(document).on("click", ".GeneratePDF", function (e) {
         e.preventDefault();
         var cssfile = "";
-          cssfile = "/Content/css/PrintingData.css";
-
+        cssfile = "/Content/css/PrintingData.css";
         $(".container-fluid").printThis({
             importCSS: true,
             importStyle: true,
@@ -212,46 +238,7 @@
         });
 
       });
-     function alertModal(msg) {
-         $('#btnalertmodal').click();
-         $('#modalContentAlert').html("<strong>"+msg+"</strong>");
-    }
-    $(document).ready(function () {
 
-        $(".datetimetext").datetimepicker();
-        
-    $(".sidebar-dropdown > a").click(function() {
-  $(".sidebar-submenu").slideUp(200);
-  if (
-    $(this)
-      .parent()
-      .hasClass("active")
-  ) {
-    $(".sidebar-dropdown").removeClass("active");
-    $(this)
-      .parent()
-      .removeClass("active");
-  } else {
-    $(".sidebar-dropdown").removeClass("active");
-    $(this)
-      .next(".sidebar-submenu")
-      .slideDown(200);
-    $(this)
-      .parent()
-      .addClass("active");
-  }
-});
-
-$("#close-sidebar").click(function() {
-  $(".page-wrapper").removeClass("toggled");
-});
-$("#show-sidebar").click(function() {
-  $(".page-wrapper").addClass("toggled");
-});
-
-
-
-    });
     $('#btnCommentModal').click(function () {
 
         var y = $(this).attr('appid');
@@ -272,6 +259,7 @@ $("#show-sidebar").click(function() {
             });
 
     });
+
     $('#btnCommentSave').click(function () {
          var formUrl = $('#myCommentForm').attr('action');
             $.ajax({
@@ -302,7 +290,7 @@ $("#show-sidebar").click(function() {
 
     });
 
-      $(document).on('click', '.UploadFile', function (e) {
+    $(document).on('click', '.UploadFile', function (e) {
             e.preventDefault();
          var refid = $(this).attr('filerefid');
          var divid = $(this).attr('divid');
@@ -335,9 +323,9 @@ $("#show-sidebar").click(function() {
 
              });
 
-     });
+      });
 
-    $(document).on("click",'.fileDelete',function (e) {
+    $(document).on("click", '.fileDelete', function (e) {
         e.preventDefault();
         var divId = $(this).attr('data-divid');
         var fileid = $(this).attr('data-fileid');
@@ -361,7 +349,13 @@ $("#show-sidebar").click(function() {
 
     });
 
-   function GetUploadFilesData(divId, refid) {
+
+     function alertModal(msg) {
+         $('#btnalertmodal').click();
+         $('#modalContentAlert').html("<strong>" + msg + "</strong>");
+    }
+
+    function GetUploadFilesData(divId, refid) {
         $(divId).html("No files attached");
             var sendData = { RefId:refid };
             $.ajax({
@@ -388,10 +382,9 @@ $("#show-sidebar").click(function() {
                     alertModal( "Something Went Wrong. Try Again");
                 },
             })
-
     }
 
-   
+
 
 
 

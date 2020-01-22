@@ -93,10 +93,18 @@ namespace ERPortal.WebUI.Controllers
             erapp.EligibleForFiscalIncentive = dGHERProposalViewModel.ERApplications.EligibleForFiscalIncentive;
             erapp.DGHApprovalStatus = dGHERProposalViewModel.ERApplications.DGHApprovalStatus;
             erapp.DGHApprovalDate = DateTime.Now; //dGHERProposalViewModel.ERApplications.DGHApprovalDate;
-            ERApplicationContext.Update(erapp);
-            ERApplicationContext.Commit();
+            if (erapp.DGHApprovalStatus != null)
+            {
+                ERApplicationContext.Update(erapp);
+                ERApplicationContext.Commit();
 
-            return Json("Submit To ER Committee Successfully", JsonRequestBehavior.AllowGet);
+                return Json("Submit To ER Committee Successfully", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json("Not Submitted. DGH Approval Mandatory", JsonRequestBehavior.AllowGet);
+            }
         }
+        
     }
 }

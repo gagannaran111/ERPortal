@@ -302,19 +302,18 @@
                                                         <td colspan="2">
                                                             <div id="DetailViewFile">
                                                                 <div class="pl-2 border-primary" style="border:dashed">
-                                                                    @if (ViewBag.ERFiles != null)
+                                                                    @if (ViewBag.ERFiles.Count>0)
                                                                     {
                                                                         foreach (var x in ViewBag.ERFiles)
                                                                         {
                                                                             <div class='badge badge-warning mr-2 mb-2'>
                                                                                 <a class='text-dark' href="@Url.Content("~/Content/UploadedFiles/" + x.FileName)" target='_blank'>@x.FileName</a>
                                                                             </div>
-
                                                                         }
                                                                     }
                                                                     else
                                                                     {
-                                                                        <p class="text-info font-weight-bold">No File Found</p>
+                                                                        <h6 class="text-danger font-weight-bold">No File Found</h6>
                                                                     }
                                                                 </div>
                                                             </div>
@@ -326,8 +325,6 @@
                                         </fieldset>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
@@ -533,8 +530,13 @@
     function OnSuccess(response) {
         console.log(response);
         alertModal(response);
-          $('#DGHform').find('input,select,radio').prop('disabled', true);
-        $('#btnSubmit').hide();
+        if ("Not Submitted. DGH Approval Mandatory" == response) {
+            return false;
+        }
+        else {
+            $('#DGHform').find('input,select,radio').prop('disabled', true);
+            $('#btnSubmit').hide();
+        }
        // $('.statussuccess').empty().append(response).removeClass('d-none');
     }
     function OnFailure() {
