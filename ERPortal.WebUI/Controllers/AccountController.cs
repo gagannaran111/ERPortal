@@ -99,7 +99,6 @@ namespace ERPortal.WebUI.Controllers
 
             switch (result)
             {
-
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
@@ -163,69 +162,45 @@ namespace ERPortal.WebUI.Controllers
         {
             ViewBag.Role = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
                                     .ToList(), "Name", "Name");
-            //IEnumerable<UserAccount> userlist = userAccountContext.Collection().ToList();
 
-            //IEnumerable<Users_in_Role_ViewModel> users = (from user1 in context.Users
-            //             select new
-            //             {
-            //                 UserId = user1.Id,
-            //                 Username = user1.UserName,
-            //                 Email = user1.Email,
-            //                 RoleNames = (from userRole in user1.Roles
-            //                              join role in context.Roles on userRole.RoleId
-            //                              equals role.Id
-            //                              select role.Name).ToList()
-            //             }).ToList().Select(p => new Users_in_Role_ViewModel()
-            //             {
-            //                 UserId = p.UserId,
-            //                 Username = p.Username,
-            //                 Email = p.Email,
-            //                 Role = string.Join(",", p.RoleNames)
-            //             }).ToList();
 
-            //var Temp = userAccountContext.Collection().AsEnumerable().Select(i => new
-            //{
-            //    UserId =i.Id,
-            //    FirstName = i.FirstName,
-            //    LastName = i.LastName,
-            //    OrganisationId = i.OrganisationId
-            //}).ToList();
 
-            //IEnumerable<Users_in_Role_ViewModel> TotalScore = Temp.Join(users, x => x.UserId,y=>y.,
-            //       (x, y) => new
-            //       {
-            //           Sender = x.Sender,
-            //           ExamResult = x.ExamResult,
-            //           StudentName = y.StudentName
-            //       }).GroupBy(x => new { x.Sender, x.StudentName })
-            //               .Select(s => new SmsResult()
-            //               {
-            //                   NoOfExam = s.Count(p => p.Sender != null),
-            //                   ExamResult = s.Sum(b => Convert.ToInt32(b.ExamResult)),
-            //                   Sender = s.Key.Sender,
-            //                   StudentName = s.Key.StudentName
-            //               }).ToList();
+            //IEnumerable<Users_in_Role_ViewModel> userwithrole = (from user1 in context.Users
+            //                    select new
+            //                    {
+            //                        UserId = user1.Id,
+            //                        Username = user1.UserName,
+            //                        Email = user1.Email,
+            //                        RoleNames = (from userRole in user1.Roles
+            //                                     join role in context.Roles on userRole.RoleId
+            //                                     equals role.Id
+            //                                     select role.Name).ToList()
 
+            //                    }).ToList().Select(p => new Users_in_Role_ViewModel()
+            //                    {
+            //                        UserId = p.UserId,
+            //                        Username = p.Username,
+            //                        Email = p.Email,
+            //                        Role = string.Join(",", p.RoleNames)
+            //                    });
+            //List<UserAccount> usersdata = userAccountContext.Collection().ToList();
             ViewBag.UserList = (from user1 in context.Users
-                            select new
-                            {
-                                UserId = user1.Id,
-                                Username = user1.UserName,
-                                Email = user1.Email,
-                                RoleNames = (from userRole in user1.Roles
-                                             join role in context.Roles on userRole.RoleId
-                                             equals role.Id
-                                             select role.Name).ToList()
-                            }).ToList().Select(p => new Users_in_Role_ViewModel()
-                            {
-                                UserId = p.UserId,
-                                Username = p.Username,
-                                Email = p.Email,
-                                Role = string.Join(",", p.RoleNames)
-                            });
-
-
-
+                                select new
+                                {
+                                    UserId = user1.Id,
+                                    Username = user1.UserName,
+                                    Email = user1.Email,
+                                    RoleNames = (from userRole in user1.Roles
+                                                 join role in context.Roles on userRole.RoleId
+                                                 equals role.Id
+                                                 select role.Name).ToList()
+                                }).ToList().Select(p => new Users_in_Role_ViewModel()
+                                {
+                                    UserId = p.UserId,
+                                    Username = p.Username,
+                                    Email = p.Email,
+                                    Role = string.Join(",", p.RoleNames)
+                                });
 
             RegisterViewModel registerViewModel = new RegisterViewModel();
             registerViewModel.Organisations = OrganisationContext.Collection().ToList(); ;
@@ -242,6 +217,15 @@ namespace ERPortal.WebUI.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                UserAccount userAccount = new UserAccount()
+                {
+                    Id = user.Id,
+                    EmailID = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    OrganisationId = model.OrganisationId,
+                    UserRole = model.UserRoles
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -270,13 +254,6 @@ namespace ERPortal.WebUI.Controllers
                                         Email = p.Email,
                                         Role = string.Join(",", p.RoleNames)
                                     });
-                    UserAccount userAccount = new UserAccount();
-
-                    userAccount.Id = user.Id;
-                    userAccount.EmailID = model.Email;
-                    userAccount.FirstName = model.FirstName;
-                    userAccount.LastName = model.LastName;
-                    userAccount.OrganisationId = model.OrganisationId;
 
                     userAccountContext.Insert(userAccount);
                     userAccountContext.Commit();

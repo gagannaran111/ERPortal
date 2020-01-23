@@ -16,20 +16,20 @@ namespace ERPortal.Core.Models
         [Required(ErrorMessage = "Valid Operator Name is required")]
         public string OrganisationId { get; set; }
         [Display(Name = "Operator Name")]
-      
+
         public virtual Organisation Organisation { get; set; }
         [Required(ErrorMessage = "Choose Field Type")]
-      
+
         public string FieldTypeId { get; set; }
         [Display(Name = "Field Type")]
         public virtual FieldType FieldType { get; set; }
 
         [Display(Name = "Field Name")]
-        [Required(ErrorMessage = "Valid Field Type is required")]       
-        [CustomValidationClass("/.,!@#$%",ErrorMessage ="Invalid Data")]
+        [Required(ErrorMessage = "Valid Field Type is required")]
+        [CustomValidationClass("/.,!@#$%", ErrorMessage = "Invalid Data")]
         public string FieldName { get; set; }
 
-        [Display(Name ="Type of Hydrocarbon")]
+        [Display(Name = "Type of Hydrocarbon")]
         [Required(ErrorMessage = "Valid Hydrocarbon Type is required")]
         public HydrocarbonType HydrocarbonType { get; set; }
 
@@ -40,10 +40,10 @@ namespace ERPortal.Core.Models
         [Display(Name = "Incentive Sought for Implementation")]
         [Required(ErrorMessage = "Valid Implementaion Type is required")]
         public ImplementaionType ImplementaionType { get; set; }
-      
+
         [Display(Name = "Date of Discovery")]
-        [Required(ErrorMessage = "Valid Date Of Discovery is required")]      
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}",ApplyFormatInEditMode = true)]
+        [Required(ErrorMessage = "Valid Date Of Discovery is required")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime DateOfDiscovery { get; set; }
 
         [Display(Name = "Date of Commencement of Commercial Production")]
@@ -99,7 +99,7 @@ namespace ERPortal.Core.Models
         public string DGHFileAttachment { get; set; }
         [Display(Name = "Pilot Mandatory")]
         public Boolean? PilotMandatory { get; set; }
-       
+
         [Display(Name = "DGH Pilot Report Submission Date")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? DGHPilotReportSubmissionDate { get; set; }
@@ -137,7 +137,9 @@ namespace ERPortal.Core.Models
         [Display(Name = "EGR Method")]
         EGRMethod,
         [Display(Name = "UHC Extraction")]
-        UHCMethod
+        UHCMethod,
+        [Display(Name = "IR Recovery")]
+        IRRecoveryMethod
     }
 
 }

@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 
 namespace ERPortal.DataAccess.SQL
 {
-    public class DataContext: DbContext
+    public class DataContext : DbContext
     {
-        public DataContext():
-            base("name=DefaultConnection"){
+        public DataContext() :
+            base("name=DefaultConnection")
+        {
             //Remove in Production
-          //  Database.SetInitializer<DataContext>(new DropCreateDatabaseIfModelChanges<DataContext>());
+             // Database.SetInitializer<DataContext>(new DropCreateDatabaseIfModelChanges<DataContext>());
 
             // Disable initializer in Production
-             Database.SetInitializer<DataContext>(null);
+            Database.SetInitializer<DataContext>(null);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -37,6 +38,18 @@ namespace ERPortal.DataAccess.SQL
             modelBuilder.Entity<Notification>().HasRequired(n => n.UserAccount);
             modelBuilder.Entity<Notification>().HasOptional(n => n.ERApplication).WithMany().WillCascadeOnDelete(true); ;
 
+            modelBuilder.Entity<ForwardApplication>().HasRequired(f => f.ERApplication);
+
+            //modelBuilder.Entity<QueryDetails>().HasRequired(q => q.ERApplication).WithMany().WillCascadeOnDelete(false); ;
+            modelBuilder.Entity<QueryDetails>().HasRequired(q => q.UserAccount);
+
+            modelBuilder.Entity<QueryMaster>().HasRequired(q => q.QueryRef);
+
+            // modelBuilder.Entity<AuditTrail>().HasRequired(at => at.ERApplication);
+            // modelBuilder.Entity<AuditTrail>().HasRequired(at => at.QueryDetails);
+
+            //  modelBuilder.Entity<ERAppActiveUsers>().HasRequired(ea => ea.ERApplication);
+            modelBuilder.Entity<ERAppActiveUsers>().HasRequired(ea => ea.UserAccount);
         }
 
         public DbSet<ERApplication> ERApplications { get; set; }
@@ -48,6 +61,12 @@ namespace ERPortal.DataAccess.SQL
         public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<UploadFile> UploadFiles { get; set; }
+        public DbSet<ForwardApplication> ForwardApplications { get; set; }
+        public DbSet<AuditTrails> AuditTrails { get; set; }
+        public DbSet<ERAppActiveUsers> ERAppActiveUsers { get; set; }
+        public DbSet<QueryDetails> QueryDetails { get; set; }
+        public DbSet<QueryMaster> QueryMasters { get; set; }
+        public DbSet<ErrorLog> ErrorLogs { get; set; }
 
     }
 }

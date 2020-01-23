@@ -69,14 +69,19 @@
   <ItemGroup>
     <Compile Include="Contracts\IRepository.cs" />
     <Compile Include="CustomValidation\CustomValidation.cs" />
+    <Compile Include="Models\AuditTrail.cs" />
     <Compile Include="Models\BaseEntity.cs" />
+    <Compile Include="Models\ERAppActiveUsers.cs" />
     <Compile Include="Models\ERApplication.cs" />
     <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\ErrorLog.cs" />
     <Compile Include="Models\ERScreeningDetail.cs" />
     <Compile Include="Models\ERScreeningInstitute.cs" />
     <Compile Include="Models\FieldType.cs" />
+    <Compile Include="Models\ForwardApplication.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Organisation.cs" />
+    <Compile Include="Models\QueryDetails.cs" />
     <Compile Include="Models\UHCProductionMethod.cs" />
     <Compile Include="Models\UploadFile.cs" />
     <Compile Include="Models\UserAccount.cs" />

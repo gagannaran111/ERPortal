@@ -36,9 +36,9 @@ namespace ERPortal.WebUI
 
                 var user = new ApplicationUser();
                 user.UserName = "shanu";
-                user.Email = "syedshanumcain@gmail.com";
+                user.Email = "gagan@gmail.com";
 
-                string userPWD = "A@Z200711";
+                string userPWD = "Gn@123";
 
                 var chkUser = UserManager.Create(user, userPWD);
 

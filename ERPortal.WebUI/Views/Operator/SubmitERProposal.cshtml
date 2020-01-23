@@ -34,12 +34,12 @@
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                         @*<div class="form-group row">
-                            @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                            <div class="col-sm-6 d-flex align-items-center">
-                                @Html.EditorFor(model => model.ERApplications.Organisation.Name, new { htmlAttributes = new { @class = "form-control disabled", @readonly = "readonly" } })
-                                @Html.ValidationMessageFor(model => model.ERApplications.Organisation, "", new { @class = "text-danger" })
-                            </div>
-                        </div>*@
+                                @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                                <div class="col-sm-6 d-flex align-items-center">
+                                    @Html.EditorFor(model => model.ERApplications.Organisation.Name, new { htmlAttributes = new { @class = "form-control disabled", @readonly = "readonly" } })
+                                    @Html.ValidationMessageFor(model => model.ERApplications.Organisation, "", new { @class = "text-danger" })
+                                </div>
+                            </div>*@
                         <div class="form-group row">
                             @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                             <div class="col-sm-6 d-flex align-items-center">
@@ -82,7 +82,7 @@
                         <div class="form-group row">
                             @Html.LabelFor(model => model.ERApplications.DateOfDiscovery, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                             <div class="col-sm-6 d-flex align-items-center">
-                                @Html.EditorFor(model => model.ERApplications.DateOfDiscovery, new { htmlAttributes = new { @class = "form-control datetimetext", @type="text" ,@Value ="" } })
+                                @Html.EditorFor(model => model.ERApplications.DateOfDiscovery, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @Value = "" } })
                                 @Html.ValidationMessageFor(model => model.ERApplications.DateOfDiscovery, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                         <div class="form-group row">
                             @Html.LabelFor(model => model.ERApplications.DateOfInitialCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                             <div class="col-sm-6 d-flex align-items-center">
-                                @Html.EditorFor(model => model.ERApplications.DateOfInitialCommercialProduction, new { htmlAttributes = new { @class = "form-control datetimetext", @type="text" } })
+                                @Html.EditorFor(model => model.ERApplications.DateOfInitialCommercialProduction, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text" } })
                                 @Html.ValidationMessageFor(model => model.ERApplications.DateOfInitialCommercialProduction, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -116,7 +116,7 @@
                         <div class="form-group row" id="DateOfLastCommercialProductionDiv" style="display:none">
                             @Html.LabelFor(model => model.ERApplications.DateOfLastCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                             <div class="col-sm-6 d-flex align-items-center">
-                                @Html.EditorFor(model => model.ERApplications.DateOfLastCommercialProduction, new { htmlAttributes = new { @class = "form-control datetimetext",@type="text" } })
+                                @Html.EditorFor(model => model.ERApplications.DateOfLastCommercialProduction, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text" } })
                                 @Html.ValidationMessageFor(model => model.ERApplications.DateOfLastCommercialProduction, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -232,9 +232,9 @@
 
 
                             @*<div style="position: relative">
-                <i class="icon-pencil" style="position: absolute;left: 0.5em; top:0.25em"></i>
-                <input class="btn" type="submit" value="&#xf19e; Submit" style="padding-left: 20px" />
-            </div>*@
+                                    <i class="icon-pencil" style="position: absolute;left: 0.5em; top:0.25em"></i>
+                                    <input class="btn" type="submit" value="&#xf19e; Submit" style="padding-left: 20px" />
+                                </div>*@
                         </div>
                     </div>
                 </fieldset>
@@ -271,21 +271,21 @@
 <script type="text/javascript">
     function OnSuccess(response) {
         alertModal(response);
-       // $('#disabledForm').attr('disabled', 'disabled')       
-       $('#operatorform').find('input,select,radio').prop('disabled', true);
+        // $('#disabledForm').attr('disabled', 'disabled')
+        $('#operatorform').find('input,select,radio').prop('disabled', true);
         $('#ERAppSubmit').hide();
         $('.statussuccess').empty().append(response).removeClass('d-none');
     }
 
-      function OnFailure() {
-            alertModal("Try Again Error Occured.");
-        }
-    $(document).ready(function () {       
+    function OnFailure() {
+        alertModal("Try Again Error Occured.");
+    }
+    $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
         if ($('#ERApplications_AppId').val() != "") {
             erscreeninglinkshowhideonload();
-          //  $('#disabledForm').attr('disabled','disabled')
-           $('#operatorform').find('input,select,radio').prop('disabled', true);
+            //  $('#disabledForm').attr('disabled','disabled')
+            $('#operatorform').find('input,select,radio').prop('disabled', true);
             $('#ERAppSubmit').hide();
             $('.statussuccess').empty().append('Application Ref. No. : ' + $('#ERApplications_AppId').val()).removeClass('d-none');
         }
@@ -295,8 +295,8 @@
             var actionDiv = $("#uhcProdnMethodDiv");
             if ("UHC" == selectedOption && actionDiv.is(":hidden")) {
                 actionDiv.val('').fadeIn("slow");
-                 $('#ERApplications_FieldGIIP').prop('disabled', false);
-                $('#ERApplications_FieldOIIP').prop('disabled',false);
+                $('#ERApplications_FieldGIIP').prop('disabled', false);
+                $('#ERApplications_FieldOIIP').prop('disabled', false);
             } else if (actionDiv.is(":visible")) {
                 actionDiv.val('').fadeOut("slow");
                 $("#uhcProdnMethodDiv option[value='']").attr('selected', true);
@@ -304,7 +304,7 @@
             if ($('#ERApplications_HydrocarbonType option:selected').val() == '0') {
                 $('#ERApplications_FieldGIIP').prop('disabled', true);
                 $('#ERApplications_FieldGIIP').val('');
-                $('#ERApplications_FieldOIIP').prop('disabled',false);
+                $('#ERApplications_FieldOIIP').prop('disabled', false);
             }
             else if ($('#ERApplications_HydrocarbonType option:selected').val() == '1') {
                 $('#ERApplications_FieldGIIP').prop('disabled', false);
@@ -316,7 +316,7 @@
         $(document).on("change", "input[name='ERApplications.ERScreeningStatus']", function () {
             var actionDiv = $('#FileDiv');
 
-            if ($(this).val() == "True" ) {
+            if ($(this).val() == "True") {
                 $("#opertor1").click();
                 actionDiv.val('').fadeIn("slow");
             } else if (actionDiv.is(":visible")) {
@@ -324,9 +324,9 @@
                 $("#FileDiv option[value='']").attr('selected', true);
             }
         });
-     
 
-         $('#formModal').on('show.bs.modal', function (event) {
+
+        $('#formModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget); // Button that triggered the modal
             var targetPage = button.data('page'); // Extract page redirection from data-* attributes
             var modalTitle = button.data('title');// Extract Modal title from data-* attributes
@@ -353,7 +353,7 @@
                     }
                 }
             });
-         });
+        });
         $('#formDetailModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget); // Button that triggered the modal
             var targetPage = button.data('page'); // Extract page redirection from data-* attributes
@@ -362,7 +362,7 @@
             // Initiate an AJAX request here (and then updating in a callback)
             $("#formModalLabelView").html(modalTitle);
             $.ajax({
-                url: "/Operator/AjaxViewDetails?targetPage=" + targetPage+"&&RefId="+RefId,
+                url: "/Operator/AjaxViewDetails?targetPage=" + targetPage + "&&RefId=" + RefId,
                 success: function (result) {
                     $('#modalContentView').html(result);
                     if (targetPage == "ERScreeningDetailView") {
@@ -384,9 +384,9 @@
             });
         });
 
-         $(document).on('submit', '#myForm', function (e) {
+        $(document).on('submit', '#myForm', function (e) {
             // stop default form submission
-             e.preventDefault();
+            e.preventDefault();
 
             var formUrl = $('#myForm').attr('action');
             $.ajax({
@@ -394,7 +394,7 @@
                 type: 'POST',
                 data: $('#myForm').serialize(),
                 success: function (result) {
-                    var res =result.split(",");
+                    var res = result.split(",");
                     if ('Success' == res[0]) {
                         if (res[2] == "ERScreeningDetail") {
 
@@ -414,7 +414,7 @@
                 },
                 error: function (result) {
 
-                      $('#modalContent').html(result);
+                    $('#modalContent').html(result);
                 },
                 fail: function (xhr, textStatus, errorThrown) {
                     $('#modalContent').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
@@ -424,9 +424,9 @@
                 }
 
 
-             });
+            });
 
-         });
+        });
         //$(document).on('click', '.ViewDetails', function (e) {
         //    e.preventDefault();
         //});
@@ -445,31 +445,36 @@
             else {
 
                 alertModal("Select Date of Commencement of Commercial Production");
-               // alert('Select Date of Commencement of Commercial Production')
+                // alert('Select Date of Commencement of Commercial Production')
                 $(this).prop("checked", false);;
             }
         });
 
-        $(document).on('keypress','input[type="date"]',function (event) {
-             event.preventDefault();
+        $(document).on('keypress', 'input[type="date"]', function (event) {
+            event.preventDefault();
         });
 
         $(document).on('change', 'input[name="ERApplications.DateOfLastCommercialProduction"]', function () {
 
             CheckERScreeningEligibility();
         });
-         $(document).on('change', 'input[name="ERApplications.FieldOIIP"]', function () {
+        $(document).on('change', 'input[name="ERApplications.FieldOIIP"]', function () {
 
             checkMandatoryPilot();
-         });
-         $(document).on('change', 'input[name="ERApplications.FieldGIIP"]', function () {
+        });
+        $(document).on('change', 'input[name="ERApplications.FieldGIIP"]', function () {
 
             checkMandatoryPilot();
-        });        
+        });
     });
 
-   
+    $(document).on('change', '#ERApplications_DateOfDiscovery', function () {
+        CheckEligibleToFillERForm();
+    });
 
+    ////////////////
+    //  Function  //
+    ////////////////
     function erscreeninglinkshowhideonload() {
         var erscreenid = $('#ERApplications_ERScreeningDetailId');
         if (erscreenid.val() != '') {
@@ -484,8 +489,8 @@
     }
     function checkMandatoryPilot() {
 
-         var FieldOIIP = $('#ERApplications_FieldOIIP');
-         var FieldGIIP = $('#ERApplications_FieldGIIP');
+        var FieldOIIP = $('#ERApplications_FieldOIIP');
+        var FieldGIIP = $('#ERApplications_FieldGIIP');
         var pilotprodprofile = $('#ERApplications_PilotProductionProfile');
         var pilotdesign = $('input[name="ERApplications.PilotDesign"]:eq(0)');
 
@@ -500,29 +505,62 @@
                 $('.pilotmandatory').attr('data-original-title', 'Mandatory');
                 pilotprodprofile.attr('required', 'required');
                 pilotdesign.prop("checked", true);
-                $('input[name="ERApplications.PilotDesign"]').attr('disabled','disabled' );
+                $('input[name="ERApplications.PilotDesign"]').attr('disabled', 'disabled');
             }
         }
         else if (FieldOIIP.val() != '' && $('#ERApplications_HydrocarbonType option:selected').val() == '0') {
             if (parseFloat(FieldOIIP.val()) < 25) {
                 $('.pilotmandatory').attr('data-original-title', 'Not Mandatory');
-                 pilotprodprofile.removeAttr('required');
-                 $('input[name="ERApplications.PilotDesign"]').removeAttr('disabled');
+                pilotprodprofile.removeAttr('required');
+                $('input[name="ERApplications.PilotDesign"]').removeAttr('disabled');
             }
             else {
                 $('.pilotmandatory').attr('data-original-title', 'Mandatory');
                 pilotprodprofile.attr('required', 'required');
-                    pilotdesign.prop("checked", true);
-                $('input[name="ERApplications.PilotDesign"]').attr('disabled','disabled' );
+                pilotdesign.prop("checked", true);
+                $('input[name="ERApplications.PilotDesign"]').attr('disabled', 'disabled');
             }
         }
         else {
-             $('.pilotmandatory').attr('data-original-title', 'If OIIP < 25 MMBBL Or GIIP < 0.25 TCF then Not Mandatory otherwise Mandatory');
+            $('.pilotmandatory').attr('data-original-title', 'If OIIP < 25 MMBBL Or GIIP < 0.25 TCF then Not Mandatory otherwise Mandatory');
         }
 
 
     }
+    function CheckEligibleToFillERForm() {
+        var dateofdiscoveryval = $('#ERApplications_DateOfDiscovery').val().split('-');
+        var dateofdiscovery = $('#ERApplications_DateOfDiscovery');
+        var currentdate = new Date();
+        var diffYear = "";
+        var diffmonth = "";
+        var diffdate = "";
+        var msg = "Date Of Discovery Less Then 3 Years. So You Cannot Fill ER Proposal";
 
+        diffYear = currentdate.getFullYear() - parseInt(dateofdiscoveryval[0]);
+        diffmonth = parseInt((currentdate.getMonth() + 1)) - parseInt(dateofdiscoveryval[1]);
+        diffdate = parseInt(currentdate.getDate()) - parseInt(dateofdiscoveryval[2]);
+
+        if (diffYear > 3) {
+            alertModal('Eligible To Fill ER Proposal');
+        }
+        else if (diffYear == 3) {
+            if (diffmonth >= 0) {
+                if (diffdate < 0) {
+                    alertModal(msg);
+                    dateofdiscovery.val('');
+                }
+            }
+            else {
+                alertModal(msg);
+                dateofdiscovery.val('');
+            }
+        }
+        else {
+            alertModal(msg);
+            dateofdiscovery.val('');
+        }
+
+    }
     function CheckERScreeningEligibility() {
 
         var dateofinitial = $('#ERApplications_DateOfInitialCommercialProduction').val();
@@ -541,7 +579,7 @@
         }
         else {
 
-             diffYear = currentdate.getFullYear() - parseInt(initialdatesplit[0]);
+            diffYear = currentdate.getFullYear() - parseInt(initialdatesplit[0]);
             diffmonth = parseInt((currentdate.getMonth() + 1)) - parseInt(initialdatesplit[1]);
             diffdate = parseInt(currentdate.getDate()) - parseInt(initialdatesplit[2]);
         }
@@ -562,7 +600,7 @@
             }
         }
         else {
-            alertModal('ERScreening Details Not Mandatory')
+            alertModal('ERScreening Details Not Mandatory');
         }
     }
 

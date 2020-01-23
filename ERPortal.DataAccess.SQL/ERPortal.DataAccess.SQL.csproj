@@ -103,6 +103,10 @@
     <Compile Include="Migrations\202001200553486_SubDateOfPilotReport.designer.cs">
       <DependentUpon>202001200553486_SubDateOfPilotReport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001231125487_addnewtable.cs" />
+    <Compile Include="Migrations\202001231125487_addnewtable.designer.cs">
+      <DependentUpon>202001231125487_addnewtable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -155,6 +159,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001200553486_SubDateOfPilotReport.resx">
       <DependentUpon>202001200553486_SubDateOfPilotReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001231125487_addnewtable.resx">
+      <DependentUpon>202001231125487_addnewtable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
