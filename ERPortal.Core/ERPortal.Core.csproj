@@ -82,6 +82,7 @@
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Organisation.cs" />
     <Compile Include="Models\QueryDetails.cs" />
+    <Compile Include="Models\StatusMaster.cs" />
     <Compile Include="Models\UHCProductionMethod.cs" />
     <Compile Include="Models\UploadFile.cs" />
     <Compile Include="Models\UserAccount.cs" />

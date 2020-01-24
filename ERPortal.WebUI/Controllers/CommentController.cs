@@ -11,6 +11,7 @@ using ERPortal.Core.ViewModels;
 
 namespace ERPortal.WebUI.Controllers
 {
+    [CustomAuthenticationFilter]
     public class CommentController : Controller
     {
         IRepository<Comment> commentContext;
@@ -39,17 +40,11 @@ namespace ERPortal.WebUI.Controllers
         [HttpPost]
         public JsonResult CommentSubmit(Comment comment, string appid)
         {
-            string userid =  Session["userId"] == null ? null : Session["userId"].ToString();
-            if (userid == null)
-            {
-                return Json("ERROR", JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
+            string[] arr = Session["UserData"] as string[];
                 Comment com = new Comment()
                 {
                     ERApplicationId = appid,
-                    UserAccountId = userid,// "62c5216e-0155-4fe3-8e9d-06dd66f1ad21",
+                    UserAccountId = arr[0],
                     Text = comment.Text,
                     Type = comment.Type,
                 };
@@ -65,7 +60,7 @@ namespace ERPortal.WebUI.Controllers
                 {
                     return Json("ERROR", JsonRequestBehavior.AllowGet);
                 }
-            }
+           
         }
         [HttpPost]
         public ActionResult LoadUploadFile(HttpPostedFileBase file, string RefId)

@@ -9,6 +9,8 @@ using System.Web.Mvc;
 
 namespace ERPortal.WebUI.Controllers
 {
+    [CustomAuthenticationFilter]
+    [CustomAuthorize("Admin")]
     public class AdminController : Controller
     {
         IRepository<FieldType> FieldTypeContext;

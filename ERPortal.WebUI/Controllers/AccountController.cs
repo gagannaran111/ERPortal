@@ -14,11 +14,12 @@ using ERPortal.Core.Models;
 using ERPortal.Core.Contracts;
 using Unity;
 using System.Collections.Generic;
+using System.Collections;
 
 
 namespace ERPortal.WebUI.Controllers
 {
-    [Authorize]
+    [Authorize]   
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -95,12 +96,20 @@ namespace ERPortal.WebUI.Controllers
             var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
             //var current_User = _userManager.GetUserAsync(HttpContext.User);
             // var userdata = SignInManager.UserManager.FindAsync(model.UserName, model.Password);
-            Session["userId"] = SignInManager.AuthenticationManager.AuthenticationResponseGrant.Identity.GetUserId();
-
+            
+           
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    string userid = SignInManager.AuthenticationManager.AuthenticationResponseGrant.Identity.GetUserId();
+                    string userRoleIds = context.Users.Find(userid).Roles
+                       .Select(r => r.RoleId).FirstOrDefault().ToString();
+
+                    string userRole = context.Roles.Find(userRoleIds).Name.ToString();
+                    string[] userdata = new string[] { userid, userRoleIds, userRole, model.UserName };
+
+                    Session["UserData"] = userdata;
+                    return RedirectToLocal(returnUrl);                    
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -157,7 +166,9 @@ namespace ERPortal.WebUI.Controllers
 
         //
         // GET: /Account/Register
-        [AllowAnonymous]
+        //[AllowAnonymous]
+        [CustomAuthenticationFilter]
+        [CustomAuthorize("Admin")]
         public ActionResult Register()
         {
             ViewBag.Role = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
@@ -486,10 +497,11 @@ namespace ERPortal.WebUI.Controllers
         //
         // POST: /Account/LogOff
         [HttpPost]
-        [ValidateAntiForgeryToken]
+       // [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Session.RemoveAll();
             return RedirectToAction("Login", "Account");
         }
 

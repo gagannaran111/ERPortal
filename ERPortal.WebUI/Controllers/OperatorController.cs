@@ -10,6 +10,9 @@ using System.Web.Mvc;
 using ERPortal.WebUI.Models;
 namespace ERPortal.WebUI.Controllers
 {
+
+
+    [CustomAuthenticationFilter]
     public class OperatorController : Controller
     {
         IRepository<ERApplication> ERApplicationContext;
@@ -31,12 +34,15 @@ namespace ERPortal.WebUI.Controllers
         }
 
         // GET: Operator
+      
+        [CustomAuthorize("operator")]
         public ActionResult Index()
         {
             ViewBag.Title = "Home";
             return View();
         }
 
+        [CustomAuthorize("operator")]
         public ActionResult SubmitERProposal(string appid)
         {
             ViewBag.Title = "Submit Proposal";
@@ -83,48 +89,7 @@ namespace ERPortal.WebUI.Controllers
 
             return Json("Application Ref No : "+_ERApplication.ERApplications.AppId,JsonRequestBehavior.AllowGet);
           //  return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public ActionResult LoadUploadFile(HttpPostedFileBase file, string RefId)
-        {
-            try
-            {
-                if (file.ContentLength > 0)
-                {
-                    string _FileName = Path.GetFileName(file.FileName);
-                    string _path = Path.Combine(Server.MapPath("~/Content/UploadedFiles"), _FileName);
-                    file.SaveAs(_path);
-                    //string FileRefId = RefId != null && RefId != "" ? RefId : Guid.NewGuid().ToString();
-                    UploadFile uploadFile = new UploadFile() { FileName = _FileName, FilePath = _path, FIleRef = RefId };
-
-                    UploadFileContext.Insert(uploadFile);
-                    UploadFileContext.Commit();
-                    return Json("File upload Success", JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    return Json("File upload failed!!", JsonRequestBehavior.AllowGet);
-                }
-            }
-            catch
-            {
-                ViewBag.Message = "File upload failed!!";
-                return View();
-            }
-        }
-        [HttpPost]
-        public JsonResult GetUploadFiles(string RefId)
-        {
-            return Json(UploadFileContext.Collection().Where(x => x.FIleRef == RefId).ToList<UploadFile>());
-        }
-        [HttpPost]
-        public JsonResult RemoveUploadFile(string FileId)
-        {
-            UploadFileContext.Delete(FileId);
-            UploadFileContext.Commit();
-            return Json("File Removed Success", JsonRequestBehavior.AllowGet);
-        }
+        }       
         public ActionResult AjaxAdd(string targetPage)
         {
             object _genericObject;
@@ -152,7 +117,7 @@ namespace ERPortal.WebUI.Controllers
 
         }
 
-        [HttpPost]
+        [HttpPost]      
         public ActionResult AjaxAdd(string targetPage, string FileRef, FormCollection collection)
         {
             object _genericObject = null;

@@ -9,6 +9,8 @@ using ERPortal.Core.Models;
 using ERPortal.Core.ViewModels;
 namespace ERPortal.WebUI.Controllers
 {
+    [CustomAuthenticationFilter]
+    [CustomAuthorize("HoD")]
     public class DGHController : Controller
     {
         IRepository<ERApplication> ERApplicationContext;

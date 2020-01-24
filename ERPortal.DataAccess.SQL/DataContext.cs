@@ -45,7 +45,7 @@ namespace ERPortal.DataAccess.SQL
 
             modelBuilder.Entity<QueryMaster>().HasRequired(q => q.QueryRef);
 
-            // modelBuilder.Entity<AuditTrail>().HasRequired(at => at.ERApplication);
+             modelBuilder.Entity<AuditTrails>().HasRequired(at => at.Status).WithMany().WillCascadeOnDelete(false); ;
             // modelBuilder.Entity<AuditTrail>().HasRequired(at => at.QueryDetails);
 
             //  modelBuilder.Entity<ERAppActiveUsers>().HasRequired(ea => ea.ERApplication);
@@ -67,6 +67,7 @@ namespace ERPortal.DataAccess.SQL
         public DbSet<QueryDetails> QueryDetails { get; set; }
         public DbSet<QueryMaster> QueryMasters { get; set; }
         public DbSet<ErrorLog> ErrorLogs { get; set; }
+        public DbSet<StatusMaster> StatusMasters { get; set; }
 
     }
 }

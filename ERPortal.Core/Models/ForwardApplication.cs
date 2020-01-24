@@ -24,6 +24,5 @@ namespace ERPortal.Core.Models
         Forward,
         Recieved,
         Approved
-
     }
 }

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace ERPortal.WebUI.Controllers
 {
+
     public class HomeController : Controller
     {
         public ActionResult Index()

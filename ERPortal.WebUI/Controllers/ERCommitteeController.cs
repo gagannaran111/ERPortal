@@ -8,6 +8,8 @@ using ERPortal.Core.Models;
 using ERPortal.Core.ViewModels;
 namespace ERPortal.WebUI.Controllers
 {
+    [CustomAuthenticationFilter]
+    [CustomAuthorize("nodal")]
     public class ERCommitteeController : Controller
     {
         IRepository<ERApplication> ERApplicationContext;
@@ -29,11 +31,13 @@ namespace ERPortal.WebUI.Controllers
         }
 
         // GET: ERCommittee
+       
         public ActionResult Index()
         {
             ViewBag.ApplicationData = ERApplicationContext.Collection().Where(x => x.DGHApprovalStatus != null).ToList(); ;            
             return View();
-        }      
+        }
+       
         public ActionResult AppRecDGHToERC(string appid)
         {
             //ViewBag.Title = "Submit Proposal";
@@ -68,7 +72,7 @@ namespace ERPortal.WebUI.Controllers
 
 
         }
-        [HttpPost]
+        [HttpPost]        
         public ActionResult ERCFormSubmit(ERCViewModel eRCViewModel)
         {
             if (eRCViewModel.ERApplications.FinalApprovalStatus != null)
