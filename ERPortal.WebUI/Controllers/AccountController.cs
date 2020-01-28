@@ -19,7 +19,7 @@ using System.Collections;
 
 namespace ERPortal.WebUI.Controllers
 {
-    [Authorize]   
+    [Authorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -96,8 +96,8 @@ namespace ERPortal.WebUI.Controllers
             var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
             //var current_User = _userManager.GetUserAsync(HttpContext.User);
             // var userdata = SignInManager.UserManager.FindAsync(model.UserName, model.Password);
-            
-           
+
+
             switch (result)
             {
                 case SignInStatus.Success:
@@ -109,7 +109,7 @@ namespace ERPortal.WebUI.Controllers
                     string[] userdata = new string[] { userid, userRoleIds, userRole, model.UserName };
 
                     Session["UserData"] = userdata;
-                    return RedirectToLocal(returnUrl);                    
+                    return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -497,7 +497,7 @@ namespace ERPortal.WebUI.Controllers
         //
         // POST: /Account/LogOff
         [HttpPost]
-       // [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);

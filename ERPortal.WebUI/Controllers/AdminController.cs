@@ -18,14 +18,17 @@ namespace ERPortal.WebUI.Controllers
         IRepository<UserAccount> UserAccountContext;
         IRepository<UHCProductionMethod> UHCProductionMethodContext;
         IRepository<ERScreeningInstitute> ERScreeningInstituteContext;
-        public AdminController(IRepository<FieldType> _FieldTypeContext, IRepository<Organisation> _OrganisationContext, IRepository<UserAccount> _UserAccountContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext)
+        IRepository<StatusMaster> StatusMasterContext;
+        IRepository<AuditTrails> AuditTrailContext;
+        public AdminController(IRepository<FieldType> _FieldTypeContext, IRepository<Organisation> _OrganisationContext, IRepository<UserAccount> _UserAccountContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<StatusMaster> _StatusMasterContext, IRepository<AuditTrails> _AuditTrailContext)
         {
             FieldTypeContext = _FieldTypeContext;
             OrganisationContext = _OrganisationContext;
             UserAccountContext = _UserAccountContext;
             UHCProductionMethodContext = _UHCProductionMethodContext;
             ERScreeningInstituteContext = _ERScreeningInstituteContext;
-
+            StatusMasterContext = _StatusMasterContext;
+            AuditTrailContext = _AuditTrailContext;
         }
         // GET: Admin
         public ActionResult Index()
@@ -38,7 +41,15 @@ namespace ERPortal.WebUI.Controllers
             adminManageViewModel.Organisations = OrganisationContext.Collection().ToList();
             adminManageViewModel.UHCProductionMethods = UHCProductionMethodContext.Collection().ToList();
             adminManageViewModel.ERScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
+            adminManageViewModel.StatusMasters = StatusMasterContext.Collection().ToList();
             return View(adminManageViewModel);
+        }
+
+        public ActionResult AuditTrail()
+        {
+            IEnumerable<AuditTrails> AuditTrailList = AuditTrailContext.Collection().ToList();
+
+            return View(AuditTrailList);
         }
 
         public ActionResult AjaxAdd(string targetPage)
@@ -64,6 +75,9 @@ namespace ERPortal.WebUI.Controllers
                     break;
                 case "ERScreeningInstitute":
                     _genericObject = new ERScreeningInstitute();
+                    break;
+                case "StatusMaster":
+                    _genericObject = new StatusMaster();
                     break;
                 default:
                     _genericObject = null;
@@ -175,6 +189,24 @@ namespace ERPortal.WebUI.Controllers
                     else
                     {
                         _genericObject = ERScreeningInstitute;
+                    }
+                    break;
+
+                case "StatusMaster":
+                    StatusMaster statusMaster = new StatusMaster()
+                    {
+                        Status = collection["Status"],
+                        Is_Active = true
+                    };
+                    modelIsValid = TryValidateModel(statusMaster);
+                    if (modelIsValid)
+                    {
+                        StatusMasterContext.Insert(statusMaster);
+                        StatusMasterContext.Commit();
+                    }
+                    else
+                    {
+                        _genericObject = statusMaster;
                     }
                     break;
                 default:

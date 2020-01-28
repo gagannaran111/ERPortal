@@ -14,6 +14,7 @@ namespace ERPortal.Core.ViewModels
         public List<Organisation> Organisations { get; set; }
         public List<UHCProductionMethod> UHCProductionMethods { get; set; }
         public List<ERScreeningInstitute> ERScreeningInstitutes { get; set; }
+        public List<StatusMaster> StatusMasters { get; set; }
 
     }
 }

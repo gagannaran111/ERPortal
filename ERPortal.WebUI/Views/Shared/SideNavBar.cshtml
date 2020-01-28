@@ -71,6 +71,9 @@
                                     <li>
                                         @Html.ActionLink("Operator", "Index", "Operator", null, new { @class = "nav-link" })
                                     </li>
+                                    @*<li>
+                                        @Html.ActionLink("ERScreeningReport", "SubmitERScreeningReport", "Operator", null, new { @class = "nav-link" })
+                                    </li>*@
                                 }
                                 @if (arr[2] == "HoD")
                                 {
@@ -78,7 +81,7 @@
                                         @Html.ActionLink("DGH", "Index", "DGH", null, new { @class = "nav-link" })
                                     </li>
                                 }
-                                @if (arr[3] == "nodal")
+                                @if (arr[2] == "nodal")
                                 {
                                     <li>
                                         @Html.ActionLink("ERC", "Index", "ERCommittee", null, new { @class = "nav-link" })
@@ -103,6 +106,10 @@
                                     </li>
                                     <li>
                                         @Html.ActionLink("Register User", "Register", "Account", null, new { @class = "nav-link" })
+                                    </li>
+                                    <li>
+                                        @Html.ActionLink("AuditTrail", "AuditTrail", "Admin", null, new { @class = "nav-link" })
+
                                     </li>
 
                                 </ul>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
 using ERPortal.Core.Contracts;
@@ -19,7 +20,10 @@ namespace ERPortal.WebUI.Controllers
         IRepository<ERScreeningDetail> ERScreeningDetailContext;
         IRepository<ERScreeningInstitute> ERScreeningInstituteContext;
         IRepository<Comment> CommentContext;
-        public ERCommitteeController(IRepository<ERApplication> _ERApplicationContext, IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<Comment> _CommentContext)
+        IRepository<ForwardApplication> ForwardApplicationContext;
+        IRepository<AuditTrails> AuditTrailContext;
+        IRepository<ERAppActiveUsers> ERAppActiveUsersContext;
+        public ERCommitteeController(IRepository<ERApplication> _ERApplicationContext, IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<Comment> _CommentContext, IRepository<ERAppActiveUsers> _ERAppActiveUsersContext, IRepository<ForwardApplication> _ForwardApplicationContext, IRepository<AuditTrails> _AuditTrailContext)
         {
             ERApplicationContext = _ERApplicationContext;
             FieldTypeContext = _FieldTypeContext;
@@ -28,20 +32,27 @@ namespace ERPortal.WebUI.Controllers
             ERScreeningDetailContext = _ERScreeningDetailContext;
             ERScreeningInstituteContext = _ERScreeningInstituteContext;
             CommentContext = _CommentContext;
+            ForwardApplicationContext = _ForwardApplicationContext;
+            AuditTrailContext = _AuditTrailContext;
+            ERAppActiveUsersContext = _ERAppActiveUsersContext;
         }
 
         // GET: ERCommittee
-       
+
         public ActionResult Index()
         {
-            ViewBag.ApplicationData = ERApplicationContext.Collection().Where(x => x.DGHApprovalStatus != null).ToList(); ;            
+            string[] userdata = Session["UserData"] as string[];
+            var er = ERAppActiveUsersContext.Collection().ToList();
+            var results = (from F in er
+                           join FT in ERApplicationContext.Collection().ToList() on F.ERApplicationId equals FT.AppId
+                           where F.UserAccountId == userdata[0]
+                           select FT);
+            ViewBag.ApplicationData = results;
             return View();
         }
-       
+
         public ActionResult AppRecDGHToERC(string appid)
         {
-            //ViewBag.Title = "Submit Proposal";
-
             ERCViewModel viewModel = new ERCViewModel();
 
             if (!string.IsNullOrEmpty(appid))
@@ -64,29 +75,44 @@ namespace ERPortal.WebUI.Controllers
             else
             {
                 return RedirectToAction("Index");
-                //viewModel.ERApplications = new ERApplication();
+
             }
-
-            //viewModel.UploadFiles = UploadFileContext.Collection();
-
-
-
         }
-        [HttpPost]        
+        [HttpPost]       
         public ActionResult ERCFormSubmit(ERCViewModel eRCViewModel)
         {
+            string[] userdata = Session["UserData"] as string[];
             if (eRCViewModel.ERApplications.FinalApprovalStatus != null)
             {
                 ERApplication erapp = ERApplicationContext.Collection().Where(x => x.AppId == eRCViewModel.ERApplications.AppId).FirstOrDefault();
                 erapp.FinalApprovalStatus = eRCViewModel.ERApplications.FinalApprovalStatus;
                 ERApplicationContext.Update(erapp);
-                ERApplicationContext.Commit();
+
+                AuditTrails auditTrails = new AuditTrails()
+                {
+                    ERApplicationId = erapp.AppId,
+                    // FileRefId = null,
+                    StatusId = "f62fccfd-4fe5-4001-9f6b-1ba05a62a0ae",
+                    //  QueryDetailsId = null,
+                    SenderId = userdata[0],
+                    // ReceiverId = null,
+                    Is_Active = true,
+                };
+
+                AuditTrailContext.Insert(auditTrails);
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    ERApplicationContext.Commit();
+                    AuditTrailContext.Commit();
+                    scope.Complete();
+                }
                 return Json("Submit To DGH Successfully", JsonRequestBehavior.AllowGet);
             }
-            else {
+            else
+            {
                 return Json("ERROR", JsonRequestBehavior.AllowGet);
             }
         }
-        
+
     }
 }

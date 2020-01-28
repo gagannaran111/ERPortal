@@ -595,15 +595,15 @@
             }
             else {
                  $('#ERProposalTab,#ERScreeningTab,#ERCTab,#DGHTab').find('input,select,radio,button').prop('disabled', true);
-                 setTimeout(function () {
-                    $('.fileDelete ').addClass('d-none')
-                }, 1000);
+                
                 $('#btnSubmit').hide();
             }
 
-
             GetUploadFilesData("#UploadFilesdghreportforpilot", "@Model.ERApplications.DGHFileAttachmentForPilot");
             GetUploadFilesData("#UploadFilesdghreport", "@Model.ERApplications.DGHFileAttachment");
+             setTimeout(function () {
+                    $('.fileDelete').addClass('d-none')
+                }, 1000);
         }
         else {
 

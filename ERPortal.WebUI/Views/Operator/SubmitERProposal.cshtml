@@ -24,7 +24,7 @@
         <div class="card border-success shadow-lg mb-3">
             <div class="card-header bg-gradient-success text-white">
                 <div class="row">
-                    <div class="col-lg-6"><h4>Submit ER Proposal</h4></div>
+                    <div class="col-lg-6"><h4>ER Screening Report</h4></div>
                     <div class="col-lg-6 "><a href="#" class="btn btn-outline-light float-right GeneratePDF" id="printapp">Print</a></div>
                 </div>
             </div>
@@ -281,6 +281,19 @@
         alertModal("Try Again Error Occured.");
     }
     $(document).ready(function () {
+
+        $.each($('#ERApplications_ImplementaionType option'), function (index, element) {
+            if ($(this).val() == "1" || $(this).val() == "0") {
+                $(this).addClass('oil');
+            }
+            else if ($(this).val() == "4" || $(this).val() == "") {
+
+            }
+            else {
+                $(this).addClass('gas');
+            }
+        });
+
         $('[data-toggle="tooltip"]').tooltip();
         if ($('#ERApplications_AppId').val() != "") {
             erscreeninglinkshowhideonload();
@@ -297,16 +310,23 @@
                 actionDiv.val('').fadeIn("slow");
                 $('#ERApplications_FieldGIIP').prop('disabled', false);
                 $('#ERApplications_FieldOIIP').prop('disabled', false);
+                $('.oil').prop('hidden', false);
+                $('.gas').prop('hidden', false);
             } else if (actionDiv.is(":visible")) {
                 actionDiv.val('').fadeOut("slow");
                 $("#uhcProdnMethodDiv option[value='']").attr('selected', true);
             }
+
             if ($('#ERApplications_HydrocarbonType option:selected').val() == '0') {
+                $('.gas').prop('hidden', true);
+                $('.oil').prop('hidden', false);
                 $('#ERApplications_FieldGIIP').prop('disabled', true);
                 $('#ERApplications_FieldGIIP').val('');
                 $('#ERApplications_FieldOIIP').prop('disabled', false);
             }
             else if ($('#ERApplications_HydrocarbonType option:selected').val() == '1') {
+                $('.oil').prop('hidden', true);
+                $('.gas').prop('hidden', false);
                 $('#ERApplications_FieldGIIP').prop('disabled', false);
                 $('#ERApplications_FieldOIIP').prop('disabled', true);
                 $('#ERApplications_FieldOIIP').val('');
@@ -388,7 +408,10 @@
             // stop default form submission
             e.preventDefault();
 
+            // if ($('#UploadFilesData').find('div').length != 0 && ) {
+
             var formUrl = $('#myForm').attr('action');
+
             $.ajax({
                 url: formUrl,
                 type: 'POST',
@@ -425,6 +448,10 @@
 
 
             });
+            // }
+            //  else {
+            //      return false;
+            //  }
 
         });
         //$(document).on('click', '.ViewDetails', function (e) {

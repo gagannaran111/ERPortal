@@ -1,0 +1,113 @@
+﻿@model ERPortal.Core.ViewModels.ERScreeningDetailViewModel
+@{
+    ViewBag.Title = "SubmitERScreeningReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Submit ER Screening Report</h2>
+@using (Ajax.BeginForm("SubmitERScreeningReport", "Operator", new AjaxOptions
+{
+    HttpMethod = "POST",
+    OnSuccess = "OnSuccess(data)",
+    OnFailure = "OnFailure(data)"
+    //LoadingElementId = "progress"
+}, new { id = "OperatorERScreeningform" }))
+{
+    <div class="row">
+        <div class="col-md-12 mt-4">
+
+            @Html.AntiForgeryToken()
+
+            <div class="alert alert-success alert-dismissible showmsg d-none statussuccess">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+            <div class="card border-primary mb-3">
+                <div class="card-header bg-gradient-primary text-white">
+                    <div class="row">
+                        <div class="col-lg-6"><h4><i class="fas fa-edit"></i> ER Screening Report</h4></div>
+                        <div class="col-lg-6 "><a href="#" class="btn btn-outline-light float-right GeneratePDF" id="printapp">Print</a></div>
+                    </div>
+                </div>
+                <div class="card-body ml-lg-5">
+                    <fieldset id="disabledForm">
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.eRScreeningDetail.ERScreeningInstituteId, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                                <div class="col-sm-6 d-flex align-items-center">
+                                    @Html.DropDownListFor(model => model.eRScreeningDetail.ERScreeningInstituteId, new SelectList(Model.eRScreeningInstitutes, "Id", "InstituteName"), "Select ER Screening Institute", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.eRScreeningDetail.ERScreeningInstituteId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.eRScreeningDetail.FirstOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                                <div class="col-sm-6 d-flex align-items-center">
+                                    <div class="form-check form-check-inline">
+                                        @Html.RadioButtonFor(model => model.eRScreeningDetail.FirstOrderScreening, true, new { @class = "form-check-input" })
+                                        @Html.LabelFor(model => model.eRScreeningDetail.FirstOrderScreening, "Yes", new { @class = "form-check-label" })
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        @Html.RadioButtonFor(model => model.eRScreeningDetail.FirstOrderScreening, false, new { @class = "form-check-input" })
+                                        @Html.LabelFor(model => model.eRScreeningDetail.FirstOrderScreening, "No", new { @class = "form-check-label" })
+                                    </div>
+                                    <div>  @Html.ValidationMessageFor(model => model.eRScreeningDetail.FirstOrderScreening, "", new { @class = "text-danger" })</div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.eRScreeningDetail.SecondOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                                <div class="col-sm-6 d-flex align-items-center">
+                                    <div class="form-check form-check-inline">
+                                        @Html.RadioButtonFor(model => model.eRScreeningDetail.SecondOrderScreening, true, new { @class = "form-check-input" })
+                                        @Html.LabelFor(model => model.eRScreeningDetail.SecondOrderScreening, "Yes", new { @class = "form-check-label" })
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        @Html.RadioButtonFor(model => model.eRScreeningDetail.SecondOrderScreening, false, new { @class = "form-check-input" })
+                                        @Html.LabelFor(model => model.eRScreeningDetail.SecondOrderScreening, "No", new { @class = "form-check-label" })
+                                    </div>
+                                    <div>  @Html.ValidationMessageFor(model => model.eRScreeningDetail.SecondOrderScreening, "", new { @class = "text-danger" })</div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.eRScreeningDetail.ThirdOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                                <div class="col-sm-6 d-flex align-items-center">
+                                    <div class="form-check form-check-inline">
+                                        @Html.RadioButtonFor(model => model.eRScreeningDetail.ThirdOrderScreening, true, new { @class = "form-check-input" })
+                                        @Html.LabelFor(model => model.eRScreeningDetail.ThirdOrderScreening, "Yes", new { @class = "form-check-label" })
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        @Html.RadioButtonFor(model => model.eRScreeningDetail.ThirdOrderScreening, false, new { @class = "form-check-input" })
+                                        @Html.LabelFor(model => model.eRScreeningDetail.ThirdOrderScreening, "No", new { @class = "form-check-label" })
+                                    </div>
+                                    <div>  @Html.ValidationMessageFor(model => model.eRScreeningDetail.ThirdOrderScreening, "", new { @class = "text-danger" })</div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="form-group row" id="FileDiv">
+                                <div class="col-lg-12">
+                                    <h6>ERScreening Report Documents</h6>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-check form-check-inline">
+                                        @Html.TextBox("file", "", new { type = "file", id = "txtFile" })
+                                        <button type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" filerefid="@ViewBag.RefId" divid="UploadFilesData" inputfile="txtFile" style="z-index:99999999"><i class="fas fa-upload"></i> Upload</button>
+                                        @*<input type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" filerefid="@ViewBag.RefId" divid="UploadFilesData" inputfile="txtFile" style="z-index:99999999" />*@
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 mt-3">
+                                    <div id="UploadFilesData" style="display:none;border:dashed; border-color:brown">
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group row justify-content-center">                              
+                                <button type="submit" class="btn btn-success" id="ERScreeningAppSubmit"><i class="fas fa-save"></i> Submit</button>                            
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+}

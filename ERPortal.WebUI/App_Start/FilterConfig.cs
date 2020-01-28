@@ -50,7 +50,7 @@ namespace ERPortal.WebUI
         {
             
             bool authorize = false;
-            string[] userdata = httpContext.Session["UserData"] as string[]; ;
+            string[] userdata = httpContext.Session["UserData"] as string[];
             var userId = userdata[0];
             if (!string.IsNullOrEmpty(userId))
                 using (var context = new Models.ApplicationDbContext())

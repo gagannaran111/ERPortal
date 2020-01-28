@@ -60,6 +60,12 @@ namespace ERPortal.WebUI
             container.RegisterType<IRepository<UploadFile>, SQLRepository<UploadFile>>();
             container.RegisterType<IRepository<UHCProductionMethod>, SQLRepository<UHCProductionMethod>>();
             container.RegisterType<IRepository<Comment>, SQLRepository<Comment>>();
+            container.RegisterType<IRepository<ERAppActiveUsers>, SQLRepository<ERAppActiveUsers>>();
+            container.RegisterType<IRepository<ForwardApplication>, SQLRepository<ForwardApplication>>();
+            container.RegisterType<IRepository<AuditTrails>, SQLRepository<AuditTrails>>();
+            container.RegisterType<IRepository<QueryDetails>, SQLRepository<QueryDetails>>();
+            container.RegisterType<IRepository<QueryMaster>, SQLRepository<QueryMaster>>();
+            container.RegisterType<IRepository<StatusMaster>, SQLRepository<StatusMaster>>();
         }
     }
 }

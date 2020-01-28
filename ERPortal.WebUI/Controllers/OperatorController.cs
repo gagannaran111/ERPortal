@@ -8,6 +8,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ERPortal.WebUI.Models;
+using System.Transactions;
+
 namespace ERPortal.WebUI.Controllers
 {
 
@@ -22,7 +24,11 @@ namespace ERPortal.WebUI.Controllers
         IRepository<ERScreeningDetail> ERScreeningDetailContext;
         IRepository<ERScreeningInstitute> ERScreeningInstituteContext;
         IRepository<Organisation> OrganisationContext;
-        public OperatorController(IRepository<ERApplication> _ERApplicationContext, IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<Organisation> _OrganisationContext)
+        IRepository<ForwardApplication> ForwardApplicationContext;
+        IRepository<AuditTrails> AuditTrailContext;
+        IRepository<ERAppActiveUsers> ERAppActiveUsersContext;
+
+        public OperatorController(IRepository<ERApplication> _ERApplicationContext, IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<Organisation> _OrganisationContext, IRepository<ForwardApplication> _ForwardApplicationContext, IRepository<AuditTrails> _AuditTrailContext, IRepository<ERAppActiveUsers> _ERAppActiveUsersContext)
         {
             ERApplicationContext = _ERApplicationContext;
             FieldTypeContext = _FieldTypeContext;
@@ -31,10 +37,13 @@ namespace ERPortal.WebUI.Controllers
             ERScreeningDetailContext = _ERScreeningDetailContext;
             ERScreeningInstituteContext = _ERScreeningInstituteContext;
             OrganisationContext = _OrganisationContext;
+            ForwardApplicationContext = _ForwardApplicationContext;
+            AuditTrailContext = _AuditTrailContext;
+            ERAppActiveUsersContext = _ERAppActiveUsersContext;
         }
 
         // GET: Operator
-      
+
         [CustomAuthorize("operator")]
         public ActionResult Index()
         {
@@ -60,6 +69,7 @@ namespace ERPortal.WebUI.Controllers
             viewModel.FieldTypes = FieldTypeContext.Collection().ToList();
             viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection().ToList();
             viewModel.organisationTypes = OrganisationContext.Collection().ToList();
+            
             //viewModel.UploadFiles = UploadFileContext.Collection();
 
             return View(viewModel);
@@ -69,6 +79,7 @@ namespace ERPortal.WebUI.Controllers
         public ActionResult SubmitERProposal(OperatorERProposalViewModel _ERApplication)
         {
             ViewBag.Title = "Submit Proposal";
+            string[] userdata = Session["UserData"] as string[];
 
             if (!ModelState.IsValid)
             {
@@ -77,19 +88,51 @@ namespace ERPortal.WebUI.Controllers
 
             else
             {
-               // var appid = ERApplicationContext.Collection().OrderByDescending(x => x.AppId).FirstOrDefault();
-               
-                    string dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss").Replace("/","").Replace(":","").Replace(" ","");               
-                    _ERApplication.ERApplications.AppId = "ERAPPID" + dt;              
-               
+                string dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss").Replace("/", "").Replace(":", "").Replace(" ", "");
+                _ERApplication.ERApplications.AppId = "ERAPPID" + dt;
 
                 ERApplicationContext.Insert(_ERApplication.ERApplications);
-                ERApplicationContext.Commit();
+                AuditTrails auditTrails = new AuditTrails()
+                {
+                    ERApplicationId = _ERApplication.ERApplications.AppId,
+                   // FileRefId = null,
+                    StatusId = "14e8e42d-aa81-4e91-876a-95651048f6d6",
+                   // QueryDetailsId = null,
+                    SenderId = userdata[0],
+                    ReceiverId = "aaf04b39-83b4-4870-84bb-20d2acac2e87",
+                    Is_Active = true,
+                };
+                List<string> lst = new List<string>() {
+                    userdata[0],
+                    "aaf04b39-83b4-4870-84bb-20d2acac2e87"
+                };
+                foreach (string x in lst)
+                {
+                    ERAppActiveUsers eRAppActiveUsers = new ERAppActiveUsers()
+                    {
+                        ERApplicationId = _ERApplication.ERApplications.AppId,
+                        UserAccountId = x, 
+                        Dept_Id = null,
+                        Is_Active = true,
+                        Status = null
+                    };
+
+                    ERAppActiveUsersContext.Insert(eRAppActiveUsers);
+                }
+                AuditTrailContext.Insert(auditTrails);
+
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    ERApplicationContext.Commit();
+                    ERAppActiveUsersContext.Commit();
+                    AuditTrailContext.Commit();
+                    scope.Complete();
+                }
+
             }
 
-            return Json("Application Ref No : "+_ERApplication.ERApplications.AppId,JsonRequestBehavior.AllowGet);
-          //  return RedirectToAction("Index");
-        }       
+            return Json("Application Ref No : " + _ERApplication.ERApplications.AppId, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult AjaxAdd(string targetPage)
         {
             object _genericObject;
@@ -117,7 +160,7 @@ namespace ERPortal.WebUI.Controllers
 
         }
 
-        [HttpPost]      
+        [HttpPost]
         public ActionResult AjaxAdd(string targetPage, string FileRef, FormCollection collection)
         {
             object _genericObject = null;
@@ -159,12 +202,12 @@ namespace ERPortal.WebUI.Controllers
                 ERScreeningDetailViewModel viewModel = new ERScreeningDetailViewModel();
                 viewModel.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
                 viewModel.eRScreeningDetail = (ERScreeningDetail)_genericObject;
-               
+                ViewBag.RefId = Guid.NewGuid().ToString();
                 return View(targetPage, viewModel);
             }
 
         }
-        public ActionResult AjaxViewDetails(string targetPage,string RefId)
+        public ActionResult AjaxViewDetails(string targetPage, string RefId)
         {
             object _genericObject;
             switch (targetPage)
@@ -188,6 +231,16 @@ namespace ERPortal.WebUI.Controllers
             }
 
         }
+       
+        //public ActionResult SubmitERScreeningReport()
+        //{
+        //    ERScreeningDetailViewModel viewModel = new ERScreeningDetailViewModel();
+        //    viewModel.eRScreeningDetail = new ERScreeningDetail();
+        //    viewModel.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
+        //    ViewBag.RefId = Guid.NewGuid().ToString();
+        //    return View(viewModel);
+        
+        //}
 
     }
 }

@@ -17,8 +17,10 @@ namespace ERPortal.Core.Models
         public string QueryDetailsId { get; set; }
 
         public string SenderId { get; set; }
+        public virtual UserAccount Sender { get; set; }
 
         public string ReceiverId { get; set; }
+        public virtual UserAccount Receiver { get; set; }
         public Boolean Is_Active { get; set; }
     }
 }
