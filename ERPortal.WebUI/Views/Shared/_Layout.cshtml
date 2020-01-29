@@ -73,34 +73,34 @@
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
                 @*<li class="nav-item active">
-                @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
-            </li>
-            <li class="nav-item">
-                @Html.ActionLink("Operator", "Index", "Operator", null, new { @class = "nav-link" })
-            </li>
-            <li class="nav-item">
-                @Html.ActionLink("DGH", "Index", "DGH", null, new { @class = "nav-link" })
-            </li>
-            <li class="nav-item">
-                @Html.ActionLink("ER Committee", "Index", "ERCommittee", null, new { @class = "nav-link" })
-            </li>
+                        @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Operator", "Index", "Operator", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("DGH", "Index", "DGH", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("ER Committee", "Index", "ERCommittee", null, new { @class = "nav-link" })
+                    </li>
 
-            <li class="nav-item">
-                @Html.ActionLink("Account", "Register", "Account", null, new { @class = "nav-link" })
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                <div class="dropdown-menu" aria-labelledby="dropdown01">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-            </li>*@               
+                    <li class="nav-item">
+                        @Html.ActionLink("Account", "Register", "Account", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </li>*@
             </ul>
             @*<form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-            </form>*@
+                    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                </form>*@
             @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
@@ -123,24 +123,28 @@
         </main>
     </div>
     @RenderSection("scripts", required: false)
+
     <!-- Modal -->
-    <div class="modal fade" id="formDetailModal" tabindex="-1" role="dialog" aria-labelledby="formDetailLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg  modal-dialog-centered" role="document">
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="formModalLabelView">Add Comments</h5>
+                    <h5 class="modal-title" id="formModalLabel">Modal title</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" id="modalContentView">
+                <div class="modal-body" id="modalContent">
+                    ...
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary btnclose " data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+                    <button type="submit" form="myForm" class="btn btn-success" id="saveButton"><i class="fas fa-save"></i> Save</button>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="modal  fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content ">
@@ -170,17 +174,16 @@
                 </div>
                 <div class="modal-body" id="modalContentComment">
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <div class="modal-footer">                 
                     <button type="submit" class="btn btn-primary" id="btnCommentSave">Save</button>
                 </div>
             </div>
         </div>
 
     </div>
-    <button type="button" class="btn btn-primary d-none" id="btnalertmodal" data-toggle="modal" data-target="#exampleModalCenter"></button>
-    <button type="button" style="display:none" id="btnCommentModal" class="btn btn-primary" data-toggle="modal" data-target="#CommentModal" data-page="Comment" data-title="Comments"></button>
+    <button type="button" class="btn btn-primary" style="display:none" id="btnalertmodal" data-toggle="modal" data-target="#exampleModalCenter"></button>    
     <button type="button" style="display:none" id="btnCommentViewModal" class="btn btn-primary" data-toggle="modal" data-target="#formDetailModal" data-page="Comment" data-title="View Comment"></button>
+    @*<button type="button" style="display:none" id="opertor1" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="ERScreeningDetail" data-title="ERScreening Detail"></button>*@
 
 </body>
 </html>
@@ -235,28 +238,6 @@
         });
 
       });
-
-    $('#btnCommentModal').click(function () {
-
-        var y = $(this).attr('appid');
-         $.ajax({
-                url: "/Comment/Comment?appid=" + y,
-                success: function (result) {
-                    $('#modalContentComment').html(result);
-
-                },
-                error: function () {
-                    $('#modalContentComment').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
-
-                },
-                fail: function (xhr, textStatus, errorThrown) {
-                    $('#modalContentComment').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
-
-                }
-            });
-
-    });
-
     $('#btnCommentSave').click(function () {
          var formUrl = $('#myCommentForm').attr('action');
             $.ajax({
@@ -380,6 +361,27 @@
                 },
             })
     }
+    function ShowCommentModal(appid,title) {
+
+        $.ajax({
+            url: "/Comment/Comment?appid=" + appid,
+            success: function (result) {
+                $('#CommentModalLabel').text(title);
+                $('#modalContentComment').html(result);
+
+            },
+            error: function () {
+                $('#modalContentComment').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
+
+            },
+            fail: function (xhr, textStatus, errorThrown) {
+                $('#modalContentComment').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
+
+            }
+        });
+
+    }
+
 
 
 

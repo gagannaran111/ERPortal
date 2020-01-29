@@ -104,6 +104,7 @@ namespace ERPortal.WebUI.Controllers
                     string userid = SignInManager.AuthenticationManager.AuthenticationResponseGrant.Identity.GetUserId();
                     string userRoleIds = context.Users.Find(userid).Roles
                        .Select(r => r.RoleId).FirstOrDefault().ToString();
+                    var dd = SignInManager.UserManager.FindById(userid);
 
                     string userRole = context.Roles.Find(userRoleIds).Name.ToString();
                     string[] userdata = new string[] { userid, userRoleIds, userRole, model.UserName };

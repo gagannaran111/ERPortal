@@ -16,7 +16,7 @@ namespace ERPortal.Core.ViewModels
         public IEnumerable<FieldType> FieldTypes { get; set; }
 
         public IEnumerable<Organisation> organisationTypes { get; set; }
-
+        public IEnumerable<ERScreeningInstitute> eRScreeningInstitutes { get; set; }
 
         // public IEnumerable<UploadFile> UploadFiles { get; set; }
     }

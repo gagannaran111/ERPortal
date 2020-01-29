@@ -5,7 +5,7 @@
 }
 
 <div class="justify-content-center">
-    @using (Ajax.BeginForm("SubmitERProposal", "Operator", new AjaxOptions
+    @using (Ajax.BeginForm("SubmitERProposal", "Operator", new { FileRef = ViewBag.RefId }, new AjaxOptions
     {
         HttpMethod = "POST",
         OnSuccess = "OnSuccess(data)",
@@ -120,24 +120,6 @@
                                 @Html.ValidationMessageFor(model => model.ERApplications.DateOfLastCommercialProduction, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
-                        <div class="form-group row" id="ErScreeningRadioDiv">
-                            @Html.LabelFor(model => model.ERApplications.ERScreeningStatus, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                            <div class="col-sm-6 d-flex align-items-center">
-                                <div class="form-check form-check-inline">
-                                    @Html.RadioButtonFor(model => model.ERApplications.ERScreeningStatus, true, new { @class = "form-check-input" })
-                                    @Html.LabelFor(model => model.ERApplications.ERScreeningStatus, "Yes", new { @class = "form-check-label lblers" })
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    @Html.RadioButtonFor(model => model.ERApplications.ERScreeningStatus, false, new { @class = "form-check-input" })
-                                    @Html.LabelFor(model => model.ERApplications.ERScreeningStatus, "No", new { @class = "form-check-label lblers" })
-
-                                    <a href="#" id="ERScreeningDetailViewLink" class="ViewDetails btn btn-primary btn-sm " style="display:none" data-toggle="modal" data-target="#formDetailModal" data-page="ERScreeningDetailView" data-title="ERScreening Detail"><i class="fas fa-eye"></i> View ERScreening Detail</a>
-                                </div>
-                            </div>
-                        </div>
-
-
                         <div class="form-group row">
                             @Html.LabelFor(model => model.ERApplications.FieldOIIP, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                             <div class="col-sm-6 d-flex align-items-center">
@@ -165,31 +147,8 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
-                            @Html.LabelFor(model => model.ERApplications.PilotDesign, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                            <div class="col-sm-6 d-flex align-items-center">
-                                <div class="pilotmandatory" data-toggle="tooltip" title="If OIIP < 25 MMBBL Or GIIP < 0.25 TCF then Not Mandatory otherwise Mandatory">
-                                    <div class="form-check form-check-inline">
-                                        @Html.RadioButtonFor(model => model.ERApplications.PilotDesign, true, new { @class = "form-check-input" })
-                                        @Html.LabelFor(model => model.ERApplications.PilotDesign, "Yes", new { @class = "form-check-label" })
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        @Html.RadioButtonFor(model => model.ERApplications.PilotDesign, false, new { @class = "form-check-input" })
-                                        @Html.LabelFor(model => model.ERApplications.PilotDesign, "No", new { @class = "form-check-label" })
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            @Html.LabelFor(model => model.ERApplications.PilotProductionProfile, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
 
-                            <div class="col-sm-6 d-flex align-items-center pilotmandatory" data-toggle="tooltip" title="If OIIP < 25 MMBBL Or GIIP < 0.25 TCF then Not Mandatory otherwise Mandatory">
 
-                                @Html.EnumDropDownListFor(model => model.ERApplications.PilotProductionProfile, "Choose...", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.ERApplications.PilotProductionProfile, "", new { @class = "text-danger" })
-                            </div>
-
-                        </div>
                         <div class="form-group row">
                             @Html.LabelFor(model => model.ERApplications.TechnicallyCompatible, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                             <div class="col-sm-6 d-flex align-items-center">
@@ -218,6 +177,58 @@
                             </div>
                         </div>
 
+
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstituteId, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                @Html.DropDownListFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstituteId, new SelectList(Model.eRScreeningInstitutes, "Id", "InstituteName"), "Select ER Screening Institute", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstituteId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, true, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, "Yes", new { @class = "form-check-label" })
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, false, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, "No", new { @class = "form-check-label" })
+                                </div>
+                                <div>  @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, "", new { @class = "text-danger" })</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, true, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, "Yes", new { @class = "form-check-label" })
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, false, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, "No", new { @class = "form-check-label" })
+                                </div>
+                                <div>  @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, "", new { @class = "text-danger" })</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                            <div class="col-sm-6 d-flex align-items-center">
+                                <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, true, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, "Yes", new { @class = "form-check-label" })
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, false, new { @class = "form-check-input" })
+                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, "No", new { @class = "form-check-label" })
+                                </div>
+                                <div>  @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, "", new { @class = "text-danger" })</div>
+                            </div>
+                        </div>
                         <div class="form-group row">
                             @Html.LabelFor(model => model.ERApplications.AdditonalRemarks, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                             <div class="col-sm-6 d-flex align-items-center">
@@ -225,17 +236,36 @@
                                 @Html.ValidationMessageFor(model => model.ERApplications.AdditonalRemarks, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                        <div class="form-group row justify-content-center">
-                            @*<input type="submit" value="Submit" class="btn btn-warning" id="ERAppSubmit">*@
-                            <button type="submit" class="btn btn-primary" id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>
-                            @*<button class="btn btn-success"  id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>*@
-
-
-                            @*<div style="position: relative">
-                                    <i class="icon-pencil" style="position: absolute;left: 0.5em; top:0.25em"></i>
-                                    <input class="btn" type="submit" value="&#xf19e; Submit" style="padding-left: 20px" />
-                                </div>*@
+                        <hr />
+                        <div class="form-group row" id="FileDiv">
+                            <div class="col-lg-12">
+                                <h6>ERScreening Report Documents</h6>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-check form-check-inline">
+                                    @Html.TextBox("file", "", new { type = "file", id = "txtFile" })
+                                    <button type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" filerefid="@ViewBag.RefId" divid="UploadFilesData" inputfile="txtFile" style="z-index:99999999"><i class="fas fa-upload"></i> Upload</button>
+                                    @*<input type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" filerefid="@ViewBag.RefId" divid="UploadFilesData" inputfile="txtFile" style="z-index:99999999" />*@
+                                </div>
+                            </div>
                         </div>
+                        <div class="form-group row">
+                            <div class="col-lg-12 mt-3">
+                                <div id="UploadFilesData" style="display:none;border:dashed; border-color:brown">
+                                    File Not Found
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="form-group row justify-content-center">
+
+                            <button type="submit" class="btn btn-primary" id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>
+
+                        </div>
+
                     </div>
                 </fieldset>
             </div>
@@ -243,30 +273,6 @@
 
     }
 </div>
-
-<!-- Modal -->
-<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="formModalLabel">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="modalContent">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btnclose " data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
-                <button type="submit" form="myForm" class="btn btn-success" id="saveButton"><i class="fas fa-save"></i> Save</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<button type="button" style="display:none" id="opertor1" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="ERScreeningDetail" data-title="ERScreening Detail"></button>
 
 <script type="text/javascript">
     function OnSuccess(response) {
@@ -296,11 +302,20 @@
 
         $('[data-toggle="tooltip"]').tooltip();
         if ($('#ERApplications_AppId').val() != "") {
-            erscreeninglinkshowhideonload();
-            //  $('#disabledForm').attr('disabled','disabled')
+
             $('#operatorform').find('input,select,radio').prop('disabled', true);
+            $('#FileDiv').addClass('d-none');
             $('#ERAppSubmit').hide();
             $('.statussuccess').empty().append('Application Ref. No. : ' + $('#ERApplications_AppId').val()).removeClass('d-none');
+            if ('@Model.ERApplications.ERScreeningDetail' != null) {
+                GetUploadFilesData('#UploadFilesData', '');
+            setTimeout(function () {
+                $('.fileDelete').addClass('d-none');
+            }, 1000);
+            }
+
+
+
         }
 
         $(document.body).on('change', '#ERApplications_HydrocarbonType', function () {
@@ -502,18 +517,7 @@
     ////////////////
     //  Function  //
     ////////////////
-    function erscreeninglinkshowhideonload() {
-        var erscreenid = $('#ERApplications_ERScreeningDetailId');
-        if (erscreenid.val() != '') {
 
-            var erlinkid = $('#ERScreeningDetailViewLink');
-            erlinkid.is(':hidden');
-            erlinkid.fadeIn('slow');
-            erlinkid.attr('form-ref-id', erscreenid.val());
-            $('input[name="ERApplications.ERScreeningStatus"]').addClass('d-none');
-            $('.lblers').addClass('d-none');
-        }
-    }
     function checkMandatoryPilot() {
 
         var FieldOIIP = $('#ERApplications_FieldOIIP');

@@ -70,12 +70,14 @@ namespace ERPortal.WebUI.Controllers
 
                     ViewBag.ERFiles = UploadFileContext.Collection().Where(y => y.FIleRef == erapp.ERScreeningDetail.ReportDocumentPath).ToList();
                 }
+                else {
+                    ViewBag.ERFiles = null;
+                }
                 viewModel.FieldTypes = FieldTypeContext.Collection();
                 viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection();
                 viewModel.comment = CommentContext.Collection().Where(x => x.ERApplicationId == erapp.Id);
 
-                viewModel.ERApplications.DGHFileAttachment = erapp.DGHFileAttachment == null ? Guid.NewGuid().ToString() : erapp.DGHFileAttachment;
-                viewModel.ERApplications.DGHFileAttachmentForPilot = erapp.DGHFileAttachmentForPilot == null ? Guid.NewGuid().ToString() : erapp.DGHFileAttachmentForPilot;
+               
                 return View(viewModel);
             }
             else
@@ -156,6 +158,13 @@ namespace ERPortal.WebUI.Controllers
             {
                 return Json("Not Submitted. DGH Approval Mandatory", JsonRequestBehavior.AllowGet);
             }
+        }
+       
+        [HttpPost]
+        public ActionResult ForwardApplication()
+        {
+
+            return View();
         }
 
     }

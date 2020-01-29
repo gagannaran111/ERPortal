@@ -12,8 +12,6 @@ using System.Transactions;
 
 namespace ERPortal.WebUI.Controllers
 {
-
-
     [CustomAuthenticationFilter]
     public class OperatorController : Controller
     {
@@ -55,6 +53,7 @@ namespace ERPortal.WebUI.Controllers
         public ActionResult SubmitERProposal(string appid)
         {
             ViewBag.Title = "Submit Proposal";
+            ViewBag.RefId = Guid.NewGuid().ToString();
             OperatorERProposalViewModel viewModel = new OperatorERProposalViewModel();
 
             if (!string.IsNullOrEmpty(appid))
@@ -69,20 +68,22 @@ namespace ERPortal.WebUI.Controllers
             viewModel.FieldTypes = FieldTypeContext.Collection().ToList();
             viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection().ToList();
             viewModel.organisationTypes = OrganisationContext.Collection().ToList();
-            
+            viewModel.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
+
             //viewModel.UploadFiles = UploadFileContext.Collection();
 
             return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult SubmitERProposal(OperatorERProposalViewModel _ERApplication)
+        public ActionResult SubmitERProposal(OperatorERProposalViewModel _ERApplication,string FileRef)
         {
             ViewBag.Title = "Submit Proposal";
             string[] userdata = Session["UserData"] as string[];
 
             if (!ModelState.IsValid)
             {
+                ViewBag.RefId = Guid.NewGuid().ToString();
                 return View(_ERApplication);
             }
 
@@ -90,12 +91,13 @@ namespace ERPortal.WebUI.Controllers
             {
                 string dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss").Replace("/", "").Replace(":", "").Replace(" ", "");
                 _ERApplication.ERApplications.AppId = "ERAPPID" + dt;
+                _ERApplication.ERApplications.ERScreeningDetail.ReportDocumentPath = FileRef;
 
                 ERApplicationContext.Insert(_ERApplication.ERApplications);
                 AuditTrails auditTrails = new AuditTrails()
                 {
                     ERApplicationId = _ERApplication.ERApplications.AppId,
-                   // FileRefId = null,
+                    FileRefId = FileRef,
                     StatusId = "14e8e42d-aa81-4e91-876a-95651048f6d6",
                    // QueryDetailsId = null,
                     SenderId = userdata[0],

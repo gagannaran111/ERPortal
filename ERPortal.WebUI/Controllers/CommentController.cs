@@ -45,8 +45,7 @@ namespace ERPortal.WebUI.Controllers
                 {
                     ERApplicationId = appid,
                     UserAccountId = arr[0],
-                    Text = comment.Text,
-                    Type = comment.Type,
+                    Text = comment.Text                   
                 };
 
                 // comment.UserAccountId=  
