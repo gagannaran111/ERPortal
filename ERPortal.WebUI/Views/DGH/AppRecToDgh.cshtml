@@ -10,8 +10,7 @@
     }
 
    #ERProposalTab label {
-        font-weight: 700;
-        font-style: italic;
+        font-weight: 700;        
     }
 </style>
 
@@ -320,27 +319,5 @@
     $(document).on('click', '.ForwardApp', function () {
          
         ShowCommentModal("@Model.ERApplications.Id",$(this).attr('data-title'));
-    });
-    @*$(document).on('click', '.ForwardApp', function (e) {
-        e.preventDefault();
-
-         $.ajax({
-                url: "@Url.Action("ForwardApplication","DGH",new { appid = @Model.ERApplications.AppId })",
-                success: function (result) {
-                    $('#modalContent').html(result);
-
-                    },
-                error: function () {
-                    $('#modalContent').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
-
-                    },
-                fail: function (xhr, textStatus, errorThrown) {
-                    $('#modalContent').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
-
-                    }
-                });
-    });*@
-
-
-
+    });   
 </script>

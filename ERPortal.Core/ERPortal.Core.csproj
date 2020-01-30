@@ -91,6 +91,7 @@
     <Compile Include="ViewModels\DGHERProposalViewModel.cs" />
     <Compile Include="ViewModels\ERCViewModel.cs" />
     <Compile Include="ViewModels\ERScreeningDetailViewModel.cs" />
+    <Compile Include="ViewModels\ForwardAppViewModel.cs" />
     <Compile Include="ViewModels\OperatorERProposalViewModel.cs" />
     <Compile Include="ViewModels\UserOrganisationViewModel.cs" />
   </ItemGroup>

@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using ERPortal.Core.Contracts;
 using ERPortal.Core.Models;
 using ERPortal.Core.ViewModels;
+using System.Transactions;
+using System.Data.Entity;
 
 
 namespace ERPortal.WebUI.Controllers
@@ -17,12 +19,20 @@ namespace ERPortal.WebUI.Controllers
         IRepository<Comment> commentContext;
         IRepository<ERApplication> eRApplicationContext;
         IRepository<UploadFile> UploadFileContext;
-        public CommentController(IRepository<Comment> _commentContext, IRepository<ERApplication> _eRApplicationContext, IRepository<UploadFile> _UploadFileContext)
+        IRepository<UserAccount> UserAccountContext;
+        IRepository<ForwardApplication> ForwardApplicationContext;
+        IRepository<AuditTrails> AuditTrailsContext;
+        IRepository<ERAppActiveUsers> ERAppActiveUsersContext;
+        public CommentController(IRepository<Comment> _commentContext, IRepository<ERApplication> _eRApplicationContext, IRepository<UploadFile> _UploadFileContext, IRepository<UserAccount> _UserAccountContext, IRepository<ForwardApplication> _ForwardApplicationContext, IRepository<AuditTrails> _AuditTrailsContext, IRepository<ERAppActiveUsers> _ERAppActiveUsersContext)
         {
 
             eRApplicationContext = _eRApplicationContext;
             commentContext = _commentContext;
             UploadFileContext = _UploadFileContext;
+            UserAccountContext = _UserAccountContext;
+            ForwardApplicationContext = _ForwardApplicationContext;
+            AuditTrailsContext = _AuditTrailsContext;
+            ERAppActiveUsersContext = _ERAppActiveUsersContext;
         }
 
         // GET: Comment
@@ -32,34 +42,81 @@ namespace ERPortal.WebUI.Controllers
         }
         public ActionResult Comment(string appid)
         {
-            Comment obj = new Comment();
-            obj.ERApplicationId = appid;
+            ForwardAppViewModel forwardAppViewModel = new ForwardAppViewModel();
+            ForwardApplication forwardApplication = new ForwardApplication();
+            forwardAppViewModel.ReciverId = UserAccountContext.Collection().Where(x => x.UserRole == "Hod" || x.UserRole == "nodal").ToList();
+            forwardApplication.FileRef = Guid.NewGuid().ToString();
+            forwardAppViewModel.ForwardApplication = forwardApplication;
+            ViewBag.appid = appid;
+            return View(forwardAppViewModel);
 
-            return View(obj);
         }
         [HttpPost]
-        public JsonResult CommentSubmit(Comment comment, string appid)
+        public JsonResult CommentSubmit(ForwardAppViewModel forwardAppViewModel, string appid)
         {
+            ForwardApplication forwardApplication;
+            ERAppActiveUsers eRAppActiveUsers;
             string[] arr = Session["UserData"] as string[];
-                Comment com = new Comment()
+            bool modelIsValid = false;
+            Comment com = new Comment()
+            {
+                ERApplicationId = appid,
+                UserAccountId = arr[0],
+                Text = forwardAppViewModel.Comment.Text
+
+            };
+            
+            var userlist = forwardAppViewModel.ReciverIdSelectList.Except(ERAppActiveUsersContext.Collection().Where(x => x.ERApplicationId == appid).Select(y => y.UserAccountId).ToList());
+            foreach (string user in userlist)
+            {
+                eRAppActiveUsers = new ERAppActiveUsers()
                 {
                     ERApplicationId = appid,
-                    UserAccountId = arr[0],
-                    Text = comment.Text                   
+                    UserAccountId = user,
+                    Dept_Id = null,
+                    Is_Active = true,
+                    Status = null
                 };
+                ERAppActiveUsersContext.Insert(eRAppActiveUsers);
+            }
 
-                // comment.UserAccountId=  
-                if (com.UserAccountId != null && com.Text != null && com.ERApplicationId != null)
+            foreach (string x in forwardAppViewModel.ReciverIdSelectList)
+            {
+                forwardApplication = new ForwardApplication()
                 {
-                    commentContext.Insert(com);
+                    Reciever = x,
+                    Sender = arr[0],
+                    FileRef = forwardAppViewModel.ForwardApplication.FileRef,
+                    CommentRefId = com.Id,
+                    Subject = forwardAppViewModel.ForwardApplication.Subject,
+                    ERApplicationId = appid,
+                    Is_active = true,
+                    FileStatus = forwardAppViewModel.ForwardApplication.FileStatus
+                };
+                ForwardApplicationContext.Insert(forwardApplication);
+            }
+
+            modelIsValid = TryValidateModel(com);
+            if (modelIsValid)
+            {
+                commentContext.Insert(com);
+
+                using (TransactionScope scope = new TransactionScope())
+                {
                     commentContext.Commit();
-                    return Json("Success", JsonRequestBehavior.AllowGet);
+                    ERAppActiveUsersContext.Commit();
+                    ForwardApplicationContext.Commit();
+                    AuditTrailsContext.Commit();
+
+                    scope.Complete();
+                    return Json("Successfully Forward Application To Selected Users ", JsonRequestBehavior.AllowGet);
                 }
-                else
-                {
-                    return Json("ERROR", JsonRequestBehavior.AllowGet);
-                }
-           
+            }
+            else
+            {
+                return Json("ERROR", JsonRequestBehavior.AllowGet);
+            }
+
         }
         [HttpPost]
         public ActionResult LoadUploadFile(HttpPostedFileBase file, string RefId)

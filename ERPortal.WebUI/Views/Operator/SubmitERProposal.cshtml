@@ -281,6 +281,9 @@
         $('#operatorform').find('input,select,radio').prop('disabled', true);
         $('#ERAppSubmit').hide();
         $('.statussuccess').empty().append(response).removeClass('d-none');
+         setTimeout(function () {
+                $('.fileDelete').addClass('d-none');
+            }, 500);
     }
 
     function OnFailure() {

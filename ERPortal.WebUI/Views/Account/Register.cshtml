@@ -126,11 +126,12 @@
 <script type="text/javascript">  
    
     function OnSuccess(data) {
+         $('#RegistrationForm').find('input,select').val('');
         if (data.length > 0) {
             $('#usertable').DataTable().destroy();
             var td = "";
             $.each(data, function (index, element) {
-                td += "<tr><td>" + data[index].FirstName + "</td><td>" + data[index].Username + "</td><td>" + data[index].Role + "</td> <td>"
+                td += "<tr><td>" + data[index].Username + "</td><td>" + data[index].Role + "</td> <td>"
 
                     + "<button class='btn btn-danger' data-UserId=" + data[index].UserId + "><i class='fas fa-trash'></i></button></td><td><button class='btn btn-primary' data-UserId=" + data[index].UserId + "><i class='fas fa-edit'></i></button></td></tr>"
 
@@ -145,7 +146,7 @@
                     lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
 
                 });
-            $('#RegistrationForm').find('input,select').val('');
+           
         }
         else {
             alertModal('Something Went Wrong!');

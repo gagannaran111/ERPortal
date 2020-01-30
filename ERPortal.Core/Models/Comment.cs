@@ -11,13 +11,15 @@ namespace ERPortal.Core.Models
     {
       
         // Link to users table
+       
         public string UserAccountId { get; set; }
         public virtual UserAccount UserAccount { get; set; }
-
+       
+        
         [Display(Name = "APPID")]
         public string ERApplicationId { get; set; }
-        public virtual ERApplication ERApplication { get; set; }
-        public string Subject { get; set; }
+        public virtual ERApplication ERApplication { get; set; }     
+        [Required]
         public string Text { get; set; }
     }
    

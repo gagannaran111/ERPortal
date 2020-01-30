@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using ERPortal.Core.Contracts;
 using ERPortal.Core.Models;
 using ERPortal.Core.ViewModels;
+using System.Data.Entity;
 namespace ERPortal.WebUI.Controllers
 {
     [CustomAuthenticationFilter]
@@ -42,7 +43,8 @@ namespace ERPortal.WebUI.Controllers
         public ActionResult Index()
         {
             string[] userdata = Session["UserData"] as string[];
-            var er = ERAppActiveUsersContext.Collection().ToList();
+            string userid = userdata[0];
+            var er = ERAppActiveUsersContext.Collection().Where(x=>x.UserAccountId==userid).ToList();
             var results = (from F in er
                            join FT in ERApplicationContext.Collection().ToList() on F.ERApplicationId equals FT.AppId
                            where F.UserAccountId == userdata[0]

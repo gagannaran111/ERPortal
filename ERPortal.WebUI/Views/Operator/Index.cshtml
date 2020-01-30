@@ -1,4 +1,9 @@
-﻿<div class="jumbotron">
+﻿@{
+    ViewBag.Title = "Dashboard Operator";
+      Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="jumbotron">
     <h1 class="display-4">Hello, User!</h1>
     <hr class="my-4">
     <p>You have no new updates</p>
@@ -16,4 +21,88 @@
             </div>
         </div>
     </div>
-</div>  
+</div>
+<br />
+<br />
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-lg">
+                <div class="card-header bg-gradient-info text-light">
+                    <h5><i class="fas fa-table"></i> DGH ER Proposal</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-bordered" id="usertable">
+                        <thead class="bg-gradient-light">
+                            <tr>
+                                <th>AppId</th>
+                                @*<th>Eamil</th>*@
+                                <th>Created Date</th>
+                                <th>Organisation</th>
+                                @*<th>Delete</th>
+                                    <th>Edit</th>*@
+                                <th>DGH Approved Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var x in ViewBag.ApplicationData)
+                            {
+                                string appid = !String.IsNullOrEmpty(x.AppId) ? x.AppId : "Not Found";
+                                <tr>
+                                    <td>@Html.ActionLink(appid, "AppRecToDgh", "DGH", new { appid = appid }, null) </td>                                   @*<td>@x.Email</td>*@
+                                    <td>@x.CreatedAt.DateTime</td>
+                                    <td>@x.Organisation.Name</td>
+                                    @if (x.DGHApprovalStatus == true)
+                                    {
+                                        <td>Approved</td>
+                                    }
+                                    else if (x.DGHApprovalStatus == false)
+                                    {
+                                        <td>Not Apporved</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    @*<td>
+                                            <button class="btn btn-danger userdelete" data-UserId="@x.AppId"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary" data-UserId="@x.AppId"><i class="fas fa-edit"></i></button>
+                                        </td>*@
+                                </tr>
+
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" id="dghform">
+
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#usertable').DataTable(
+            {
+                scrollY: '50vh',
+                scrollCollapse: true,
+                paging: true,
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+
+                //processing: true,
+                // deferLoading: 5
+            });
+        $('.userdelete').click(function () {
+
+
+
+        });
+        $('#dghform').html();
+    });
+</script>

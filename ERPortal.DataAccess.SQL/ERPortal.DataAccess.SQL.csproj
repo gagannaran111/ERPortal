@@ -111,6 +111,10 @@
     <Compile Include="Migrations\202001240427165_addnewtable_StatusMaster.designer.cs">
       <DependentUpon>202001240427165_addnewtable_StatusMaster.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001300620081_RemoveTypeInComment.cs" />
+    <Compile Include="Migrations\202001300620081_RemoveTypeInComment.designer.cs">
+      <DependentUpon>202001300620081_RemoveTypeInComment.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -169,6 +173,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001240427165_addnewtable_StatusMaster.resx">
       <DependentUpon>202001240427165_addnewtable_StatusMaster.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001300620081_RemoveTypeInComment.resx">
+      <DependentUpon>202001300620081_RemoveTypeInComment.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using ERPortal.WebUI.Models;
 using System.Transactions;
+using System.Data.Entity;
 
 namespace ERPortal.WebUI.Controllers
 {
@@ -44,8 +45,16 @@ namespace ERPortal.WebUI.Controllers
 
         [CustomAuthorize("operator")]
         public ActionResult Index()
-        {
-            ViewBag.Title = "Home";
+        {          
+            string[] userdata = Session["UserData"] as string[];
+            string userid = userdata[0];
+            var er = ERAppActiveUsersContext.Collection().Where(x => x.UserAccountId == userid).ToList();
+            var results = (from F in er
+                           join FT in ERApplicationContext.Collection().ToList() on F.ERApplicationId equals FT.AppId
+                           where F.UserAccountId == userdata[0]
+                           select FT);
+
+            ViewBag.ApplicationData = results;
             return View();
         }
 
@@ -96,7 +105,7 @@ namespace ERPortal.WebUI.Controllers
                 ERApplicationContext.Insert(_ERApplication.ERApplications);
                 AuditTrails auditTrails = new AuditTrails()
                 {
-                    ERApplicationId = _ERApplication.ERApplications.AppId,
+                    ERApplicationId = _ERApplication.ERApplications.Id,
                     FileRefId = FileRef,
                     StatusId = "14e8e42d-aa81-4e91-876a-95651048f6d6",
                    // QueryDetailsId = null,
@@ -112,7 +121,7 @@ namespace ERPortal.WebUI.Controllers
                 {
                     ERAppActiveUsers eRAppActiveUsers = new ERAppActiveUsers()
                     {
-                        ERApplicationId = _ERApplication.ERApplications.AppId,
+                        ERApplicationId = _ERApplication.ERApplications.Id,
                         UserAccountId = x, 
                         Dept_Id = null,
                         Is_Active = true,

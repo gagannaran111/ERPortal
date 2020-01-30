@@ -175,7 +175,7 @@
                 <div class="modal-body" id="modalContentComment">
                 </div>
                 <div class="modal-footer">                 
-                    <button type="submit" class="btn btn-primary" id="btnCommentSave">Save</button>
+                    <button type="submit" class="btn btn-primary" style="display:none" id="btnCommentSave">Save</button>
                 </div>
             </div>
         </div>
@@ -248,8 +248,10 @@
 
                     if ('Success' == result) {
 
-                        $('#modalContentComment').html('<div class="alert alert-success" role="alert"> Successfully Added </div >');
-
+                        $('#modalContentComment').html('<div class="alert alert-success" role="alert"> '+ result +'  </div >');
+                         if ($("#btnCommentSave").is(":visible")) {
+                            $('#btnCommentSave').fadeOut();
+                        }
                     } else {
                         $('#modalContentComment').html(result);
                     }
@@ -368,11 +370,13 @@
             success: function (result) {
                 $('#CommentModalLabel').text(title);
                 $('#modalContentComment').html(result);
-
+               if ($("#btnCommentSave").is(":hidden")) {
+                        $('#btnCommentSave').show();
+                    }
             },
             error: function () {
                 $('#modalContentComment').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
-
+               
             },
             fail: function (xhr, textStatus, errorThrown) {
                 $('#modalContentComment').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');

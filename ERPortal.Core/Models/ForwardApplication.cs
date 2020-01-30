@@ -16,13 +16,12 @@ namespace ERPortal.Core.Models
         public string CommentRefId { get; set; }
         // public virtual  Comment Comment { get; set; }
         public string FileRef { get; set; }
-        public string FileStatus { get; set; }
+        public FileStatus FileStatus { get; set; }
         public Boolean Is_active { get; set; }
     }
     public enum FileStatus
     {
-        Forward,
-        Recieved,
-        Approved
+        Forward,       
+        Approved        
     }
 }
