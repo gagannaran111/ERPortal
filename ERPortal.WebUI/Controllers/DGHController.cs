@@ -12,7 +12,7 @@ using System.Transactions;
 namespace ERPortal.WebUI.Controllers
 {
     [CustomAuthenticationFilter]
-    [CustomAuthorize("HoD")]
+    [CustomAuthorize("HoD", "nodal")]
     public class DGHController : Controller
     {
         IRepository<ERApplication> ERApplicationContext;
@@ -49,7 +49,7 @@ namespace ERPortal.WebUI.Controllers
             string userid = userdata[0];
             var er = ERAppActiveUsersContext.Collection().Where(x => x.UserAccountId == userid).ToList();
             var results = (from F in er
-                           join FT in ERApplicationContext.Collection().ToList() on F.ERApplicationId equals FT.AppId
+                           join FT in ERApplicationContext.Collection().ToList() on F.ERApplicationId equals FT.Id
                            where F.UserAccountId == userdata[0]
                            select FT);
 

@@ -17,42 +17,45 @@
                             <tr>
                                 <th>AppId</th>
                                 @*<th>Eamil</th>*@
-                                <th>ReceiverId </th>
                                 <th>SenderId</th>
+                                <th>ReceiverId </th>
+
                                 <th>Status</th>
                                 <th>Is_Active</th>
                                 <th>CreatedAt</th>
 
                                 @*<th>Delete</th>
-                                    <th>Edit</th>*@
+        <th>Edit</th>*@
                             </tr>
                         </thead>
                         <tbody>
 
                             @foreach (var x in Model)
                             {
-                                <tr>
-                                    <td>@Html.ActionLink(x.ERApplicationId, "AppRecDGHToERC", "ERCommittee", new { x.ERApplicationId }, null) </td>
+                            <tr>
+                                <td>@Html.ActionLink(x.ERApplicationId, "AppRecDGHToERC", "ERCommittee", new { x.ERApplicationId }, null) </td>
 
-                                    @if (x.ReceiverId != null)
-                                    {
+
+                                <td>@x.Sender.FirstName @x.Sender.LastName (@x.Sender.UserRole)</td>
+                                @if (x.ReceiverId != null)
+                                {
                                     <td>@x.Receiver.FirstName @x.Receiver.LastName (@x.Receiver.UserRole)</td>
-                                    }
-                                    else { 
+                                }
+                                else
+                                {
                                     <td></td>
-                                    }
-                                    <td>@x.Sender.FirstName @x.Sender.LastName (@x.Sender.UserRole)</td>
-                                    <td>@x.Is_Active</td>
-                                    <td>@x.Status.Status</td>
-                                    <td>@x.CreatedAt.DateTime</td>
+                                }
+                                <td>@x.Status.Status</td>
+                                <td>@x.Is_Active</td>
+                                <td>@x.CreatedAt.DateTime</td>
 
-                                    @*<td>
-                                            <button class="btn btn-danger userdelete" data-UserId="@x.AppId"><i class="fas fa-trash"></i></button>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-primary" data-UserId="@x.AppId"><i class="fas fa-edit"></i></button>
-                                        </td>*@
-                                </tr>
+                                @*<td>
+            <button class="btn btn-danger userdelete" data-UserId="@x.AppId"><i class="fas fa-trash"></i></button>
+        </td>
+        <td>
+            <button class="btn btn-primary" data-UserId="@x.AppId"><i class="fas fa-edit"></i></button>
+        </td>*@
+                            </tr>
 
                             }
 

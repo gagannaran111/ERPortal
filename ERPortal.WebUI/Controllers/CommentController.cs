@@ -23,7 +23,8 @@ namespace ERPortal.WebUI.Controllers
         IRepository<ForwardApplication> ForwardApplicationContext;
         IRepository<AuditTrails> AuditTrailsContext;
         IRepository<ERAppActiveUsers> ERAppActiveUsersContext;
-        public CommentController(IRepository<Comment> _commentContext, IRepository<ERApplication> _eRApplicationContext, IRepository<UploadFile> _UploadFileContext, IRepository<UserAccount> _UserAccountContext, IRepository<ForwardApplication> _ForwardApplicationContext, IRepository<AuditTrails> _AuditTrailsContext, IRepository<ERAppActiveUsers> _ERAppActiveUsersContext)
+        IRepository<StatusMaster> StatusMasterContext;
+        public CommentController(IRepository<Comment> _commentContext, IRepository<ERApplication> _eRApplicationContext, IRepository<UploadFile> _UploadFileContext, IRepository<UserAccount> _UserAccountContext, IRepository<ForwardApplication> _ForwardApplicationContext, IRepository<AuditTrails> _AuditTrailsContext, IRepository<ERAppActiveUsers> _ERAppActiveUsersContext, IRepository<StatusMaster> _StatusMasterContext)
         {
 
             eRApplicationContext = _eRApplicationContext;
@@ -33,6 +34,7 @@ namespace ERPortal.WebUI.Controllers
             ForwardApplicationContext = _ForwardApplicationContext;
             AuditTrailsContext = _AuditTrailsContext;
             ERAppActiveUsersContext = _ERAppActiveUsersContext;
+            StatusMasterContext = _StatusMasterContext;
         }
 
         // GET: Comment
@@ -65,7 +67,7 @@ namespace ERPortal.WebUI.Controllers
                 Text = forwardAppViewModel.Comment.Text
 
             };
-            
+
             var userlist = forwardAppViewModel.ReciverIdSelectList.Except(ERAppActiveUsersContext.Collection().Where(x => x.ERApplicationId == appid).Select(y => y.UserAccountId).ToList());
             foreach (string user in userlist)
             {
@@ -80,6 +82,21 @@ namespace ERPortal.WebUI.Controllers
                 ERAppActiveUsersContext.Insert(eRAppActiveUsers);
             }
 
+            string st = "";
+            switch (forwardAppViewModel.ForwardApplication.FileStatus.ToString())
+            {
+                case "0":
+                    st = "Application Forward";
+                    break;
+                case "1":
+                    st = "Application Approved";
+                    break;
+                case "2":
+                    st = "Application Revert Back";
+                    break;
+                default: return Json("ERROR", JsonRequestBehavior.AllowGet);
+            }
+            string auditstatus = StatusMasterContext.Collection().Where(status => status.Status == st).FirstOrDefault().Id;
             foreach (string x in forwardAppViewModel.ReciverIdSelectList)
             {
                 forwardApplication = new ForwardApplication()
@@ -94,6 +111,19 @@ namespace ERPortal.WebUI.Controllers
                     FileStatus = forwardAppViewModel.ForwardApplication.FileStatus
                 };
                 ForwardApplicationContext.Insert(forwardApplication);
+
+                AuditTrails auditTrails = new AuditTrails()
+                {
+                    ERApplicationId = appid,
+                    FileRefId = forwardAppViewModel.ForwardApplication.FileRef,
+                    StatusId = auditstatus,
+                    // QueryDetailsId = null,
+                    SenderId = arr[0],
+                    ReceiverId = x,
+                    Is_Active = true,
+                };
+
+                AuditTrailsContext.Insert(auditTrails);
             }
 
             modelIsValid = TryValidateModel(com);
@@ -117,7 +147,42 @@ namespace ERPortal.WebUI.Controllers
                 return Json("ERROR", JsonRequestBehavior.AllowGet);
             }
 
+
+
         }
+        public ActionResult ApplicationSummary(string appid)
+        {
+            var forapptbl = ForwardApplicationContext.Collection().Where(forApp => forApp.ERApplicationId == appid).ToList();
+            var userlist = UserAccountContext.Collection().ToList();
+            var ForwardSummaryData = forapptbl.Select(x => new
+            {
+                recivername = userlist.Where(c => c.Id == x.Reciever)
+                .Select(m => m.FirstName + " " + m.LastName + " (" + m.UserRole + ")").FirstOrDefault(),
+                Sendername = userlist.Where(c => c.Id == x.Sender)
+               .Select(m => m.FirstName + " " + m.LastName + " (" + m.UserRole + ")").FirstOrDefault(),
+                x.FileStatus,
+                x.Id,
+                x.CreatedAt,
+                x.ERApplicationId,
+                x.Subject,
+                x.FileRef,
+                comments = commentContext.Collection().Where(c => c.Id == x.CommentRefId)
+               .Select(m => m.Text).FirstOrDefault(),
+                Files = UploadFileContext.Collection().Where(f => f.FIleRef == x.FileRef).ToList()
+            }).GroupBy(x=>x.FileRef);
+
+            return Json(ForwardSummaryData, JsonRequestBehavior.AllowGet);
+        }
+
+
+        //public JsonResult GetComment(string[] commentrefid)
+        //{
+        //    commentContext.Collection();
+        //    return Json(commentContext.Collection().ToList(), JsonRequestBehavior.AllowGet);
+
+        //}
+
+        #region Upload,Delete,Get Files
         [HttpPost]
         public ActionResult LoadUploadFile(HttpPostedFileBase file, string RefId)
         {
@@ -158,5 +223,6 @@ namespace ERPortal.WebUI.Controllers
             UploadFileContext.Commit();
             return Json("File Removed Success", JsonRequestBehavior.AllowGet);
         }
+        #endregion
     }
 }

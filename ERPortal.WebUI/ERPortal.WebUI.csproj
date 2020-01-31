@@ -615,6 +615,7 @@
     <Content Include="Views\Admin\StatusMaster.cshtml" />
     <Content Include="Views\Admin\AuditTrail.cshtml" />
     <Content Include="Views\Operator\SubmitERScreeningReport.cshtml" />
+    <Content Include="Views\Comment\ApplicationSummary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

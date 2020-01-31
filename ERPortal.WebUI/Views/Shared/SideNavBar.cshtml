@@ -75,13 +75,13 @@
                                         @Html.ActionLink("ERScreeningReport", "SubmitERScreeningReport", "Operator", null, new { @class = "nav-link" })
                                     </li>*@
                                 }
-                                @if (arr[2] == "HoD")
+                                else if (arr[2] == "HoD" || arr[2]=="nodal")
                                 {
                                     <li>
                                         @Html.ActionLink("DGH", "Index", "DGH", null, new { @class = "nav-link" })
                                     </li>
                                 }
-                                @if (arr[2] == "nodal")
+                                else if (arr[2] == "nodal")
                                 {
                                     <li>
                                         @Html.ActionLink("ERC", "Index", "ERCommittee", null, new { @class = "nav-link" })

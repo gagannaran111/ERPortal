@@ -26,8 +26,8 @@ namespace ERPortal.WebUI.Controllers
         IRepository<ForwardApplication> ForwardApplicationContext;
         IRepository<AuditTrails> AuditTrailContext;
         IRepository<ERAppActiveUsers> ERAppActiveUsersContext;
-
-        public OperatorController(IRepository<ERApplication> _ERApplicationContext, IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<Organisation> _OrganisationContext, IRepository<ForwardApplication> _ForwardApplicationContext, IRepository<AuditTrails> _AuditTrailContext, IRepository<ERAppActiveUsers> _ERAppActiveUsersContext)
+        IRepository<StatusMaster> StatusMasterContext;
+        public OperatorController(IRepository<ERApplication> _ERApplicationContext, IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<Organisation> _OrganisationContext, IRepository<ForwardApplication> _ForwardApplicationContext, IRepository<AuditTrails> _AuditTrailContext, IRepository<ERAppActiveUsers> _ERAppActiveUsersContext, IRepository<StatusMaster> _StatusMasterContext)
         {
             ERApplicationContext = _ERApplicationContext;
             FieldTypeContext = _FieldTypeContext;
@@ -39,6 +39,7 @@ namespace ERPortal.WebUI.Controllers
             ForwardApplicationContext = _ForwardApplicationContext;
             AuditTrailContext = _AuditTrailContext;
             ERAppActiveUsersContext = _ERAppActiveUsersContext;
+            StatusMasterContext = _StatusMasterContext;
         }
 
         // GET: Operator
@@ -50,7 +51,7 @@ namespace ERPortal.WebUI.Controllers
             string userid = userdata[0];
             var er = ERAppActiveUsersContext.Collection().Where(x => x.UserAccountId == userid).ToList();
             var results = (from F in er
-                           join FT in ERApplicationContext.Collection().ToList() on F.ERApplicationId equals FT.AppId
+                           join FT in ERApplicationContext.Collection().ToList() on F.ERApplicationId equals FT.Id
                            where F.UserAccountId == userdata[0]
                            select FT);
 
@@ -103,19 +104,20 @@ namespace ERPortal.WebUI.Controllers
                 _ERApplication.ERApplications.ERScreeningDetail.ReportDocumentPath = FileRef;
 
                 ERApplicationContext.Insert(_ERApplication.ERApplications);
+                string auditstatus = StatusMasterContext.Collection().Where(status => status.Status == "Application Submitted").FirstOrDefault().Id;
                 AuditTrails auditTrails = new AuditTrails()
                 {
                     ERApplicationId = _ERApplication.ERApplications.Id,
                     FileRefId = FileRef,
-                    StatusId = "14e8e42d-aa81-4e91-876a-95651048f6d6",
+                    StatusId = auditstatus,
                    // QueryDetailsId = null,
                     SenderId = userdata[0],
-                    ReceiverId = "aaf04b39-83b4-4870-84bb-20d2acac2e87",
+                    ReceiverId = "aaf04b39-83b4-4870-84bb-20d2acac2e87", // coordinator
                     Is_Active = true,
                 };
                 List<string> lst = new List<string>() {
                     userdata[0],
-                    "aaf04b39-83b4-4870-84bb-20d2acac2e87"
+                    "aaf04b39-83b4-4870-84bb-20d2acac2e87" // coordinator
                 };
                 foreach (string x in lst)
                 {
