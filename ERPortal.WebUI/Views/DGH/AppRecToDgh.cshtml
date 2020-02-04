@@ -3,6 +3,7 @@
     ViewBag.Title = "AppRecToDGH";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <style>
     .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
         background-color: #bcf31185;
@@ -25,24 +26,21 @@
     <div class="row">
         <!-- Tab panes -->
         <div class="tab-content shadow-lg col-lg-12 ">
-            <ul class="nav nav-tabs bg-gradient-light">
+            <ul class="nav nav-tabs bg-gradient-light mt-3">
                 <li class="nav-item">
                     <a class="nav-link active" data-toggle="tab" href="#ERProposalTab">ER Screening Report</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link commenttablink" data-toggle="tab" href="#CommentTab">Comment</a>
+                    <a class="nav-link commenttablink" data-toggle="tab" href="#CommentTab">Summary</a>
                 </li>
             </ul>
 
-            <div id="ERProposalTab" class="container tab-pane active">
+            <div id="ERProposalTab" class="container-fluid tab-pane active">
                 <div class="row">
                     <div class="col-md-12 mt-4">
 
                         @Html.AntiForgeryToken()
 
-                        <div class="alert alert-success alert-dismissible showmsg d-none statussuccess">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        </div>
                         <div class="card border-primary mb-3">
                             <div class="card-header bg-gradient-primary text-white">
                                 <div class="row">
@@ -247,27 +245,24 @@
 
             </div>
 
-            <div id="CommentTab" class="container tab-pane fade">
+            <div id="CommentTab" class="container-fluid tab-pane fade">
                 <br />
-                <div class="row">
-                    <div class="col-md ">
-                        <div class="card border-success mb-3">
-                            <div class="card-header bg-gradient-success text-white">
-                                <div class="row">
-                                    <div class="col-lg-6"><h4><i class="fas fa-edit"></i> SUMMARY/COMMENTS</h4></div>
-                                    <div class="col-lg-6 "><a href="#" class="btn btn-outline-light float-right GeneratePDF" id="printapp">Print</a></div>
-                                </div>
+
+                <div class="row form-group">
+                    <div class="col-xs-12 col-md-offset-2 col-md-12 col-lg-12 col-lg-offset-2">
+                        <div class="card  border-info">
+                            <div class="card-header bg-gradient-info text-light">
+                                <i class="fas fa-comment "></i> Application Summary
                             </div>
-                            <div class="card-body ml-lg-5">
-                                <div class="col-sm-12 mt-3 commentdiv">
-                                   
-                                   
-                                </div>
+                            <div class="card-body body-panel">
+
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
+
 
         </div>
 
@@ -307,28 +302,69 @@
              success: function (result) {
                  console.log(result);
                  var dd = "";
-                 $.each(result, function (index, element) {
+                 var statuscheck = "";
 
-                     dd += '<div class="border mb-5"><div class="text-success">' + result[index].comments + '</div><div class="bg-gradient-success border-bottom">Subject :' + result[index].Subject +
-                         '</div><div class="bg-gradient-light">' + result[index].comments + '</div><div class="alert-primary"><div class="badge badge-info">' + "" + '</div></div></div>';
+                 $.each(result, function (index, element) {
+                     var files = "";
+
+
+                     $.each(result[index].Files, function (i, e) {
+
+                         files += '<a class="badge badge-info mr-2" href="' + result[index].Files[i].FilePath + '" target="blank"><i class="fas fa-file-download"></i> ' + result[index].Files[i].FileName + '</a>';
                      });
 
-                 $(".commentdiv").html(dd);
 
+                    // statuscheck = result[index].FileStatus == 0 ? "Application Forward To " + result[index].recivername + " by " + result[index].Sendername : "Application Approved by " + result[index].Sendername;
+                     if (result[index].FileStatus == 0) {
+                         statuscheck = "Application Forward To " + result[index].recivername + " by " + result[index].Sendername;
+                     }
+                     else if (result[index].FileStatus == 1) {
+                         statuscheck = "Application Approved by " + result[index].Sendername;
+                     }
+                     else if (result[index].FileStatus == 2) {
+                         statuscheck = "Application Revert Back To " + result[index].recivername + " by " + result[index].Sendername;;
+                     }
+                     else {
+                         statuscheck = "";
+                     }
 
+                     dd += ' <li class="left clearfix "><span class="chat_img pull-left">' +
+                         '	<span class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="User" style="width:50px"> </span>' +
+                         '</span><div class="chat-body clearfix"><div class="header"><strong class="text-danger">'+statuscheck + '</strong> <small class="pull-right text-muted">' +
+                         '<i class="fas fa-clock"></i> ' +ToChangeDateFormate(result[index].CreatedAt)  + '</small></div>' +
+                         '<p>' + result[index].comments + '</p><div class="mb-2"><p>' + files + '</p ></div></div ></li >';
+                 });
+                 $(".body-panel").html('<ul class="chat">'+dd+'</ul>');
+             },
+             error: function () {
 
-                },
-                error: function () {
+                 alertModal("Something Went Wrong. Try Again Later");
+             },
+             fail: function (xhr, textStatus, errorThrown) {
 
-                    alertModal("Something Went Wrong. Try Again Later");
-                },
-                fail: function (xhr, textStatus, errorThrown) {
-                   
-                     alertModal("Something Went Wrong. Try Again Later");
-                }
-            });
+                 alertModal("Something Went Wrong. Try Again Later");
+             }
+         });
 
     });
+    $(document).on('change', '#ForwardApplication_FileStatus', function () {
+        var value = $('#ForwardApplication_FileStatus option:selected').val();
+        if (value == "1" || value == "2") {
+            $('.ReciverIdSelectList').addClass('d-none');
+        }
 
+        else {
+             $('.ReciverIdSelectList').removeClass('d-none');
+        }
+
+    })
+
+    function ToChangeDateFormate(value) {
+        var pattern = /Date\(([^)]+)\)/;
+        var results = pattern.exec(value);
+        var dt = new Date(parseFloat(results[1]));
+
+        return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+    }
 
 </script>

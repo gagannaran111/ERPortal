@@ -174,10 +174,8 @@ namespace ERPortal.WebUI.Controllers
         {
             ViewBag.Role = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
                                     .ToList(), "Name", "Name");
-
-
-
-            //IEnumerable<Users_in_Role_ViewModel> userwithrole = (from user1 in context.Users
+           
+            //ViewBag.UserList = (from user1 in context.Users
             //                    select new
             //                    {
             //                        UserId = user1.Id,
@@ -187,7 +185,6 @@ namespace ERPortal.WebUI.Controllers
             //                                     join role in context.Roles on userRole.RoleId
             //                                     equals role.Id
             //                                     select role.Name).ToList()
-
             //                    }).ToList().Select(p => new Users_in_Role_ViewModel()
             //                    {
             //                        UserId = p.UserId,
@@ -195,25 +192,7 @@ namespace ERPortal.WebUI.Controllers
             //                        Email = p.Email,
             //                        Role = string.Join(",", p.RoleNames)
             //                    });
-            //List<UserAccount> usersdata = userAccountContext.Collection().ToList();
-            ViewBag.UserList = (from user1 in context.Users
-                                select new
-                                {
-                                    UserId = user1.Id,
-                                    Username = user1.UserName,
-                                    Email = user1.Email,
-                                    RoleNames = (from userRole in user1.Roles
-                                                 join role in context.Roles on userRole.RoleId
-                                                 equals role.Id
-                                                 select role.Name).ToList()
-                                }).ToList().Select(p => new Users_in_Role_ViewModel()
-                                {
-                                    UserId = p.UserId,
-                                    Username = p.Username,
-                                    Email = p.Email,
-                                    Role = string.Join(",", p.RoleNames)
-                                });
-
+            ViewBag.UserList = userAccountContext.Collection().ToList();
             RegisterViewModel registerViewModel = new RegisterViewModel();
             registerViewModel.Organisations = OrganisationContext.Collection().ToList(); ;
             return View(registerViewModel);

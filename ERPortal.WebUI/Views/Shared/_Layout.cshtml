@@ -36,6 +36,8 @@
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/DataTables/dataTables.bootstrap4.min.js"></script>
     <link href="~/Content/css/SideNavBar.css" rel="stylesheet" />
+    <link href="~/Content/css/ChatBox.css" rel="stylesheet" />
+   
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -246,7 +248,7 @@
                 data: $('#myCommentForm').serialize(),
                 success: function (result) {
 
-                    if ('Success' == result) {
+                    if ('ERROR' != result) {
 
                         $('#modalContentComment').html('<div class="alert alert-success" role="alert"> '+ result +'  </div >');
                          if ($("#btnCommentSave").is(":visible")) {

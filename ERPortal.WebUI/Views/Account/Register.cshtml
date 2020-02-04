@@ -4,8 +4,8 @@
 }
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-5">
+    <div class="row nowrap">
+        <div class="col-md-4">
             <div class="card shadow-lg">
                 <div class="card-header bg-gradient-info text-light">
                     <h5><i class="fas fa-user-plus"></i> Create a new account.</h5>
@@ -20,7 +20,7 @@
                     },new { id="RegistrationForm" }))
                     {
                        // @Html.AntiForgeryToken()
-
+                     
                         <div class="form-group row">
                             @Html.LabelFor(m => m.FirstName, new { @class = "col-md-4 control-label" })
                             <div class="col-md-8">
@@ -79,7 +79,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-7">
+        <div class="col-md-8">
             <div class="card shadow-lg">
                 <div class="card-header bg-gradient-info text-light">
                     <h5><i class="fas fa-table"></i> REGISTERED USER</h5>
@@ -89,8 +89,10 @@
                         <thead class="bg-gradient-light">
                             <tr>
                                 <th>Name</th>
-                                @*<th>Eamil</th>*@
+
                                 <th>Role</th>
+                                <th>Email</th>
+                                <th>Organisation</th>
                                 <th>Delete</th>
                                 <th>Edit</th>
                             </tr>
@@ -98,18 +100,18 @@
                         <tbody>
                             @foreach (var x in ViewBag.UserList)
                             {
-                                <tr>
-
-                                    <td>@x.Username</td>
-                                    @*<td>@x.Email</td>*@
-                                    <td>@x.Role</td>
-                                    <td>
-                                        <button class="btn btn-danger" data-UserId="@x.UserId"><i class="fas fa-trash"></i></button>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-primary" data-UserId="@x.UserId"><i class="fas fa-edit"></i></button>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>@x.FirstName @x.LastName</td>
+                                <td>@x.UserRole</td>
+                                <td>@x.EmailID</td>
+                                <td>@x.Organisation.Type</td>
+                                <td>
+                                    <button class="btn btn-danger" data-UserId="@x.Id"><i class="fas fa-trash"></i></button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary" data-UserId="@x.Id"><i class="fas fa-edit"></i></button>
+                                </td>
+                            </tr>
 
                             }
 
