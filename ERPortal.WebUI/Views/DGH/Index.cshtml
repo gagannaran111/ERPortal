@@ -16,11 +16,12 @@
                             <tr>
                                 <th>AppId</th>
                                 @*<th>Eamil</th>*@
-                                <th>Created Date</th>
                                 <th>Organisation</th>
+                                <th>Created Date</th>
+
                                 @*<th>Delete</th>
                                     <th>Edit</th>*@
-                                <th>DGH Approved Status</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -30,26 +31,9 @@
                                 string appid = !String.IsNullOrEmpty(x.AppId) ? x.AppId : "Not Found";
                                 <tr>
                                     <td>@Html.ActionLink(appid, "AppRecToDgh", "DGH", new { appid = appid }, null) </td>                                   @*<td>@x.Email</td>*@
-                                    <td>@x.CreatedAt.DateTime</td>
+
                                     <td>@x.Organisation.Name</td>
-                                    @if (x.DGHApprovalStatus == true)
-                                    {
-                                        <td>Approved</td>
-                                    }
-                                    else if (x.DGHApprovalStatus == false)
-                                    {
-                                        <td>Not Apporved</td>
-                                    }
-                                    else
-                                    {
-                                        <td></td>
-                                    }
-                                    @*<td>
-                                            <button class="btn btn-danger userdelete" data-UserId="@x.AppId"><i class="fas fa-trash"></i></button>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-primary" data-UserId="@x.AppId"><i class="fas fa-edit"></i></button>
-                                        </td>*@
+                                    <td>@x.CreatedAt.DateTime</td>
                                 </tr>
 
                             }

@@ -46,8 +46,10 @@
                                 <div class="row">
                                     <div class="col-lg-6"><h5><i class="fas fa-file-alt"></i> ER Screening Report Approval For DGH</h5></div>
                                     <div class="col-lg-6 ">
-                                        <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 GeneratePDF" id="printapp">Print</a>
-                                        <a href="#" class="btn btn-sm btn-outline-light float-right ForwardApp" id="forwardapp" data-toggle="modal" data-target="#CommentModal" data-page="Comment" data-title="Application Forward">Forward/Approved</a>
+                                        <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 GeneratePDF" id="printapp"><i class="fas fa-print"></i> Print</a>
+                                        <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 ForwardApp d-none" id="forwardapp" data-toggle="modal" data-target="#CommentModal" data-page="Comment" data-title="Application Forward"><i class="fas fa-forward"></i> Forward/Approved</a>
+                                        <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 QueryComment " id="QueryComment" data-toggle="modal" data-target="#CommentModal" data-page="Comment" data-title="Query"><i class="fas fa-question"></i> Query</a>
+                                        <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 GrantApp" id="grantapp" data-toggle="modal" data-target="#CommentModal" data-page="Comment" data-title="Application Grant"><i class="fas fa-check"></i> Grant</a>
                                     </div>
                                 </div>
                             </div>
@@ -252,12 +254,10 @@
                     <div class="col-xs-12 col-md-offset-2 col-md-12 col-lg-12 col-lg-offset-2">
                         <div class="card  border-info">
                             <div class="card-header bg-gradient-info text-light">
-                                <i class="fas fa-comment "></i> Application Summary
+                                <h6><i class="fas fa-comment-alt "></i> Application Summary<span class="float-right">Application Id : @Model.ERApplications.AppId</span></h6>
                             </div>
                             <div class="card-body body-panel">
-
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -287,13 +287,19 @@
 
                 //processing: true,
                 // deferLoading: 5
-            });
+             });
+        BtnForwardCheckShowHideStatus("btnForward");
     });
-
     $(document).on('click', '.ForwardApp', function () {
-
-        ShowCommentModal("@Model.ERApplications.Id",$(this).attr('data-title'));
+        ShowCommentModal("@Model.ERApplications.Id",$(this).attr('data-title'),"@Url.Action("ForwardApplication","Comment")");
     });
+     $(document).on('click', '.QueryComment', function () {
+        ShowCommentModal("@Model.ERApplications.Id",$(this).attr('data-title'),"@Url.Action("QueryComment","Comment")");
+     });
+     $(document).on('click', '.GrantApp', function () {
+        ShowCommentModal("@Model.ERApplications.Id",$(this).attr('data-title'),"@Url.Action("GrantApplication","Comment")");
+     });
+    
 
     $(document).on('click', '.commenttablink', function () {
 
@@ -313,23 +319,22 @@
                          files += '<a class="badge badge-info mr-2" href="' + result[index].Files[i].FilePath + '" target="blank"><i class="fas fa-file-download"></i> ' + result[index].Files[i].FileName + '</a>';
                      });
 
-
-                    // statuscheck = result[index].FileStatus == 0 ? "Application Forward To " + result[index].recivername + " by " + result[index].Sendername : "Application Approved by " + result[index].Sendername;
                      if (result[index].FileStatus == 0) {
                          statuscheck = "Application Forward To " + result[index].recivername + " by " + result[index].Sendername;
                      }
                      else if (result[index].FileStatus == 1) {
                          statuscheck = "Application Approved by " + result[index].Sendername;
                      }
-                     else if (result[index].FileStatus == 2) {
-                         statuscheck = "Application Revert Back To " + result[index].recivername + " by " + result[index].Sendername;;
-                     }
+                     //else if (result[index].FileStatus == 2) {
+                     //    statuscheck = "Application Revert Back To " + result[index].recivername + " by " + result[index].Sendername;;
+                     //}
                      else {
                          statuscheck = "";
                      }
 
+                   
                      dd += ' <li class="left clearfix "><span class="chat_img pull-left">' +
-                         '	<span class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="User" style="width:50px"> </span>' +
+                         '	<span class="chat_img"> <img src="../Content/img/user-profile.png" alt="User" style="width:50px"> </span>' +
                          '</span><div class="chat-body clearfix"><div class="header"><strong class="text-danger">'+statuscheck + '</strong> <small class="pull-right text-muted">' +
                          '<i class="fas fa-clock"></i> ' +ToChangeDateFormate(result[index].CreatedAt)  + '</small></div>' +
                          '<p>' + result[index].comments + '</p><div class="mb-2"><p>' + files + '</p ></div></div ></li >';
@@ -365,6 +370,32 @@
         var dt = new Date(parseFloat(results[1]));
 
         return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+    }
+     function BtnForwardCheckShowHideStatus(typebtn) {
+        var sendData = { btnType: typebtn, appid: "@Model.ERApplications.Id" };
+        $.ajax({
+            url: "@Url.Action("BtnCheckStatus", "Comment")",
+            type: 'POST',
+            data: sendData,
+            async: false,
+            success: function (result) {
+                switch (result) {
+                    case "Show":
+                        $('.ForwardApp').removeClass('d-none');
+                        break;
+                    case "Hide":
+                        $('.ForwardApp').addClass('d-none');
+                        break;
+                    default:  alertModal("Something Went Wrong. Try Again Later");
+                }
+            },
+            error: function () {
+                alertModal("Something Went Wrong. Try Again Later");
+            },
+            fail: function (xhr, textStatus, errorThrown) {
+                alertModal("Something Went Wrong. Try Again Later");
+            }
+        });
     }
 
 </script>

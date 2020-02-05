@@ -11,13 +11,12 @@ namespace ERPortal.Core.Models
         public string ERApplicationId { get; set; }
         
         public string Subject { get; set; }
-        public string Text { get; set; }
+        public string CommentRefId { get; set; }
         public string QueryParent { get; set; }
         public int QuerySeq { get; set; }
         public string FileRefId { get; set; }
        
-        public string UserAccountId { get; set; }
-        public virtual UserAccount UserAccount { get; set; }
+        public string SenderId { get; set; }      
         public Boolean Is_Active { get; set; }
 
     }
@@ -28,7 +27,7 @@ namespace ERPortal.Core.Models
         public string Reciever { get; set; }
         public Boolean Is_Active { get; set; }
         public string QueryRefId { get; set; }
-        public virtual QueryDetails QueryRef { get; set; }
+        
        // public string ERApplicationId  { get; set; }
     }
 }

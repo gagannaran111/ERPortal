@@ -24,9 +24,9 @@ namespace ERPortal.Core.Models
     }
     public enum FileStatus
     {
+        [Display(Name = "Application Forward For Comments/Approval")]
         Forward,       
-        Approved,
-        [Display(Name ="Application Revert Back")]
-        ApplicationRevertBack
+        [Display(Name ="Application Approved")]
+        Approved
     }
 }

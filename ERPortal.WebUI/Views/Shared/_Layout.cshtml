@@ -177,7 +177,7 @@
                 <div class="modal-body" id="modalContentComment">
                 </div>
                 <div class="modal-footer">                 
-                    <button type="submit" class="btn btn-primary" style="display:none" id="btnCommentSave">Save</button>
+                    <button type="submit" class="btn btn-primary" style="display:none" id="btnCommentSave"><i class="fas fa-save"></i> Save</button>
                 </div>
             </div>
         </div>
@@ -241,11 +241,12 @@
 
       });
     $('#btnCommentSave').click(function () {
-         var formUrl = $('#myCommentForm').attr('action');
+        var form = $('#modalContentComment').find('form');
+        var formUrl = form.attr('action');
             $.ajax({
                 url: formUrl,
                 type: 'POST',
-                data: $('#myCommentForm').serialize(),
+                data: form.serialize(),
                 success: function (result) {
 
                     if ('ERROR' != result) {
@@ -365,10 +366,12 @@
                 },
             })
     }
-    function ShowCommentModal(appid,title) {
-
-        $.ajax({
-            url: "/Comment/Comment?appid=" + appid,
+    function ShowCommentModal(appid, title, urlpath) {
+        $('#modalContentComment').empty();
+        var senddata = { appid: appid };
+        $.ajax({ 
+            url: urlpath,
+            data: senddata,
             success: function (result) {
                 $('#CommentModalLabel').text(title);
                 $('#modalContentComment').html(result);

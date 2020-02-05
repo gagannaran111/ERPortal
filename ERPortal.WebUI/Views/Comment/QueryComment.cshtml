@@ -1,26 +1,27 @@
-﻿
-@model ERPortal.Core.ViewModels.ForwardAppViewModel
+﻿@model ERPortal.Core.ViewModels.QueryCommentViewModel
 @{
     Layout = null;
 }
-@using (Ajax.BeginForm("CommentSubmit", "Comment", new { appid = ViewBag.appid }, new AjaxOptions
+
+
+@using (Ajax.BeginForm("QueryCommentSubmit", "Comment", new { appid = ViewBag.appid }, new AjaxOptions
 {
     HttpMethod = "POST",
     OnSuccess = "OnSuccessComment(data)",
     OnFailure = "OnFailureComment(data)",
     //LoadingElementId = "progress"
-}, new { @id = "myCommentForm" }))
+}, new { @id = "myQueryCommentForm" }))
 {
-    @Html.HiddenFor(model => model.ForwardApplication.FileRef)
+    @Html.HiddenFor(model => model.QueryDetails.FileRefId)
 
     @*@using (Html.BeginForm("CommentSubmit", "Comment", new { appid = Model.ERApplicationId, FileRef = ViewBag.RefId }, FormMethod.Post, new { @id = "myCommentForm" }))
         {*@
     @Html.AntiForgeryToken()
     <div class="form-group row">
-        @Html.LabelFor(model => model.ForwardApplication.FileStatus, htmlAttributes: new { @class = "col-sm-3 col-form-label" })
+        @Html.LabelFor(model => model.QueryStatus, htmlAttributes: new { @class = "col-sm-3 col-form-label" })
         <div class="col-sm-6 d-flex align-items-center">
-            @Html.EnumDropDownListFor(model => model.ForwardApplication.FileStatus, "Choose...", new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.ForwardApplication.FileStatus, "", new { @class = "text-danger" })
+            @Html.EnumDropDownListFor(model => model.QueryStatus, "Choose...", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.QueryStatus, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="form-group row ReciverIdSelectList">
@@ -31,12 +32,12 @@
         </div>
     </div>
     @*<div class="form-group row">
-        @Html.LabelFor(model => model.ForwardApplication.Subject, htmlAttributes: new { @class = "col-sm-3 col-form-label" })
-        <div class="col-sm-9 d-flex align-items-center">
-            @Html.EditorFor(model => model.ForwardApplication.Subject, new { htmlAttributes = new { @class = "form-control " } })
-            @Html.ValidationMessageFor(model => model.ForwardApplication.Subject, "", new { @class = "text-danger" })
-        </div>
-    </div>*@
+            @Html.LabelFor(model => model.ForwardApplication.Subject, htmlAttributes: new { @class = "col-sm-3 col-form-label" })
+            <div class="col-sm-9 d-flex align-items-center">
+                @Html.EditorFor(model => model.ForwardApplication.Subject, new { htmlAttributes = new { @class = "form-control " } })
+                @Html.ValidationMessageFor(model => model.ForwardApplication.Subject, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
     <div class="form-group row">
         @Html.LabelFor(model => model.Comment.Text, htmlAttributes: new { @class = "col-sm-3 col-form-label" })
         <div class="col-sm-9 d-flex align-items-center">
@@ -52,7 +53,7 @@
         <div class="col-lg-6">
             <div class="form-check form-check-inline">
                 @Html.TextBox("file", "", new { type = "file", id = "txtFile" })
-                <button type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" filerefid="@Model.ForwardApplication.FileRef" divid="UploadFilesData" inputfile="txtFile" style="z-index:99999999"><i class="fas fa-upload"></i> Upload</button>
+                <button type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" filerefid="@Model.QueryDetails.FileRefId" divid="UploadFilesData" inputfile="txtFile" style="z-index:99999999"><i class="fas fa-upload"></i> Upload</button>
                 @*<input type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" filerefid="@ViewBag.RefId" divid="UploadFilesData" inputfile="txtFile" style="z-index:99999999" />*@
             </div>
         </div>
@@ -66,4 +67,3 @@
     </div>
     //}
 }
-
