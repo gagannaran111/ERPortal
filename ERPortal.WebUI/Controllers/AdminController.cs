@@ -20,7 +20,8 @@ namespace ERPortal.WebUI.Controllers
         IRepository<ERScreeningInstitute> ERScreeningInstituteContext;
         IRepository<StatusMaster> StatusMasterContext;
         IRepository<AuditTrails> AuditTrailContext;
-        public AdminController(IRepository<FieldType> _FieldTypeContext, IRepository<Organisation> _OrganisationContext, IRepository<UserAccount> _UserAccountContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<StatusMaster> _StatusMasterContext, IRepository<AuditTrails> _AuditTrailContext)
+        IRepository<ERApplication> ERApplicationContext;
+        public AdminController(IRepository<FieldType> _FieldTypeContext, IRepository<Organisation> _OrganisationContext, IRepository<UserAccount> _UserAccountContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<StatusMaster> _StatusMasterContext, IRepository<AuditTrails> _AuditTrailContext, IRepository<ERApplication> _ERApplicationContext)
         {
             FieldTypeContext = _FieldTypeContext;
             OrganisationContext = _OrganisationContext;
@@ -29,6 +30,7 @@ namespace ERPortal.WebUI.Controllers
             ERScreeningInstituteContext = _ERScreeningInstituteContext;
             StatusMasterContext = _StatusMasterContext;
             AuditTrailContext = _AuditTrailContext;
+            ERApplicationContext = _ERApplicationContext;
         }
         // GET: Admin
         public ActionResult Index()
@@ -44,12 +46,35 @@ namespace ERPortal.WebUI.Controllers
             adminManageViewModel.StatusMasters = StatusMasterContext.Collection().ToList();
             return View(adminManageViewModel);
         }
-
         public ActionResult AuditTrail()
         {
-            IEnumerable<AuditTrails> AuditTrailList = AuditTrailContext.Collection().ToList();
+            ViewBag.Application = ERApplicationContext.Collection().Select(x=>new {
+                value = x.Id,
+                text =x.AppId
+            }).ToList();
 
-            return View(AuditTrailList);
+            return View();
+
+        }
+        public JsonResult AuditTrailData(string appid)
+        {
+            string Application = ERApplicationContext.Collection().Where(x => x.Id == appid).FirstOrDefault().AppId;
+            var AuditTrailList = AuditTrailContext.Collection().Where(s => s.ERApplicationId == appid)
+                .Select(x => new
+                {
+                    ERApplicationId = Application,
+                    x.CreatedAt,
+                    x.Receiver,
+                    x.Sender,
+                    x.ReceiverId,
+                    x.StatusId,
+                    x.Status,
+                    x.QueryDetailsId,
+                    x.Is_Active,
+                    x.FileRefId,
+                    x.Id
+                }).OrderByDescending(d=>d.CreatedAt).ToList();
+            return Json(AuditTrailList, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult AjaxAdd(string targetPage)

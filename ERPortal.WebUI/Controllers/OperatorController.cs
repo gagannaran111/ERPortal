@@ -14,6 +14,7 @@ using System.Data.Entity;
 namespace ERPortal.WebUI.Controllers
 {
     [CustomAuthenticationFilter]
+    [CustomAuthorize("operator")]
     public class OperatorController : Controller
     {
         IRepository<ERApplication> ERApplicationContext;
@@ -44,7 +45,7 @@ namespace ERPortal.WebUI.Controllers
 
         // GET: Operator
 
-        [CustomAuthorize("operator")]
+    
         public ActionResult Index()
         {          
             string[] userdata = Session["UserData"] as string[];
@@ -59,7 +60,7 @@ namespace ERPortal.WebUI.Controllers
             return View();
         }
 
-        [CustomAuthorize("operator")]
+       
         public ActionResult SubmitERProposal(string appid)
         {
             ViewBag.Title = "Submit Proposal";
@@ -96,7 +97,7 @@ namespace ERPortal.WebUI.Controllers
                 ViewBag.RefId = Guid.NewGuid().ToString();
                 return View(_ERApplication);
             }
-
+          //  _ERApplication.ERApplications.FieldName
             else
             {
                 string dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss").Replace("/", "").Replace(":", "").Replace(" ", "");

@@ -19,27 +19,27 @@
     <div class="row mb-3">
         <div class="col-sm">
             <div class="card-deck">
-                <div class="card d-flex  bg-gradient-success">                    
+                <div class="card d-flex rounded-pill  bg-gradient-success">                    
                     <div class="card-body align-items-center d-flex justify-content-center">
                         <h6 class="card-title text-center">@Html.ActionLink("Submit ER Screening Report", "SubmitERProposal", "Operator", null, new { @class = "text-white" })</h6>
                     </div>
                 </div>
-                <div class="card d-flex  text-white bg-gradient-primary">
+                <div class="card d-flex  text-white rounded-pill bg-gradient-primary">
                     <div class="card-body align-items-center d-flex justify-content-center">
-                        <h6 class="card-title text-center">View Submitted Proposals</h6>
+                        <h6 class="card-title text-center">ER Screening Report Submission Status</h6>
                     </div>
                 </div>
-                <div class="card d-flex  text-white bg-gradient-primary">
+                <div class="card d-flex  text-white rounded-pill bg-gradient-primary">
                     <div class="card-body align-items-center d-flex justify-content-center">
-                        <h6 class="card-title text-center">View Submitted Proposals</h6>
+                        <h6 class="card-title text-center">Submitted ER Proposals</h6>
                     </div>
                 </div>
-                <div class="card d-flex  text-white bg-gradient-primary">
+                <div class="card d-flex  text-white rounded-pill bg-gradient-primary">
                     <div class="card-body align-items-center d-flex justify-content-center">
-                        <h6 class="card-title text-center">View Submitted Proposals</h6>
+                        <h6 class="card-title text-center">ER Proposal Submission Status</h6>
                     </div>
                 </div>
-                <div class="card d-flex  text-white bg-gradient-primary">
+                <div class="card d-flex  text-white rounded-pill bg-gradient-primary">
                     <div class="card-body align-items-center d-flex justify-content-center">
                         <h6 class="card-title text-center">View Submitted Proposals</h6>
                     </div>
@@ -58,12 +58,11 @@
                         <thead class="bg-gradient-light">
                             <tr>
                                 <th>AppId</th>
-                                @*<th>Eamil</th>*@
-                                <th>Created Date</th>
+
+                                <th>Field Type</th>
+                                <th>Field Name</th>
                                 <th>Organisation</th>
-                                @*<th>Delete</th>
-                                    <th>Edit</th>*@
-                                <th>DGH Approved Status</th>
+                                <th>Created Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,29 +70,15 @@
                             @foreach (var x in ViewBag.ApplicationData)
                             {
                                 string appid = !String.IsNullOrEmpty(x.AppId) ? x.AppId : "Not Found";
-                                <tr>
-                                    <td>@Html.ActionLink(appid, "SubmitERProposal", "Operator", new { appid = appid }, null) </td>                                   @*<td>@x.Email</td>*@
-                                    <td>@x.CreatedAt.DateTime</td>
-                                    <td>@x.Organisation.Name</td>
-                                    @if (x.DGHApprovalStatus == true)
-                                    {
-                                        <td>Approved</td>
-                                    }
-                                    else if (x.DGHApprovalStatus == false)
-                                    {
-                                        <td>Not Apporved</td>
-                                    }
-                                    else
-                                    {
-                                        <td></td>
-                                    }
-                                    @*<td>
-                                            <button class="btn btn-danger userdelete" data-UserId="@x.AppId"><i class="fas fa-trash"></i></button>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-primary" data-UserId="@x.AppId"><i class="fas fa-edit"></i></button>
-                                        </td>*@
-                                </tr>
+                            <tr>
+                                <td>@Html.ActionLink(appid, "SubmitERProposal", "Operator", new { appid = appid }, null) </td>                                   @*<td>@x.Email</td>*@
+
+                                <td>@x.FieldType.Type</td>
+                                <td>@x.FieldName</td>
+                                <td>@x.Organisation.Name</td>
+                                <td>@x.CreatedAt.DateTime</td>
+
+                            </tr>
 
                             }
 

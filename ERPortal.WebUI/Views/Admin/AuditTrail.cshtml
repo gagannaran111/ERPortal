@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ERPortal.Core.Models.AuditTrails>
+﻿
 @{
     ViewBag.Title = "AuditTrail";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,12 +7,24 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
+            <div class="form-group row">
+                <div class="col-sm-3 d-flex">
+                    @Html.DropDownList("DropApplcationId", new SelectList(ViewBag.Application, "value", "text"), "Choose....", new { @class = "form-control", @id = "DropApplcationId" })
+
+                </div>
+                <div class="col-sm-4 d-flex">
+
+                    <button class="btn btn-sm btn-primary btnSearchApp"><i class="fas fa-search"></i> Search</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
             <div class="card shadow-lg">
                 <div class="card-header bg-gradient-info text-light">
-                    <h5><i class="fas fa-table"></i> ERC ER Proposal</h5>
+                    <h5><i class="fas fa-table"></i> ER Screening Report</h5>
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped table-bordered" id="usertable">
+                    <table class="table table-striped table-bordered" id="AuditTable">
                         <thead class="bg-gradient-light">
                             <tr>
                                 <th>AppId</th>
@@ -25,39 +37,19 @@
                                 <th>CreatedAt</th>
 
                                 @*<th>Delete</th>
-        <th>Edit</th>*@
+                                    <th>Edit</th>*@
                             </tr>
                         </thead>
                         <tbody>
 
-                            @foreach (var x in Model)
-                            {
-                            <tr>
-                                <td>@Html.ActionLink(x.ERApplicationId, "AppRecDGHToERC", "ERCommittee", new { x.ERApplicationId }, null) </td>
 
+                            @*<td>
+                                    <button class="btn btn-danger userdelete" data-UserId="@x.AppId"><i class="fas fa-trash"></i></button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary" data-UserId="@x.AppId"><i class="fas fa-edit"></i></button>
+                                </td>*@
 
-                                <td>@x.Sender.FirstName @x.Sender.LastName (@x.Sender.UserRole)</td>
-                                @if (x.ReceiverId != null)
-                                {
-                                    <td>@x.Receiver.FirstName @x.Receiver.LastName (@x.Receiver.UserRole)</td>
-                                }
-                                else
-                                {
-                                    <td></td>
-                                }
-                                <td>@x.Status.Status</td>
-                                <td>@x.Is_Active</td>
-                                <td>@x.CreatedAt.DateTime</td>
-
-                                @*<td>
-            <button class="btn btn-danger userdelete" data-UserId="@x.AppId"><i class="fas fa-trash"></i></button>
-        </td>
-        <td>
-            <button class="btn btn-primary" data-UserId="@x.AppId"><i class="fas fa-edit"></i></button>
-        </td>*@
-                            </tr>
-
-                            }
 
                         </tbody>
                     </table>
@@ -72,20 +64,51 @@
 </div>
 <script>
     $(document).ready(function () {
-        $('#usertable').DataTable(
-            {
-                scrollY: '50vh',
-                scrollCollapse: true,
-                paging: true,
-                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
 
-                //processing: true,
-                // deferLoading: 5
-            });
         $('.userdelete').click(function () {
 
 
 
+        });
+
+    });
+    $(document).on('click', '.btnSearchApp', function () {
+        $('#AuditTable').DataTable().destroy();
+        var sendData = { appid: $('#DropApplcationId option:selected').val() };
+        $.ajax({
+
+            url:"@Url.Action("AuditTrailData", "Admin")",
+            type: 'POST',
+            data: sendData,
+            async: false,
+            success: function (result) {
+                console.log(result);
+                if (result.length > 0) {
+                    var dd = "";
+                    $.each(result, function (index, element) {
+                        dd += "<tr><td>" + result[index].ERApplicationId + "</td><td>" + result[index].Sender.FirstName + " " + result[index].Sender.LastName + "(" + result[index].Sender.UserRole + ")</td >" +
+                            " <td>" + result[index].Receiver.FirstName + " " + result[index].Receiver.LastName + "(" + result[index].Receiver.UserRole + ")</td > <td>" + result[index].Status.Status + "</td><td>" +
+                            result[index].Is_Active + "</td><td>" + ToChangeDateFormate(result[index].CreatedAt) + "</td></tr>";
+
+                    });
+                    $('#AuditTable tbody').html(dd);
+                    $('#AuditTable').DataTable(
+                        {
+                            scrollY: '70vh',
+                            scrollCollapse: true,
+                            paging: true,
+                            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                        });
+                }
+            },
+            error: function () {
+
+                 alertModal("Something Went Wrong. Try Again Later");
+             },
+             fail: function (xhr, textStatus, errorThrown) {
+
+                 alertModal("Something Went Wrong. Try Again Later");
+             }
         });
 
     });

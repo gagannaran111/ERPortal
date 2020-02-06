@@ -2,7 +2,12 @@
 <nav id="sidebar" class="sidebar-wrapper">
     <div class="sidebar-content">
         <div class="sidebar-brand">
-            @Html.ActionLink("DGH ER PORTAL", "Index", "Home")
+            <a href="@Url.Action("Index","Home")">
+                <i class="fa fa-home"></i>
+                <span>ER PORTAL</span>
+                @*<span class="badge badge-pill badge-warning">New</span>*@
+            </a>
+
 
             <div id="close-sidebar">
                 <i class="fas fa-times"></i>
@@ -54,61 +59,46 @@
                     <li class="header-menu">
                         <span>General</span>
                     </li>
-                    <li class="sidebar-dropdown">
-                        <a href="#">
-                            <i class="fa fa-tachometer-alt"></i>
-                            <span>Dashboard</span>
-                            @*<span class="badge badge-pill badge-warning">New</span>*@
-                        </a>
-                        <div class="sidebar-submenu">
-                            <ul>
-                                <li>
-                                    @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
+                    @if (arr[2] == "operator")
+                    {
+                        <li class="sidebar-content">
+                            <a href="@Url.Action("Index", "Operator")">
+                                <i class="fa fa-tachometer-alt"></i>
+                                <span>Dashboard</span>
+                                @*<span class="badge badge-pill badge-warning">New</span>*@
+                            </a>
+                        </li>
+                    }
+                    else if (arr[2] == "HoD" || arr[2] == "coordinator" || arr[2] == "ADG")
+                    {
+                        <li class="sidebar-content">
+                            <a href="@Url.Action("Index", "DGH")">
+                                <i class="fa fa-tachometer-alt"></i>
+                                <span>Dashboard</span>
+                                @*<span class="badge badge-pill badge-warning">New</span>*@
+                            </a>
+                        </li>
+                    }
 
-                                </li>
-                                @if (arr[2] == "operator")
-                                {
-                                    <li>
-                                        @Html.ActionLink("Operator", "Index", "Operator", null, new { @class = "nav-link" })
-                                    </li>
-                                    @*<li>
-                                        @Html.ActionLink("ERScreeningReport", "SubmitERScreeningReport", "Operator", null, new { @class = "nav-link" })
-                                    </li>*@
-                                }
-                                else if (arr[2] == "HoD" || arr[2]=="nodal" || arr[2]=="ADG")
-                                {
-                                    <li>
-                                        @Html.ActionLink("DGH", "Index", "DGH", null, new { @class = "nav-link" })
-                                    </li>
-                                }
-                                else if (arr[2] == "nodal")
-                                {
-                                    <li>
-                                        @Html.ActionLink("ERC", "Index", "ERCommittee", null, new { @class = "nav-link" })
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                    </li>
-                    @if (arr[2] == "Admin")
+                    else if (arr[2] == "Admin")
                     {
                         <li class="sidebar-dropdown">
                             <a href="#">
-                                <i class="fa fa-tachometer-alt"></i>
+                                <i class="fa fa-user-secret"></i>
                                 <span>Admin</span>
                                 @*<span class="badge badge-pill badge-warning">New</span>*@
                             </a>
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        @Html.ActionLink("Home", "Index", "Admin", null, new { @class = "nav-link" })
+                                        @Html.ActionLink("Manager", "Index", "Admin", null, new { @class = "nav-link" })
 
                                     </li>
                                     <li>
                                         @Html.ActionLink("Register User", "Register", "Account", null, new { @class = "nav-link" })
                                     </li>
                                     <li>
-                                        @Html.ActionLink("AuditTrail", "AuditTrail", "Admin", null, new { @class = "nav-link" })
+                                        @Html.ActionLink("Report", "AuditTrail", "Admin", null, new { @class = "nav-link" })
 
                                     </li>
 

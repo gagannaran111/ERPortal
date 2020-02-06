@@ -306,40 +306,41 @@
          $.ajax({
                 url: "@Url.Action("ApplicationSummary","Comment",new { appid = Model.ERApplications.Id })",
              success: function (result) {
+
                  console.log(result);
-                 var dd = "";
-                 var statuscheck = "";
+                 if (result.length == 0) {
+                       $(".body-panel").html('<h3 class="text-danger ">Data Not Found</h3>');
+                 }
+                 else {
+                     var dd = "";
+                     var statuscheck = "";
 
-                 $.each(result, function (index, element) {
-                     var files = "";
+                     $.each(result, function (index, element) {
+                         var files = "";
 
 
-                     $.each(result[index].Files, function (i, e) {
+                         $.each(result[index].Files, function (i, e) {
 
-                         files += '<a class="badge badge-info mr-2" href="' + result[index].Files[i].FilePath + '" target="blank"><i class="fas fa-file-download"></i> ' + result[index].Files[i].FileName + '</a>';
+                             files += '<a class="badge badge-info mr-2" href="' + result[index].Files[i].FilePath + '" target="blank"><i class="fas fa-file-download"></i> ' + result[index].Files[i].FileName + '</a>';
+                         });
+
+                         if (result[index].FileStatus == 0) {
+                             statuscheck = "Application Forward To " + result[index].recivername + " by " + result[index].Sendername;
+                         }
+                         else if (result[index].FileStatus == 1) {
+                             statuscheck = "Application Approved by " + result[index].Sendername;
+                         }
+                         else {
+                             statuscheck = "";
+                         }
+                         dd += ' <li class="left clearfix "><span class="chat_img pull-left">' +
+                             '	<span class="chat_img"> <img src="../Content/img/user-profile.png" alt="User" style="width:50px"> </span>' +
+                             '</span><div class="chat-body clearfix"><div class="header"><strong class="text-danger">' + statuscheck + '</strong> <small class="pull-right text-muted">' +
+                             '<i class="fas fa-clock"></i> ' + ToChangeDateFormate(result[index].CreatedAt) + '</small></div>' +
+                             '<p>' + result[index].comments + '</p><div class="mb-2"><p>' + files + '</p ></div></div ></li >';
                      });
-
-                     if (result[index].FileStatus == 0) {
-                         statuscheck = "Application Forward To " + result[index].recivername + " by " + result[index].Sendername;
-                     }
-                     else if (result[index].FileStatus == 1) {
-                         statuscheck = "Application Approved by " + result[index].Sendername;
-                     }
-                     //else if (result[index].FileStatus == 2) {
-                     //    statuscheck = "Application Revert Back To " + result[index].recivername + " by " + result[index].Sendername;;
-                     //}
-                     else {
-                         statuscheck = "";
-                     }
-
-                   
-                     dd += ' <li class="left clearfix "><span class="chat_img pull-left">' +
-                         '	<span class="chat_img"> <img src="../Content/img/user-profile.png" alt="User" style="width:50px"> </span>' +
-                         '</span><div class="chat-body clearfix"><div class="header"><strong class="text-danger">'+statuscheck + '</strong> <small class="pull-right text-muted">' +
-                         '<i class="fas fa-clock"></i> ' +ToChangeDateFormate(result[index].CreatedAt)  + '</small></div>' +
-                         '<p>' + result[index].comments + '</p><div class="mb-2"><p>' + files + '</p ></div></div ></li >';
-                 });
-                 $(".body-panel").html('<ul class="chat">'+dd+'</ul>');
+                     $(".body-panel").html('<ul class="chat">' + dd + '</ul>');
+                 }
              },
              error: function () {
 
@@ -364,13 +365,7 @@
 
     })
 
-    function ToChangeDateFormate(value) {
-        var pattern = /Date\(([^)]+)\)/;
-        var results = pattern.exec(value);
-        var dt = new Date(parseFloat(results[1]));
-
-        return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-    }
+ 
      function BtnForwardCheckShowHideStatus(typebtn) {
         var sendData = { btnType: typebtn, appid: "@Model.ERApplications.Id" };
         $.ajax({
