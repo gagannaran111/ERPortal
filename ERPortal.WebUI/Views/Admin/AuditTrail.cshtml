@@ -73,43 +73,51 @@
 
     });
     $(document).on('click', '.btnSearchApp', function () {
-        $('#AuditTable').DataTable().destroy();
-        var sendData = { appid: $('#DropApplcationId option:selected').val() };
-        $.ajax({
+       
+        var appval = $('#DropApplcationId option:selected').val();
+        if (appval != "") {
+             $('#AuditTable').DataTable().destroy();
+            var sendData = { appid: $('#DropApplcationId option:selected').val() };
+            $.ajax({
 
-            url:"@Url.Action("AuditTrailData", "Admin")",
-            type: 'POST',
-            data: sendData,
-            async: false,
-            success: function (result) {
-                console.log(result);
-                if (result.length > 0) {
-                    var dd = "";
-                    $.each(result, function (index, element) {
-                        dd += "<tr><td>" + result[index].ERApplicationId + "</td><td>" + result[index].Sender.FirstName + " " + result[index].Sender.LastName + "(" + result[index].Sender.UserRole + ")</td >" +
-                            " <td>" + result[index].Receiver.FirstName + " " + result[index].Receiver.LastName + "(" + result[index].Receiver.UserRole + ")</td > <td>" + result[index].Status.Status + "</td><td>" +
-                            result[index].Is_Active + "</td><td>" + ToChangeDateFormate(result[index].CreatedAt) + "</td></tr>";
+                url: "@Url.Action("AuditTrailData", "Admin")",
+                type: 'POST',
+                data: sendData,
+                async: false,
+                success: function (result) {
+                    console.log(result);
+                    if (result.length > 0) {
+                        var dd = "";
+                        $.each(result, function (index, element) {
+                            dd += "<tr><td>" + result[index].ERApplicationId + "</td><td>" + result[index].Sender.FirstName + " " + result[index].Sender.LastName + "(" + result[index].Sender.UserRole + ")</td >" +
+                                " <td>" + result[index].Receiver.FirstName + " " + result[index].Receiver.LastName + "(" + result[index].Receiver.UserRole + ")</td > <td>" + result[index].Status.Status + "</td><td>" +
+                                result[index].Is_Active + "</td><td>" + ToChangeDateFormate(result[index].CreatedAt) + "</td></tr>";
 
-                    });
-                    $('#AuditTable tbody').html(dd);
-                    $('#AuditTable').DataTable(
-                        {
-                            scrollY: '70vh',
-                            scrollCollapse: true,
-                            paging: true,
-                            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                         });
+                        $('#AuditTable tbody').html(dd);
+                        $('#AuditTable').DataTable(
+                            {
+                                scrollY: '70vh',
+                                scrollCollapse: true,
+                                paging: true,
+                                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                            });
+                    }
+                },
+                error: function () {
+
+                    alertModal("Something Went Wrong. Try Again Later");
+                },
+                fail: function (xhr, textStatus, errorThrown) {
+
+                    alertModal("Something Went Wrong. Try Again Later");
                 }
-            },
-            error: function () {
-
-                 alertModal("Something Went Wrong. Try Again Later");
-             },
-             fail: function (xhr, textStatus, errorThrown) {
-
-                 alertModal("Something Went Wrong. Try Again Later");
-             }
-        });
+            });
+        }
+        else {
+            $('#AuditTable tbody').empty();
+            alertModal("Select Application Id");
+        }
 
     });
 </script>

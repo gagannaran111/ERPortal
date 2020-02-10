@@ -133,7 +133,7 @@
             $('#usertable').DataTable().destroy();
             var td = "";
             $.each(data, function (index, element) {
-                td += "<tr><td>" + data[index].Username + "</td><td>" + data[index].Role + "</td> <td>"
+                td += "<tr><td>" + data[index].Username + "</td><td>" + data[index].Role + "</td><td>" + data[index].EmailID + "</td><td>" + data[index].Organisation.Type + "</td> <td>"
 
                     + "<button class='btn btn-danger' data-UserId=" + data[index].UserId + "><i class='fas fa-trash'></i></button></td><td><button class='btn btn-primary' data-UserId=" + data[index].UserId + "><i class='fas fa-edit'></i></button></td></tr>"
 

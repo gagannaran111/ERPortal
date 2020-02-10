@@ -65,6 +65,7 @@ namespace ERPortal.WebUI
             container.RegisterType<IRepository<AuditTrails>, SQLRepository<AuditTrails>>();
             container.RegisterType<IRepository<QueryDetails>, SQLRepository<QueryDetails>>();
             container.RegisterType<IRepository<QueryMaster>, SQLRepository<QueryMaster>>();
+            container.RegisterType<IRepository<QueryUser>, SQLRepository<QueryUser>>();
             container.RegisterType<IRepository<StatusMaster>, SQLRepository<StatusMaster>>();
         }
     }

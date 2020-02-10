@@ -17,27 +17,27 @@
     @*@using (Html.BeginForm("CommentSubmit", "Comment", new { appid = Model.ERApplicationId, FileRef = ViewBag.RefId }, FormMethod.Post, new { @id = "myCommentForm" }))
         {*@
     @Html.AntiForgeryToken()
-    <div class="form-group row">
+    @*<div class="form-group row">
         @Html.LabelFor(model => model.QueryStatus, htmlAttributes: new { @class = "col-sm-3 col-form-label" })
         <div class="col-sm-6 d-flex align-items-center">
             @Html.EnumDropDownListFor(model => model.QueryStatus, "Choose...", new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.QueryStatus, "", new { @class = "text-danger" })
         </div>
-    </div>
+    </div>*@
     <div class="form-group row ReciverIdSelectList">
         @Html.LabelFor(model => model.ReciverIdSelectList, htmlAttributes: new { @class = "col-sm-3 col-form-label" })
         <div class="col-sm-6 d-flex align-items-center">
-            @Html.DropDownListFor(model => model.ReciverIdSelectList, new SelectList(Model.ReciverId, "Id", "FirstName"), "Select Forward To", new { @class = "form-control", @multiple = true })
+            @Html.DropDownListFor(model => model.ReciverIdSelectList, new SelectList(ViewBag.ReciverList, "ListItemKey", "ListItemValue"), "Select Forward To", new { @class = "form-control"})
             @Html.ValidationMessageFor(model => model.ReciverIdSelectList, "", new { @class = "text-danger" })
         </div>
     </div>
-    @*<div class="form-group row">
-            @Html.LabelFor(model => model.ForwardApplication.Subject, htmlAttributes: new { @class = "col-sm-3 col-form-label" })
+    <div class="form-group row">
+            @Html.LabelFor(model => model.QueryMaster.Subject, htmlAttributes: new { @class = "col-sm-3 col-form-label" })
             <div class="col-sm-9 d-flex align-items-center">
-                @Html.EditorFor(model => model.ForwardApplication.Subject, new { htmlAttributes = new { @class = "form-control " } })
-                @Html.ValidationMessageFor(model => model.ForwardApplication.Subject, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.QueryMaster.Subject, new { htmlAttributes = new { @class = "form-control " } })
+                @Html.ValidationMessageFor(model => model.QueryMaster.Subject, "", new { @class = "text-danger" })
             </div>
-        </div>*@
+        </div>
     <div class="form-group row">
         @Html.LabelFor(model => model.Comment.Text, htmlAttributes: new { @class = "col-sm-3 col-form-label" })
         <div class="col-sm-9 d-flex align-items-center">

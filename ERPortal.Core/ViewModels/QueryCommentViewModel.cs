@@ -12,7 +12,7 @@ namespace ERPortal.Core.ViewModels
         public QueryDetails QueryDetails { get; set; }
         public QueryMaster QueryMaster { get; set; }
         public Comment Comment { get; set; }
-        public IEnumerable<UserAccount> ReciverId { get; set; }
+        public IEnumerable<ListItemData> ReciverId { get; set; }
         [Display(Name = "Forward To")]
         public string[] ReciverIdSelectList { get; set; }
         [Display(Name = "Query Type")]

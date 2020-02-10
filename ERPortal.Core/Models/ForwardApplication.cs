@@ -26,7 +26,7 @@ namespace ERPortal.Core.Models
     {
         [Display(Name = "Application Forward For Comments/Approval")]
         Forward,       
-        [Display(Name ="Application Approved")]
-        Approved
+        [Display(Name = "Application Recommended")]
+        Recommended
     }
 }

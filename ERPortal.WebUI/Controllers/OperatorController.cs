@@ -28,7 +28,8 @@ namespace ERPortal.WebUI.Controllers
         IRepository<AuditTrails> AuditTrailContext;
         IRepository<ERAppActiveUsers> ERAppActiveUsersContext;
         IRepository<StatusMaster> StatusMasterContext;
-        public OperatorController(IRepository<ERApplication> _ERApplicationContext, IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<Organisation> _OrganisationContext, IRepository<ForwardApplication> _ForwardApplicationContext, IRepository<AuditTrails> _AuditTrailContext, IRepository<ERAppActiveUsers> _ERAppActiveUsersContext, IRepository<StatusMaster> _StatusMasterContext)
+        IRepository<UserAccount> UserAccountContext;
+        public OperatorController(IRepository<ERApplication> _ERApplicationContext, IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<Organisation> _OrganisationContext, IRepository<ForwardApplication> _ForwardApplicationContext, IRepository<AuditTrails> _AuditTrailContext, IRepository<ERAppActiveUsers> _ERAppActiveUsersContext, IRepository<StatusMaster> _StatusMasterContext, IRepository<UserAccount> _UserAccountContext)
         {
             ERApplicationContext = _ERApplicationContext;
             FieldTypeContext = _FieldTypeContext;
@@ -41,6 +42,8 @@ namespace ERPortal.WebUI.Controllers
             AuditTrailContext = _AuditTrailContext;
             ERAppActiveUsersContext = _ERAppActiveUsersContext;
             StatusMasterContext = _StatusMasterContext;
+            UserAccountContext = _UserAccountContext;
+           
         }
 
         // GET: Operator
@@ -106,6 +109,9 @@ namespace ERPortal.WebUI.Controllers
 
                 ERApplicationContext.Insert(_ERApplication.ERApplications);
                 string auditstatus = StatusMasterContext.Collection().Where(status => status.Status == "Application Submitted").FirstOrDefault().Id;
+
+                string coordinatorId = UserAccountContext.Collection().Where(x => x.UserRole == "coordinator").Select(c => c.Id).FirstOrDefault();
+
                 AuditTrails auditTrails = new AuditTrails()
                 {
                     ERApplicationId = _ERApplication.ERApplications.Id,
@@ -113,12 +119,12 @@ namespace ERPortal.WebUI.Controllers
                     StatusId = auditstatus,
                    // QueryDetailsId = null,
                     SenderId = userdata[0],
-                    ReceiverId = "aaf04b39-83b4-4870-84bb-20d2acac2e87", // coordinator
+                    ReceiverId = coordinatorId, // coordinator
                     Is_Active = true,
                 };
                 List<string> lst = new List<string>() {
                     userdata[0],
-                    "aaf04b39-83b4-4870-84bb-20d2acac2e87" // coordinator
+                    coordinatorId // coordinator
                 };
                 foreach (string x in lst)
                 {
@@ -147,6 +153,7 @@ namespace ERPortal.WebUI.Controllers
 
             return Json("Application Ref No : " + _ERApplication.ERApplications.AppId, JsonRequestBehavior.AllowGet);
         }
+        #region // Not Used
         public ActionResult AjaxAdd(string targetPage)
         {
             object _genericObject;
@@ -245,7 +252,7 @@ namespace ERPortal.WebUI.Controllers
             }
 
         }
-       
+
         //public ActionResult SubmitERScreeningReport()
         //{
         //    ERScreeningDetailViewModel viewModel = new ERScreeningDetailViewModel();
@@ -253,8 +260,9 @@ namespace ERPortal.WebUI.Controllers
         //    viewModel.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
         //    ViewBag.RefId = Guid.NewGuid().ToString();
         //    return View(viewModel);
-        
+
         //}
+        #endregion
 
     }
 }

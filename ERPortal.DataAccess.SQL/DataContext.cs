@@ -68,6 +68,7 @@ namespace ERPortal.DataAccess.SQL
         public DbSet<QueryMaster> QueryMasters { get; set; }
         public DbSet<ErrorLog> ErrorLogs { get; set; }
         public DbSet<StatusMaster> StatusMasters { get; set; }
+        public DbSet<QueryUser> QueryUsers { get; set; }
 
     }
 }

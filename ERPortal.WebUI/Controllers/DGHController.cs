@@ -12,7 +12,7 @@ using System.Transactions;
 namespace ERPortal.WebUI.Controllers
 {
     [CustomAuthenticationFilter]
-    [CustomAuthorize("HoD","ADG", "coordinator")]
+    [CustomAuthorize("HoD", "ADG", "coordinator")]
     public class DGHController : Controller
     {
         IRepository<ERApplication> ERApplicationContext;
@@ -69,16 +69,18 @@ namespace ERPortal.WebUI.Controllers
                 if (!string.IsNullOrEmpty(erapp.ERScreeningDetailId))
                 {
 
-                    ViewBag.ERFiles = UploadFileContext.Collection().Where(y => y.FIleRef == erapp.ERScreeningDetail.ReportDocumentPath).ToList();
+                    ViewBag.ERFiles = UploadFileContext.Collection()
+                        .Where(y => y.FIleRef == erapp.ERScreeningDetail.ReportDocumentPath).ToList();
                 }
-                else {
+                else
+                {
                     ViewBag.ERFiles = null;
                 }
                 viewModel.FieldTypes = FieldTypeContext.Collection();
                 viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection();
                 viewModel.comment = CommentContext.Collection().Where(x => x.ERApplicationId == erapp.Id);
 
-               
+
                 return View(viewModel);
             }
             else
@@ -93,6 +95,8 @@ namespace ERPortal.WebUI.Controllers
 
         }
 
+
+        #region // Currently Not Used
         [HttpPost]
         public JsonResult DGHFormSubmit(DGHERProposalViewModel dGHERProposalViewModel)
         {
@@ -160,13 +164,8 @@ namespace ERPortal.WebUI.Controllers
                 return Json("Not Submitted. DGH Approval Mandatory", JsonRequestBehavior.AllowGet);
             }
         }
-       
-        [HttpPost]
-        public ActionResult ForwardApplication()
-        {
 
-            return View();
-        }
+        #endregion 
 
     }
 }

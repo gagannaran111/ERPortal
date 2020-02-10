@@ -22,5 +22,11 @@ namespace ERPortal.Core.Models
         [Required]
         public string Text { get; set; }
     }
-   
+    public class ListItemData
+    {
+        public string ListItemKey { get; set; }
+        public string ListItemValue { get; set; }
+
+    }
+
 }

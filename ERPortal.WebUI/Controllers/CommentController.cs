@@ -25,7 +25,10 @@ namespace ERPortal.WebUI.Controllers
         IRepository<AuditTrails> AuditTrailsContext;
         IRepository<ERAppActiveUsers> ERAppActiveUsersContext;
         IRepository<StatusMaster> StatusMasterContext;
-        public CommentController(IRepository<Comment> _commentContext, IRepository<ERApplication> _eRApplicationContext, IRepository<UploadFile> _UploadFileContext, IRepository<UserAccount> _UserAccountContext, IRepository<ForwardApplication> _ForwardApplicationContext, IRepository<AuditTrails> _AuditTrailsContext, IRepository<ERAppActiveUsers> _ERAppActiveUsersContext, IRepository<StatusMaster> _StatusMasterContext)
+        IRepository<QueryMaster> QueryMasterContext;
+        IRepository<QueryDetails> QueryDetailsContext;
+        IRepository<QueryUser> QueryUserContext;
+        public CommentController(IRepository<Comment> _commentContext, IRepository<ERApplication> _eRApplicationContext, IRepository<UploadFile> _UploadFileContext, IRepository<UserAccount> _UserAccountContext, IRepository<ForwardApplication> _ForwardApplicationContext, IRepository<AuditTrails> _AuditTrailsContext, IRepository<ERAppActiveUsers> _ERAppActiveUsersContext, IRepository<StatusMaster> _StatusMasterContext, IRepository<QueryMaster> _QueryMasterContext, IRepository<QueryDetails> _QueryDetailsContext, IRepository<QueryUser> _QueryUserContext)
         {
 
             eRApplicationContext = _eRApplicationContext;
@@ -36,6 +39,9 @@ namespace ERPortal.WebUI.Controllers
             AuditTrailsContext = _AuditTrailsContext;
             ERAppActiveUsersContext = _ERAppActiveUsersContext;
             StatusMasterContext = _StatusMasterContext;
+            QueryMasterContext = _QueryMasterContext;
+            QueryDetailsContext = _QueryDetailsContext;
+            QueryUserContext = _QueryUserContext;
         }
 
         // GET: Comment
@@ -100,8 +106,8 @@ namespace ERPortal.WebUI.Controllers
                     st = "Application Forward";
                     break;
 
-                case "Approved":
-                    st = "Application Approved";
+                case "Recommended":
+                    st = "Application Recommended";
                     senderid = ForwardApplicationContext.Collection().Where(x => x.Reciever == userid && x.ERApplicationId == appid && x.FileStatus == 0).FirstOrDefault().Sender;
                     reciverlist = new string[] { senderid };
                     break;
@@ -168,22 +174,92 @@ namespace ERPortal.WebUI.Controllers
             {
                 FileRefId = Guid.NewGuid().ToString(),
             };
-            queryCommentViewModel.ReciverId= UserAccountContext.Collection().Where(x => (x.UserRole == "Hod" || x.UserRole == "nodal" || x.UserRole == "ADG") && x.Id != userid).ToList();
 
+            if (arr[2] == "coordinator")
+            {
+                ViewBag.ReciverList = ERAppActiveUsersContext.Collection().Where(x => x.ERApplicationId == appid && x.UserAccountId != userid)
+                     .Select(d => new { ListItemKey = d.UserAccountId, ListItemValue = d.UserAccount.FirstName + " " + d.UserAccount.LastName + " (" + d.UserAccount.UserRole + ")" }).ToList();
+                //  queryCommentViewModel.ReciverId = (IEnumerable<ListItemData>)dt;
+            }
+            else if (arr[2] == "operator")
+            {
+                ViewBag.ReciverList = ERAppActiveUsersContext.Collection().Where(x => x.ERApplicationId == appid && x.UserAccountId != userid && x.UserAccount.UserRole == "coordinator")
+                     .Select(d => new { ListItemKey = d.UserAccountId, ListItemValue = d.UserAccount.FirstName + " " + d.UserAccount.LastName + " (" + d.UserAccount.UserRole + ")" }).ToList();
+                // queryCommentViewModel.ReciverId = (IEnumerable<ListItemData>)dt;
+            }
+            else
+            {
+                ViewBag.ReciverList = ERAppActiveUsersContext.Collection().Where(x => x.ERApplicationId == appid && x.UserAccountId != userid && x.UserAccount.UserRole != "operator")
+                    .Select(d => new { ListItemKey = d.UserAccount.Id, ListItemValue = d.UserAccount.FirstName + " " + d.UserAccount.LastName + " (" + d.UserAccount.UserRole + ")" }).ToList();
+                //queryCommentViewModel.ReciverId = (IEnumerable<ListItemData>)dt;
+            }
+
+            ViewBag.appid = appid;
             queryCommentViewModel.QueryDetails = queryDetails;
             return View(queryCommentViewModel);
 
         }
-        public ActionResult QueryCommentSubmit(string appid, QueryCommentViewModel queryCommentViewModel)
+        [HttpPost]
+        public JsonResult QueryCommentSubmit(string appid, QueryCommentViewModel queryCommentViewModel)
         {
-            return View();
+            string[] arr = Session["UserData"] as string[];
+
+            queryCommentViewModel.Comment.ERApplicationId = appid;
+            queryCommentViewModel.Comment.UserAccountId = arr[0];
+
+            queryCommentViewModel.QueryMaster.ERApplicationId = appid;
+            queryCommentViewModel.QueryMaster.Is_Active = true;
+            queryCommentViewModel.QueryMaster.QueryParentId = null;
+
+            queryCommentViewModel.QueryDetails.CommentRefId = queryCommentViewModel.Comment.Id;
+            queryCommentViewModel.QueryDetails.QueryParentId = queryCommentViewModel.QueryMaster.Id;
+            queryCommentViewModel.QueryDetails.Status = StatusMasterContext.Collection().Where(x => x.Status == "Query Rasied").FirstOrDefault().Id;
+            queryCommentViewModel.QueryDetails.Is_Active = true;
+
+            QueryUser queryUser = new QueryUser()
+            {
+                SenderId = arr[0],
+                RecieverId = queryCommentViewModel.ReciverIdSelectList[0],
+                QueryId = queryCommentViewModel.QueryDetails.Id,
+            };
+            AuditTrails auditTrails = new AuditTrails()
+            {
+                ERApplicationId = appid,
+                FileRefId = queryCommentViewModel.QueryDetails.FileRefId,
+                StatusId = queryCommentViewModel.QueryDetails.Status,
+                QueryDetailsId = queryCommentViewModel.QueryDetails.Id,
+                SenderId = arr[0],
+                ReceiverId = queryCommentViewModel.ReciverIdSelectList[0],
+                Is_Active = true,
+            };
+
+            AuditTrailsContext.Insert(auditTrails);
+            QueryDetailsContext.Insert(queryCommentViewModel.QueryDetails);
+            QueryMasterContext.Insert(queryCommentViewModel.QueryMaster);
+            QueryUserContext.Insert(queryUser);
+            commentContext.Insert(queryCommentViewModel.Comment);
+
+            if (TryValidateModel(queryCommentViewModel)) {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    commentContext.Commit();
+                    AuditTrailsContext.Commit();
+                    QueryDetailsContext.Commit();
+                    QueryMasterContext.Commit();
+                    QueryUserContext.Commit();
+                    scope.Complete();
+                    return Json("Successfully Query Rasied To Selected Users", JsonRequestBehavior.AllowGet);
+                } }
+            else
+            {
+              return Json("Something Went Wrong! Try Again Later");
+            }
 
         }
-
         public JsonResult GrantApplication()
         {
-            return Json("",JsonRequestBehavior.AllowGet);
-        
+            return Json("", JsonRequestBehavior.AllowGet);
+
         }
         public ActionResult ApplicationSummary(string appid)
         {
@@ -215,7 +291,6 @@ namespace ERPortal.WebUI.Controllers
             string userid = arr[0];
             string statuscheck = "Hide";
             int recievecheck = 0;
-            // int forwardcount = 0;
             int approvedcount = 0;
             switch (btnType)
             {
@@ -226,14 +301,14 @@ namespace ERPortal.WebUI.Controllers
                     {
                         statuscheck = "Show";
                         approvedcount = ForwardApplicationContext.Collection()
-                            .Where(x => x.Sender == userid && (x.FileStatus == FileStatus.Approved) && x.ERApplicationId == appid && x.Is_active == true).Count();
+                            .Where(x => x.Sender == userid && (x.FileStatus == FileStatus.Recommended) && x.ERApplicationId == appid && x.Is_active == true).Count();
                         statuscheck = approvedcount > 0 ? "Hide" : "Show";
                     }
                     else
                     {
                         statuscheck = "Hide";
                     }
-                    // statuscheck = countcheck > 0 ? "Hide" : "Show";
+
                     break;
                 default:
                     return Json("ERROR", JsonRequestBehavior.AllowGet);
