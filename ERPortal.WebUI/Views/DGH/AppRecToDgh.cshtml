@@ -276,6 +276,21 @@
                             </div>
                             <div class="card-body body-panel">
                             </div>
+                            @*<div class="card-footer">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-12 nopadding">
+                                                <textarea id="demo-editor-bootstrap"> </textarea>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <button class="btn btn-success mt-2"><i class="fas fa-forward"></i> Send</button>
+                                                <button class="btn btn-success mt-2"><i class="fas fa-reply"></i> Reply</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>*@
                         </div>
                     </div>
                 </div>
@@ -290,6 +305,7 @@
 
 
 <script>
+
 
     $(document).ready(function () {
 
@@ -306,21 +322,24 @@
                 //processing: true,
                 // deferLoading: 5
              });
+
         BtnForwardCheckShowHideStatus("btnForward");
     });
     $(document).on('click', '.ForwardApp', function () {
-        ShowCommentModal("@Model.ERApplications.Id",$(this).attr('data-title'),"@Url.Action("ForwardApplication","Comment")");
+        ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("ForwardApplication","Comment")");
+
     });
      $(document).on('click', '.QueryComment', function () {
-        ShowCommentModal("@Model.ERApplications.Id",$(this).attr('data-title'),"@Url.Action("QueryComment","Comment")");
+         ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("QueryComment","Comment")");
+
      });
      $(document).on('click', '.GrantApp', function () {
         ShowCommentModal("@Model.ERApplications.Id",$(this).attr('data-title'),"@Url.Action("GrantApplication","Comment")");
      });
 
+   
 
-
-    // Forward Application 
+    // Forward Application
     $(document).on('click', '.commenttablink', function () {
 
          $.ajax({
@@ -329,7 +348,7 @@
 
                  console.log(result);
                  if (result.length == 0) {
-                       $(".body-panel").html('<h3 class="text-danger ">Data Not Found</h3>');
+                       $("#CommentTab .body-panel").html('<h3 class="text-danger ">Data Not Found</h3>');
                  }
                  else {
                      var dd = "";
@@ -383,7 +402,7 @@
              $('.ReciverIdSelectList').removeClass('d-none');
         }
 
-    }) 
+    })
      function BtnForwardCheckShowHideStatus(typebtn) {
         var sendData = { btnType: typebtn, appid: "@Model.ERApplications.Id" };
         $.ajax({
@@ -411,19 +430,21 @@
         });
     }
 
-    // Query Comment 
+    // Query Comment
 
     $(document).on('click', '.Querycommenttablink', function () {
 
           $.ajax({
-                url: "@Url.Action("ApplicationSummary","Comment",new { appid = Model.ERApplications.Id })",
+              url: "@Url.Action("QueryCommentSummary","Comment",new { appid = Model.ERApplications.Id })",
+              type:'POST',
              success: function (result) {
 
                  console.log(result);
                  if (result.length == 0) {
-                       $(".body-panel").html('<h3 class="text-danger ">Data Not Found</h3>');
+                       $("#QueryCommentTab .body-panel").html('<h3 class="text-danger ">Data Not Found</h3>');
                  }
                  else {
+                     //editor("#demo-editor-bootstrap");
                      var dd = "";
                      var statuscheck = "";
 
@@ -433,13 +454,13 @@
 
                          $.each(result[index].Files, function (i, e) {
 
-                             files += '<a class="badge badge-info mr-2" href="' + result[index].Files[i].FilePath + '" target="blank"><i class="fas fa-file-download"></i> ' + result[index].Files[i].FileName + '</a>';
+                             files += '<a class="badge badge-success mr-2" href="' + result[index].Files[i].FilePath + '" target="blank"><i class="fas fa-file-download"></i> ' + result[index].Files[i].FileName + '</a>';
                          });
 
-                         if (result[index].FileStatus == 0) {
-                             statuscheck = "Application Forward To " + result[index].recivername + " by " + result[index].Sendername;
+                         if (result[index].Status == "Query Rasied") {
+                             statuscheck = "Query Rasied To " + result[index].ReciverName + " by " + result[index].SenderName;
                          }
-                         else if (result[index].FileStatus == 1) {
+                         else if (result[index].Status == "") {
                              statuscheck = "Application Recommended by " + result[index].Sendername;
                          }
                          else {
@@ -449,9 +470,15 @@
                              '	<span class="chat_img"> <img src="../Content/img/user-profile.png" alt="User" style="width:50px"> </span>' +
                              '</span><div class="chat-body clearfix"><div class="header"><strong class="text-danger">' + statuscheck + '</strong> <small class="pull-right text-muted">' +
                              '<i class="fas fa-clock"></i> ' + ToChangeDateFormate(result[index].CreatedAt) + '</small></div>' +
-                             '<p>' + result[index].comments + '</p><div class="mb-2"><p>' + files + '</p ></div></div ></li >';
+                             '<p>' + result[index].Comments + '</p><div class="mb-2"><p>' + files + '</p ></div>'+
+                             '<div class="float-right" > <button class="btn btn-sm btn-success BtnQueryForward" data-query-parentid="' + result[index].QueryParentId + '" data-query-id="' + result[index].Id +
+                             '" data-toggle="modal" data-target="#CommentModal" data-title="Query Forward"><i class="fas fa-forward"></i> Forward</button>' +
+                             '<button class="btn btn-sm btn-primary ml-2 BtnQueryReply" data-query-parentid="' + result[index].QueryParentId + '" data-query-id="' + result[index].Id +
+                             '" data-toggle="modal" data-target="#CommentModal" data-title="Query Reply"><i class="fas fa-reply"></i> Reply</button>' +
+                             '<button class="btn btn-sm btn-info ml-2 BtnQueryResolved" data-query-parentid="' + result[index].QueryParentId + '" data-query-id="' + result[index].Id +
+                             '" data-toggle="modal" data-target="#CommentModal" data-title="Query Resolved"><i class="fas fa-check"></i> Mark As Resolved</button></div ></div ></li > ';
                      });
-                     $("#CommentTab .body-panel").html('<ul class="chat">' + dd + '</ul>');
+                     $("#QueryCommentTab .body-panel").html('<ul class="chat">' + dd + '</ul>');
                  }
              },
              error: function () {
@@ -465,4 +492,19 @@
          });
 
     });
+     
+      $(document).on('click', '.BtnQueryForward', function () {
+           ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("QueryComment","Comment")");
+
+    });
+    $(document).on('click', '.BtnQueryReply', function () {
+         ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("QueryComment","Comment")");
+
+
+    });
+    $(document).on('click', '.BtnQueryResolved', function () {
+          ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("QueryComment","Comment")");
+    });
+
+
 </script>

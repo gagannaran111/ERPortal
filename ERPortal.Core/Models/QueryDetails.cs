@@ -7,7 +7,8 @@ using System.ComponentModel.DataAnnotations;
 namespace ERPortal.Core.Models
 {
     public class QueryDetails : BaseEntity
-    {      
+    {
+        public string ERApplicationId { get; set; }
         public string CommentRefId { get; set; }
         //public virtual Comment CommentRef { get; set; }
         public string QueryParentId { get; set; }

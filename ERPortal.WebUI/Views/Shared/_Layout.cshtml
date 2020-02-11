@@ -37,7 +37,11 @@
     <script src="~/Scripts/DataTables/dataTables.bootstrap4.min.js"></script>
     <link href="~/Content/css/SideNavBar.css" rel="stylesheet" />
     <link href="~/Content/css/ChatBox.css" rel="stylesheet" />
-   
+
+
+    <link href="~/Content/css/editor.css" rel="stylesheet" />
+    <script src="~/Scripts/editor.js"></script>
+
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -191,7 +195,7 @@
 </html>
 <script type="text/javascript">
     $(document).ready(function () {
-
+       
         $(".datetimetext").datetimepicker({
              format:'Y/m/d',
               timepicker:false
@@ -241,7 +245,7 @@
 
       });
     $('#btnCommentSave').click(function () {
-        var form = $('#modalContentComment').find('form');
+        var form = $('#modalContentComment').find('form');       
         var formUrl = form.attr('action');
             $.ajax({
                 url: formUrl,
@@ -377,7 +381,8 @@
                 $('#modalContentComment').html(result);
                if ($("#btnCommentSave").is(":hidden")) {
                         $('#btnCommentSave').show();
-                    }
+                }
+              //  editor('#modalContentComment textarea');
             },
             error: function () {
                 $('#modalContentComment').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
@@ -399,6 +404,15 @@
     }
 
 
+     function editor(textareaid) {
+        $(textareaid).Editor({
 
+            "insert_img": false,
+            "insert_link": false,
+            "togglescreen": false,
+            "source": false
+        });
+
+    }
 
 </script>

@@ -123,6 +123,10 @@
     <Compile Include="Migrations\202002100942495_QueryTables2.designer.cs">
       <DependentUpon>202002100942495_QueryTables2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202002110422575_QueryTables3.cs" />
+    <Compile Include="Migrations\202002110422575_QueryTables3.designer.cs">
+      <DependentUpon>202002110422575_QueryTables3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -190,6 +194,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202002100942495_QueryTables2.resx">
       <DependentUpon>202002100942495_QueryTables2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002110422575_QueryTables3.resx">
+      <DependentUpon>202002110422575_QueryTables3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

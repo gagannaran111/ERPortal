@@ -165,6 +165,7 @@ namespace ERPortal.WebUI.Controllers
             }
         }
 
+        // Query Raised Model View
         public ActionResult QueryComment(string appid)
         {
             string[] arr = Session["UserData"] as string[];
@@ -199,6 +200,9 @@ namespace ERPortal.WebUI.Controllers
             return View(queryCommentViewModel);
 
         }
+
+
+        // Query Raised Submit
         [HttpPost]
         public JsonResult QueryCommentSubmit(string appid, QueryCommentViewModel queryCommentViewModel)
         {
@@ -211,6 +215,8 @@ namespace ERPortal.WebUI.Controllers
             queryCommentViewModel.QueryMaster.Is_Active = true;
             queryCommentViewModel.QueryMaster.QueryParentId = null;
 
+            queryCommentViewModel.QueryDetails.ERApplicationId = appid;
+            queryCommentViewModel.QueryDetails.QuerySeq = 1;
             queryCommentViewModel.QueryDetails.CommentRefId = queryCommentViewModel.Comment.Id;
             queryCommentViewModel.QueryDetails.QueryParentId = queryCommentViewModel.QueryMaster.Id;
             queryCommentViewModel.QueryDetails.Status = StatusMasterContext.Collection().Where(x => x.Status == "Query Rasied").FirstOrDefault().Id;
@@ -239,7 +245,8 @@ namespace ERPortal.WebUI.Controllers
             QueryUserContext.Insert(queryUser);
             commentContext.Insert(queryCommentViewModel.Comment);
 
-            if (TryValidateModel(queryCommentViewModel)) {
+            if (TryValidateModel(queryCommentViewModel))
+            {
                 using (TransactionScope scope = new TransactionScope())
                 {
                     commentContext.Commit();
@@ -249,13 +256,57 @@ namespace ERPortal.WebUI.Controllers
                     QueryUserContext.Commit();
                     scope.Complete();
                     return Json("Successfully Query Rasied To Selected Users", JsonRequestBehavior.AllowGet);
-                } }
+                }
+            }
             else
             {
-              return Json("Something Went Wrong! Try Again Later");
+                return Json("Something Went Wrong! Try Again Later");
             }
 
         }
+
+        
+        
+        // Query Summary
+        [HttpPost]
+        public JsonResult QueryCommentSummary(string appid)
+        {
+            var userlist = UserAccountContext.Collection().ToList();
+            var querydetail = QueryDetailsContext.Collection().Where(x => x.ERApplicationId == appid).ToList();
+            var FinalData = querydetail.Select(x => new
+            {
+                x.Id,
+                x.QueryParentId,
+                x.ERApplicationId,
+                x.CreatedAt,
+                Subject = QueryMasterContext.Collection().Where(d=>d.Id==x.QueryParentId && d.QueryParentId==null).Select(s=>s.Subject).FirstOrDefault(),
+                Comments = commentContext.Collection().Where(c => c.Id == x.CommentRefId).Select(m => m.Text).FirstOrDefault(),
+                Status = StatusMasterContext.Collection().Where(s => s.Id == x.Status).Select(s => s.Status).FirstOrDefault(),
+                Files = UploadFileContext.Collection().Where(f => f.FIleRef == x.FileRefId && x.Is_Active == true).ToList(),
+               // SenderReciverId = QueryUserContext.Collection().Where(c => c.QueryId == x.Id).Select(u=> new { u.SenderId,u.RecieverId }).ToList(),
+
+                SenderName = userlist.Where(uu=>uu.Id==(QueryUserContext.Collection().Where(c => c.QueryId == x.Id).Select(u=>u.SenderId).FirstOrDefault()))
+                 .Select(m => m.FirstName + " " + m.LastName + " (" + m.UserRole + ")").FirstOrDefault(),
+                ReciverName = userlist.Where(uu => uu.Id == (QueryUserContext.Collection().Where(c => c.QueryId == x.Id).Select(u => u.RecieverId).FirstOrDefault()))
+                 .Select(m => m.FirstName + " " + m.LastName + " (" + m.UserRole + ")").FirstOrDefault()
+
+            }).ToList();
+            
+
+            return Json(FinalData, JsonRequestBehavior.AllowGet);
+
+        }
+
+        // Query Reply Submit
+        [HttpPost]
+        public JsonResult QueryReplySubmit(string queryid,QueryCommentViewModel queryCommentViewModel)
+        {
+
+
+
+            return Json("",JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult GrantApplication()
         {
             return Json("", JsonRequestBehavior.AllowGet);
