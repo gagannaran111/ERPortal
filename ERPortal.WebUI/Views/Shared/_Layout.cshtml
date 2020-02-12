@@ -180,14 +180,14 @@
                 </div>
                 <div class="modal-body" id="modalContentComment">
                 </div>
-                <div class="modal-footer">                 
+                <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" style="display:none" id="btnCommentSave"><i class="fas fa-save"></i> Save</button>
                 </div>
             </div>
         </div>
 
     </div>
-    <button type="button" class="btn btn-primary" style="display:none" id="btnalertmodal" data-toggle="modal" data-target="#exampleModalCenter"></button>    
+    <button type="button" class="btn btn-primary" style="display:none" id="btnalertmodal" data-toggle="modal" data-target="#exampleModalCenter"></button>
     <button type="button" style="display:none" id="btnCommentViewModal" class="btn btn-primary" data-toggle="modal" data-target="#formDetailModal" data-page="Comment" data-title="View Comment"></button>
     @*<button type="button" style="display:none" id="opertor1" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="ERScreeningDetail" data-title="ERScreening Detail"></button>*@
 
@@ -195,7 +195,7 @@
 </html>
 <script type="text/javascript">
     $(document).ready(function () {
-       
+
         $(".datetimetext").datetimepicker({
              format:'Y/m/d',
               timepicker:false
@@ -245,7 +245,7 @@
 
       });
     $('#btnCommentSave').click(function () {
-        var form = $('#modalContentComment').find('form');       
+        var form = $('#modalContentComment').find('form');
         var formUrl = form.attr('action');
             $.ajax({
                 url: formUrl,
@@ -261,6 +261,10 @@
                         }
                     } else {
                         $('#modalContentComment').html(result);
+
+                        if (result == "Query Reply Successfully") {
+                            $('.Querycommenttablink').click();
+                        }
                     }
                 },
                 error: function (result) {
@@ -370,13 +374,14 @@
                 },
             })
     }
-    function ShowCommentModal(appid, title, urlpath) {
+    function ShowCommentModal(appid, title, urlpath,targetpage,queryid) {
         $('#modalContentComment').empty();
-        var senddata = { appid: appid };
-        $.ajax({ 
+        var senddata = { appid: appid, targetPage : targetpage,queryId: queryid };
+        $.ajax({
             url: urlpath,
             data: senddata,
             success: function (result) {
+                console.log(result);
                 $('#CommentModalLabel').text(title);
                 $('#modalContentComment').html(result);
                if ($("#btnCommentSave").is(":hidden")) {
@@ -386,7 +391,7 @@
             },
             error: function () {
                 $('#modalContentComment').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
-               
+
             },
             fail: function (xhr, textStatus, errorThrown) {
                 $('#modalContentComment').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');

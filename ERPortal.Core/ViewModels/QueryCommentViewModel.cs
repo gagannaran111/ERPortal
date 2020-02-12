@@ -17,6 +17,7 @@ namespace ERPortal.Core.ViewModels
         public string[] ReciverIdSelectList { get; set; }
         [Display(Name = "Query Type")]
         public QueryStatus QueryStatus { get; set; }
+        public QueryUser QueryUser { get; set; }
     }
     public enum QueryStatus
     {

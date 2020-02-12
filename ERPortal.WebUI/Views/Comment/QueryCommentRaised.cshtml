@@ -4,7 +4,7 @@
 }
 
 
-@using (Ajax.BeginForm("QueryCommentSubmit", "Comment", new { appid = ViewBag.appid }, new AjaxOptions
+@using (Ajax.BeginForm("QueryCommentSubmit", "Comment", new {appid = ViewBag.appid }, new AjaxOptions
 {
     HttpMethod = "POST",
     OnSuccess = "OnSuccessComment(data)",

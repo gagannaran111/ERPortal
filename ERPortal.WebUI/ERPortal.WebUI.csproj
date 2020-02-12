@@ -699,7 +699,9 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Comment\QueryComment.cshtml" />
+    <Content Include="Views\Comment\QueryCommentRaised.cshtml" />
+    <Content Include="Views\Comment\QueryCommentForward.cshtml" />
+    <Content Include="Views\Comment\QueryCommentReply.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

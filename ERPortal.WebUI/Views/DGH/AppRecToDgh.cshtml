@@ -50,8 +50,8 @@
                                     <div class="col-lg-6"><h5><i class="fas fa-file-alt"></i> ER Screening Report Approval For DGH</h5></div>
                                     <div class="col-lg-6 ">
                                         <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 GeneratePDF" id="printapp"><i class="fas fa-print"></i> Print</a>
-                                        <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 ForwardApp d-none" id="forwardapp" data-toggle="modal" data-target="#CommentModal" data-page="Comment" data-title="Application Forward"><i class="fas fa-forward"></i> Forward/Approved</a>
-                                        <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 QueryComment " id="QueryComment" data-toggle="modal" data-target="#CommentModal" data-page="Comment" data-title="Query Raised"><i class="fas fa-question"></i> Query</a>
+                                        <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 ForwardApp d-none" id="forwardapp" data-toggle="modal" data-target="#CommentModal" data-page="ForwardApplication" data-title="Application Forward"><i class="fas fa-forward"></i> Forward/Approved</a>
+                                        <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 QueryComment " id="QueryComment" data-toggle="modal" data-target="#CommentModal" data-page="QueryCommentRaised" data-title="Query Raised"><i class="fas fa-question"></i> Query</a>
                                         <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 GrantApp" id="grantapp" data-toggle="modal" data-target="#CommentModal" data-page="Comment" data-title="Application Grant"><i class="fas fa-check"></i> Grant</a>
                                     </div>
                                 </div>
@@ -326,15 +326,15 @@
         BtnForwardCheckShowHideStatus("btnForward");
     });
     $(document).on('click', '.ForwardApp', function () {
-        ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("ForwardApplication","Comment")");
+        ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd","Comment")",$(this).attr('data-page'),null);
 
     });
      $(document).on('click', '.QueryComment', function () {
-         ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("QueryComment","Comment")");
+         ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd","Comment")",$(this).attr('data-page'),null);
 
      });
      $(document).on('click', '.GrantApp', function () {
-        ShowCommentModal("@Model.ERApplications.Id",$(this).attr('data-title'),"@Url.Action("GrantApplication","Comment")");
+        ShowCommentModal("@Model.ERApplications.Id",$(this).attr('data-title'),"@Url.Action("AjaxAdd","Comment")",$(this).attr('data-page'),null);
      });
 
    
@@ -460,8 +460,8 @@
                          if (result[index].Status == "Query Rasied") {
                              statuscheck = "Query Rasied To " + result[index].ReciverName + " by " + result[index].SenderName;
                          }
-                         else if (result[index].Status == "") {
-                             statuscheck = "Application Recommended by " + result[index].Sendername;
+                         else if (result[index].Status == "Query Reply") {
+                              statuscheck = "Query Reply To " + result[index].ReciverName + " by " + result[index].SenderName;
                          }
                          else {
                              statuscheck = "";
@@ -471,11 +471,11 @@
                              '</span><div class="chat-body clearfix"><div class="header"><strong class="text-danger">' + statuscheck + '</strong> <small class="pull-right text-muted">' +
                              '<i class="fas fa-clock"></i> ' + ToChangeDateFormate(result[index].CreatedAt) + '</small></div>' +
                              '<p>' + result[index].Comments + '</p><div class="mb-2"><p>' + files + '</p ></div>'+
-                             '<div class="float-right" > <button class="btn btn-sm btn-success BtnQueryForward" data-query-parentid="' + result[index].QueryParentId + '" data-query-id="' + result[index].Id +
+                             '<div class="float-right" > <button class="btn btn-sm btn-success BtnQueryForward" data-page="QueryCommentForward" data-query-parentid="' + result[index].QueryParentId + '" data-query-id="' + result[index].Id +
                              '" data-toggle="modal" data-target="#CommentModal" data-title="Query Forward"><i class="fas fa-forward"></i> Forward</button>' +
-                             '<button class="btn btn-sm btn-primary ml-2 BtnQueryReply" data-query-parentid="' + result[index].QueryParentId + '" data-query-id="' + result[index].Id +
+                             '<button class="btn btn-sm btn-primary ml-2 BtnQueryReply" data-page="QueryCommentReply" data-query-parentid="' + result[index].QueryParentId + '" data-query-id="' + result[index].Id +
                              '" data-toggle="modal" data-target="#CommentModal" data-title="Query Reply"><i class="fas fa-reply"></i> Reply</button>' +
-                             '<button class="btn btn-sm btn-info ml-2 BtnQueryResolved" data-query-parentid="' + result[index].QueryParentId + '" data-query-id="' + result[index].Id +
+                             '<button class="btn btn-sm btn-info ml-2 BtnQueryResolved" data-page="QueryCommentResolved" data-query-parentid="' + result[index].QueryParentId + '" data-query-id="' + result[index].Id +
                              '" data-toggle="modal" data-target="#CommentModal" data-title="Query Resolved"><i class="fas fa-check"></i> Mark As Resolved</button></div ></div ></li > ';
                      });
                      $("#QueryCommentTab .body-panel").html('<ul class="chat">' + dd + '</ul>');
@@ -494,16 +494,16 @@
     });
      
       $(document).on('click', '.BtnQueryForward', function () {
-           ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("QueryComment","Comment")");
+           ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd","Comment")",$(this).attr('data-page'),$(this).attr('data-query-id'));
 
     });
     $(document).on('click', '.BtnQueryReply', function () {
-         ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("QueryComment","Comment")");
+         ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd","Comment")",$(this).attr('data-page'),$(this).attr('data-query-id'));
 
 
     });
     $(document).on('click', '.BtnQueryResolved', function () {
-          ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("QueryComment","Comment")");
+          ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd","Comment")",$(this).attr('data-page'),$(this).attr('data-query-id'));
     });
 
 
