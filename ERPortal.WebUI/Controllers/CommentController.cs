@@ -158,6 +158,8 @@ namespace ERPortal.WebUI.Controllers
             string userid = arr[0];
             object _genericObject;
             QueryDetails queryDetails;
+            QueryMaster queryMaster;
+            Comment comment;
             switch (targetPage)
             {
                 case "QueryCommentRaised":
@@ -198,20 +200,36 @@ namespace ERPortal.WebUI.Controllers
                 case "QueryCommentForward":
 
                     QueryCommentViewModel QueryCommentForward = new QueryCommentViewModel();
-
+                    QueryDetails qd  = QueryDetailsContext.Collection().Where(x => x.Id == queryId).FirstOrDefault();
                     queryDetails = new QueryDetails()
                     {
                         FileRefId = Guid.NewGuid().ToString(),
                         ERApplicationId = appid,
-                        QueryParentId = QueryDetailsContext.Collection().Where(x => x.Id == queryId).Select(d => d.QueryParentId).FirstOrDefault().ToString(),
+                        QueryParentId = qd.QueryParentId,
                     };
+                    
+                    queryMaster = new QueryMaster()
+                    {
+                        Subject = QueryMasterContext.Collection().Where(d => d.Id == qd.QueryParentId).FirstOrDefault().Subject,
+                    };
+                    comment = new Comment() {
+                    Text= commentContext.Collection().Where(c=>c.Id == qd.CommentRefId ).FirstOrDefault().Text,
+                    };
+
                     QueryCommentForward.QueryDetails = queryDetails;
-                    var xx = QueryDetailsContext.Collection().Where(y => y.Id == queryId).Select(d => d.QueryParentId).FirstOrDefault();
-                    QueryUser queryUser = QueryUserContext.Collection().Where(x => x.QueryId ==xx).FirstOrDefault();
+                    QueryCommentForward.QueryMaster = queryMaster;
+                    QueryCommentForward.Comment = comment;
+                   
+                    QueryUser queryUser = QueryUserContext.Collection().Where(x => x.QueryId ==qd.QueryParentId).FirstOrDefault();                    
 
                     if (arr[2] == "coordinator")
                     {
                         //  QueryUserContext.Collection().Where(x=>x.QueryId==queryId)
+                        var qmc = QueryMasterContext.Collection().Where(e => e.ERApplicationId == appid).ToList();
+                        var query = from p in qmc
+                                    join q in qmc on p.Id equals q.QueryParentId
+                                    select new { pid = p.Id, qid = q.Id };
+
 
                         ViewBag.ReciverList = ERAppActiveUsersContext.Collection().Where(x => x.ERApplicationId == appid && x.UserAccountId != userid && x.UserAccountId != queryUser.RecieverId && x.UserAccountId != queryUser.SenderId)
                              .Select(d => new { ListItemKey = d.UserAccountId, ListItemValue = d.UserAccount.FirstName + " " + d.UserAccount.LastName + " (" + d.UserAccount.UserRole + ")" }).ToList();
@@ -221,8 +239,6 @@ namespace ERPortal.WebUI.Controllers
                         ViewBag.ReciverList = ERAppActiveUsersContext.Collection().Where(x => x.ERApplicationId == appid && x.UserAccountId != userid && x.UserAccount.UserRole != "operator" && x.UserAccountId != queryUser.RecieverId && x.UserAccountId != queryUser.SenderId)
                             .Select(d => new { ListItemKey = d.UserAccount.Id, ListItemValue = d.UserAccount.FirstName + " " + d.UserAccount.LastName + " (" + d.UserAccount.UserRole + ")" }).ToList();
                     }
-
-
                     _genericObject = QueryCommentForward;
                     break;
                 case "QueryCommentReply":
@@ -335,8 +351,6 @@ namespace ERPortal.WebUI.Controllers
 
         }
 
-
-
         // Query Summary
         [HttpPost]
         public JsonResult QueryCommentSummary(string appid)
@@ -350,19 +364,19 @@ namespace ERPortal.WebUI.Controllers
                 x.ERApplicationId,
                 x.CreatedAt,
                 x.QuerySeq,
-                Subject = QueryMasterContext.Collection().Where(d => d.Id == x.QueryParentId && d.QueryParentId == null).Select(s => s.Subject).FirstOrDefault(),
+                Subject = QueryMasterContext.Collection().Where(d => d.Id == x.QueryParentId).Select(s => s.Subject).FirstOrDefault(),
                 Comments = commentContext.Collection().Where(c => c.Id == x.CommentRefId).Select(m => m.Text).FirstOrDefault(),
                 Status = StatusMasterContext.Collection().Where(s => s.Id == x.Status).Select(s => s.Status).FirstOrDefault(),
                 Files = UploadFileContext.Collection().Where(f => f.FIleRef == x.FileRefId && x.Is_Active == true).ToList(),
                 // SenderReciverId = QueryUserContext.Collection().Where(c => c.QueryId == x.Id).Select(u=> new { u.SenderId,u.RecieverId }).ToList(),
 
-                SenderName = userlist.Where(uu => uu.Id == (AuditTrailsContext.Collection().Where(q => q.QueryDetailsId == x.Id).Select(u => u.SenderId).FirstOrDefault()))
-                 .Select(m => m.FirstName + " " + m.LastName + " (" + m.UserRole + ")").FirstOrDefault(),
-                ReciverName = userlist.Where(uu => uu.Id == (AuditTrailsContext.Collection().Where(q => q.QueryDetailsId == x.Id).Select(u => u.ReceiverId).FirstOrDefault()))
-                 .Select(m => m.FirstName + " " + m.LastName + " (" + m.UserRole + ")").FirstOrDefault()
-
-            }).ToList();
-
+                Sender = userlist.Where(uu => uu.Id == (AuditTrailsContext.Collection().Where(q => q.QueryDetailsId == x.Id).Select(u => u.SenderId).FirstOrDefault()))
+                 .Select(m => new { SenderName = m.FirstName + " " + m.LastName + " (" + m.UserRole + ")", SenderId = m.Id }).FirstOrDefault(),
+                Reciver = userlist.Where(uu => uu.Id == (AuditTrailsContext.Collection().Where(q => q.QueryDetailsId == x.Id).Select(u => u.ReceiverId).FirstOrDefault()))
+                 .Select(m => new { ReciverName = m.FirstName + " " + m.LastName + " (" + m.UserRole + ")", ReciverId= m.Id }).FirstOrDefault()
+                 
+            }).OrderBy(d=>d.CreatedAt.DateTime).GroupBy(d=>new { d.QueryParentId }).ToList();
+            
 
             return Json(FinalData, JsonRequestBehavior.AllowGet);
 
@@ -437,9 +451,67 @@ namespace ERPortal.WebUI.Controllers
         public JsonResult QueryForwardSubmit(string queryid, QueryCommentViewModel queryCommentViewModel)
         {
 
+            string[] arr = Session["UserData"] as string[];
+            string appid = queryCommentViewModel.QueryDetails.ERApplicationId;
+
+            queryCommentViewModel.Comment.ERApplicationId = appid;
+            queryCommentViewModel.Comment.UserAccountId = arr[0];
+
+            queryCommentViewModel.QueryMaster.Is_Active = true;
+            queryCommentViewModel.QueryMaster.QueryParentId = queryCommentViewModel.QueryDetails.QueryParentId;
+            queryCommentViewModel.QueryMaster.ERApplicationId = appid;
 
 
-            return Json("", JsonRequestBehavior.AllowGet);
+            queryCommentViewModel.QueryDetails.QuerySeq = 1;
+            queryCommentViewModel.QueryDetails.CommentRefId = queryCommentViewModel.Comment.Id;
+            queryCommentViewModel.QueryDetails.QueryParentId = queryCommentViewModel.QueryMaster.Id;
+            queryCommentViewModel.QueryDetails.Status = StatusMasterContext.Collection().Where(x => x.Status == "Query Forward").FirstOrDefault().Id;
+            queryCommentViewModel.QueryDetails.Is_Active = true;
+
+            QueryUser queryUser = new QueryUser()
+            {
+                SenderId = arr[0],
+                RecieverId = queryCommentViewModel.ReciverIdSelectList[0],
+                QueryId = queryCommentViewModel.QueryDetails.QueryParentId,
+            };
+
+            AuditTrails auditTrails = new AuditTrails()
+            {
+                ERApplicationId = appid,
+                FileRefId = queryCommentViewModel.QueryDetails.FileRefId,
+                StatusId = queryCommentViewModel.QueryDetails.Status,
+                QueryDetailsId = queryCommentViewModel.QueryDetails.Id,
+                SenderId = queryUser.SenderId,
+                ReceiverId = queryUser.RecieverId,
+                Is_Active = true,
+            };
+
+
+            AuditTrailsContext.Insert(auditTrails);
+            QueryUserContext.Insert(queryUser);
+            commentContext.Insert(queryCommentViewModel.Comment);
+            QueryDetailsContext.Insert(queryCommentViewModel.QueryDetails);
+            QueryMasterContext.Insert(queryCommentViewModel.QueryMaster);
+
+            if (TryValidateModel(queryCommentViewModel))
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    commentContext.Commit();
+                    AuditTrailsContext.Commit();
+                    QueryDetailsContext.Commit();
+                    QueryUserContext.Commit();
+                    QueryMasterContext.Commit();
+                    scope.Complete();
+                    return Json("Successfully Query Forward To Selected User.", JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                return Json("Something Went Wrong! Try Again Later");
+            }
+
+           
         }
         public JsonResult GrantApplication()
         {

@@ -16,6 +16,7 @@
     @Html.HiddenFor(model => model.QueryDetails.FileRefId)
     @Html.HiddenFor(model => model.QueryDetails.ERApplicationId)
     @Html.HiddenFor(model => model.QueryDetails.QueryParentId)
+    @Html.HiddenFor(model => model.QueryMaster.Subject)
 
     @*@using (Html.BeginForm("CommentSubmit", "Comment", new { appid = Model.ERApplicationId, FileRef = ViewBag.RefId }, FormMethod.Post, new { @id = "myCommentForm" }))
         {*@
