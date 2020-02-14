@@ -26,7 +26,7 @@
     <div class="form-group row ReciverIdSelectList">
         @Html.LabelFor(model => model.ReciverIdSelectList, htmlAttributes: new { @class = "col-sm-3 col-form-label" })
         <div class="col-sm-6 d-flex align-items-center">
-            @Html.DropDownListFor(model => model.ReciverIdSelectList, new SelectList(Model.ReciverId, "Id", "FirstName"), "Select Forward To", new { @class = "form-control", @multiple = true })
+            @Html.DropDownListFor(model => model.ReciverIdSelectList, new SelectList( ViewBag.ReciverList, "ListItemKey", "ListItemValue"), "Select Forward To", new { @class = "form-control", @multiple = true })
             @Html.ValidationMessageFor(model => model.ReciverIdSelectList, "", new { @class = "text-danger" })
         </div>
     </div>

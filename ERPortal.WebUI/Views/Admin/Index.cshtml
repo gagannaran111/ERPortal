@@ -32,6 +32,9 @@
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#StatusTab">Status</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#DepartmentTab">Department</a>
+                </li>
             </ul>
 
             <div id="OrganisationsTab" class="container tab-pane active">
@@ -211,7 +214,52 @@
                     </div>
                 </div>
             </div>
-
+            <div id="DepartmentTab" class="container tab-pane fade">
+                <div class="card shadow-lg m-3">
+                    <div class="card-body">
+                        @{
+                            if (Model.Departments.Count() != 0)
+                            {
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Id</th>
+                                            <th scope="col">Department Name</th>
+                                            <th scope="col">Sub Department Name</th>
+                                            <th scope="col">Is_Active</th>
+                                            <th scope="col">Created Date</th>
+                                            <th scope="col">Edit/Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var department in Model.Departments)
+                                        {
+                                        <tr id="row_@department.Id">
+                                            <td>@department.Id</td>
+                                            <td>@department.DeptName</td>
+                                            <td>@department.SubDeptName</td>
+                                            <td>@department.Is_Active</td>
+                                            <td>@department.CreatedAt.DateTime</td>
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-warning" value="@department.Id">Edit</button>
+                                                <button type="button" class="btn btn-danger" value="@department.Id">Delete</button>
+                                            </td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <h4>No Department available</h4>
+                            }
+                        }
+                        <br />
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="Department" data-title="Department">Add New Department</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -303,7 +351,7 @@
 
         $('.table').DataTable(
             {
-               // scrollY: '50vh',
+                // scrollY: '50vh',
                 scrollCollapse: true,
                 paging: true,
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],

@@ -110,7 +110,7 @@ namespace ERPortal.WebUI.Controllers
                 ERApplicationContext.Insert(_ERApplication.ERApplications);
                 string auditstatus = StatusMasterContext.Collection().Where(status => status.Status == "Application Submitted").FirstOrDefault().Id;
 
-                string coordinatorId = UserAccountContext.Collection().Where(x => x.UserRole == "coordinator").Select(c => c.Id).FirstOrDefault();
+                string CER = UserAccountContext.Collection().Where(x => x.UserRole == "Consultant Enhanced Recovery").Select(c => c.Id).FirstOrDefault();
 
                 AuditTrails auditTrails = new AuditTrails()
                 {
@@ -119,12 +119,12 @@ namespace ERPortal.WebUI.Controllers
                     StatusId = auditstatus,
                    // QueryDetailsId = null,
                     SenderId = userdata[0],
-                    ReceiverId = coordinatorId, // coordinator
+                    ReceiverId = CER, // Consultant Enhanced Recovery
                     Is_Active = true,
                 };
                 List<string> lst = new List<string>() {
                     userdata[0],
-                    coordinatorId // coordinator
+                    CER // Consultant Enhanced Recovery
                 };
                 foreach (string x in lst)
                 {

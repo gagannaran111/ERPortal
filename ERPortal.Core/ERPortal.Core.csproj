@@ -71,6 +71,7 @@
     <Compile Include="CustomValidation\CustomValidation.cs" />
     <Compile Include="Models\AuditTrail.cs" />
     <Compile Include="Models\BaseEntity.cs" />
+    <Compile Include="Models\DepartmentType.cs" />
     <Compile Include="Models\ERAppActiveUsers.cs" />
     <Compile Include="Models\ERApplication.cs" />
     <Compile Include="Models\Comment.cs" />

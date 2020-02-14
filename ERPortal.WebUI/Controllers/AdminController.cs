@@ -21,7 +21,8 @@ namespace ERPortal.WebUI.Controllers
         IRepository<StatusMaster> StatusMasterContext;
         IRepository<AuditTrails> AuditTrailContext;
         IRepository<ERApplication> ERApplicationContext;
-        public AdminController(IRepository<FieldType> _FieldTypeContext, IRepository<Organisation> _OrganisationContext, IRepository<UserAccount> _UserAccountContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<StatusMaster> _StatusMasterContext, IRepository<AuditTrails> _AuditTrailContext, IRepository<ERApplication> _ERApplicationContext)
+        IRepository<DepartmentType> DepartmentContext;
+        public AdminController(IRepository<FieldType> _FieldTypeContext, IRepository<Organisation> _OrganisationContext, IRepository<UserAccount> _UserAccountContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<StatusMaster> _StatusMasterContext, IRepository<AuditTrails> _AuditTrailContext, IRepository<ERApplication> _ERApplicationContext, IRepository<DepartmentType> _DepartmentContext)
         {
             FieldTypeContext = _FieldTypeContext;
             OrganisationContext = _OrganisationContext;
@@ -31,6 +32,7 @@ namespace ERPortal.WebUI.Controllers
             StatusMasterContext = _StatusMasterContext;
             AuditTrailContext = _AuditTrailContext;
             ERApplicationContext = _ERApplicationContext;
+            DepartmentContext = _DepartmentContext;
         }
         // GET: Admin
         public ActionResult Index()
@@ -44,6 +46,7 @@ namespace ERPortal.WebUI.Controllers
             adminManageViewModel.UHCProductionMethods = UHCProductionMethodContext.Collection().ToList();
             adminManageViewModel.ERScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
             adminManageViewModel.StatusMasters = StatusMasterContext.Collection().ToList();
+            adminManageViewModel.Departments = DepartmentContext.Collection().ToList();
             return View(adminManageViewModel);
         }
         public ActionResult AuditTrail()
@@ -103,6 +106,9 @@ namespace ERPortal.WebUI.Controllers
                     break;
                 case "StatusMaster":
                     _genericObject = new StatusMaster();
+                    break;
+                case "Department":
+                    _genericObject = new DepartmentType();
                     break;
                 default:
                     _genericObject = null;
@@ -232,6 +238,25 @@ namespace ERPortal.WebUI.Controllers
                     else
                     {
                         _genericObject = statusMaster;
+                    }
+                    break;
+
+                case "Department":
+                    DepartmentType department = new DepartmentType()
+                    {
+                        DeptName = collection["DeptName"],
+                        SubDeptName=collection["SubDeptName"],
+                        Is_Active=true
+                    };
+                    modelIsValid = TryValidateModel(department);
+                    if (modelIsValid)
+                    {
+                        DepartmentContext.Insert(department);
+                        DepartmentContext.Commit();
+                    }
+                    else
+                    {
+                        _genericObject = department;
                     }
                     break;
                 default:

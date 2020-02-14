@@ -50,7 +50,7 @@ namespace ERPortal.WebUI
 
             //var ctr = new InjectionConstructor(typeof(IRepository<Organisation>));
 
-          //  container.RegisterType<AccountController>(new InjectionConstructor());
+            //  container.RegisterType<AccountController>(new InjectionConstructor());
             container.RegisterType<IRepository<ERApplication>, SQLRepository<ERApplication>>();
             container.RegisterType<IRepository<FieldType>, SQLRepository<FieldType>>();
             container.RegisterType<IRepository<ERScreeningDetail>, SQLRepository<ERScreeningDetail>>();
@@ -67,6 +67,7 @@ namespace ERPortal.WebUI
             container.RegisterType<IRepository<QueryMaster>, SQLRepository<QueryMaster>>();
             container.RegisterType<IRepository<QueryUser>, SQLRepository<QueryUser>>();
             container.RegisterType<IRepository<StatusMaster>, SQLRepository<StatusMaster>>();
+            container.RegisterType<IRepository<DepartmentType>, SQLRepository<DepartmentType>>();
         }
     }
 }

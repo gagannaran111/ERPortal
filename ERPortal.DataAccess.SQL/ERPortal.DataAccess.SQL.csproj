@@ -127,6 +127,14 @@
     <Compile Include="Migrations\202002110422575_QueryTables3.designer.cs">
       <DependentUpon>202002110422575_QueryTables3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202002140527049_QueryTableAddColumn.cs" />
+    <Compile Include="Migrations\202002140527049_QueryTableAddColumn.designer.cs">
+      <DependentUpon>202002140527049_QueryTableAddColumn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202002140906233_DepartmentTable.cs" />
+    <Compile Include="Migrations\202002140906233_DepartmentTable.designer.cs">
+      <DependentUpon>202002140906233_DepartmentTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -197,6 +205,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202002110422575_QueryTables3.resx">
       <DependentUpon>202002110422575_QueryTables3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002140527049_QueryTableAddColumn.resx">
+      <DependentUpon>202002140527049_QueryTableAddColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002140906233_DepartmentTable.resx">
+      <DependentUpon>202002140906233_DepartmentTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

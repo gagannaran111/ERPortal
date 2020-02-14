@@ -17,7 +17,7 @@ namespace ERPortal.Core.Models
         public string FileRefId { get; set; }            
         public string Status { get; set; }
         public Boolean Is_Active { get; set; }
-
+        public string CustQueryId { get; set; }
     }
 
     public class QueryMaster :BaseEntity
@@ -26,6 +26,7 @@ namespace ERPortal.Core.Models
         public string Subject { get; set; }
         public Boolean Is_Active { get; set; }
         public string QueryParentId { get; set; }
+        public string CustQueryId { get; set; }
 
     }
     public class QueryUser : BaseEntity

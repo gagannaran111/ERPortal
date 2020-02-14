@@ -14,6 +14,6 @@ namespace ERPortal.Core.ViewModels
         [Display(Name = "Forward To")]
         public string[] ReciverIdSelectList { get; set; }
       
-        public IEnumerable<UserAccount> ReciverId { get; set; }
+        //public IEnumerable<UserAccount> ReciverId { get; set; }
     }
 }

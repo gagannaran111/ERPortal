@@ -181,6 +181,14 @@ namespace ERPortal.WebUI
                 roleManager.Create(role);
 
             }
+            // creating Creating state district officer role     
+            if (!roleManager.RoleExists("Consultant Enhanced Recovery"))
+            {
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "Consultant Enhanced Recovery";
+                roleManager.Create(role);
+
+            }
         }
     }
 }

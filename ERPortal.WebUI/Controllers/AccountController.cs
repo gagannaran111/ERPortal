@@ -27,23 +27,26 @@ namespace ERPortal.WebUI.Controllers
         ApplicationDbContext context;
         IRepository<UserAccount> userAccountContext;
         IRepository<Organisation> OrganisationContext;
+        IRepository<DepartmentType> DepartmentContext;
         [InjectionConstructor]
-        public AccountController(IRepository<Organisation> _OrganisationContext, IRepository<UserAccount> _userAccountContext)
+        public AccountController(IRepository<Organisation> _OrganisationContext, IRepository<UserAccount> _userAccountContext, IRepository<DepartmentType> _DepartmentContext)
         {
             OrganisationContext = _OrganisationContext;
+            DepartmentContext = _DepartmentContext;
             userAccountContext = _userAccountContext;
             //var rr = org.Collection().ToList();
             // OrganisationContext = org;
             context = new ApplicationDbContext();
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IRepository<UserAccount> _userAccountContext, IRepository<Organisation> _OrganisationContext)
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IRepository<UserAccount> _userAccountContext, IRepository<Organisation> _OrganisationContext, IRepository<DepartmentType> _DepartmentContext)
         {
             UserManager = userManager;
             SignInManager = signInManager;
             context = new ApplicationDbContext();
             userAccountContext = _userAccountContext;
             OrganisationContext = _OrganisationContext;
+            DepartmentContext = _DepartmentContext;
         }
 
         public ApplicationSignInManager SignInManager
@@ -107,7 +110,10 @@ namespace ERPortal.WebUI.Controllers
                     var dd = SignInManager.UserManager.FindById(userid);
 
                     string userRole = context.Roles.Find(userRoleIds).Name.ToString();
-                    string[] userdata = new string[] { userid, userRoleIds, userRole, model.UserName };
+
+
+                    var userdata1 = userAccountContext.Collection().Where(x => x.Id == userid).FirstOrDefault();
+                    string[] userdata = new string[] { userid, userRoleIds, userRole, model.UserName,userdata1.Dept.DeptName};
 
                     Session["UserData"] = userdata;
                     return RedirectToLocal(returnUrl);
@@ -174,7 +180,7 @@ namespace ERPortal.WebUI.Controllers
         {
             ViewBag.Role = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
                                     .ToList(), "Name", "Name");
-           
+
             //ViewBag.UserList = (from user1 in context.Users
             //                    select new
             //                    {
@@ -192,9 +198,18 @@ namespace ERPortal.WebUI.Controllers
             //                        Email = p.Email,
             //                        Role = string.Join(",", p.RoleNames)
             //                    });
+
             ViewBag.UserList = userAccountContext.Collection().ToList();
-            RegisterViewModel registerViewModel = new RegisterViewModel();
-            registerViewModel.Organisations = OrganisationContext.Collection().ToList(); ;
+
+            RegisterViewModel registerViewModel = new RegisterViewModel()
+            {
+                Organisations = OrganisationContext.Collection().ToList(),
+                DepartmentList = DepartmentContext.Collection().ToList()
+            };
+            //registerViewModel.Organisations = OrganisationContext.Collection().ToList();
+            //registerViewModel.Departments = DepartmentContext.Collection().ToList();
+
+
             return View(registerViewModel);
         }
 
@@ -215,7 +230,8 @@ namespace ERPortal.WebUI.Controllers
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     OrganisationId = model.OrganisationId,
-                    UserRole = model.UserRoles
+                    UserRole = model.UserRoles,
+                    DeptId = model.DepartmentId
                 };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)

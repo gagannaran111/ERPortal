@@ -12,7 +12,7 @@ using System.Transactions;
 namespace ERPortal.WebUI.Controllers
 {
     [CustomAuthenticationFilter]
-    [CustomAuthorize("HoD", "ADG", "coordinator")]
+    [CustomAuthorize("HoD", "ADG", "coordinator", "Consultant Enhanced Recovery")]
     public class DGHController : Controller
     {
         IRepository<ERApplication> ERApplicationContext;

@@ -173,6 +173,7 @@ namespace ERPortal.WebUI.Controllers
                     QueryCommentViewModel QueryCommentRaised = new QueryCommentViewModel();
                     QueryCommentRaised.QueryDetails = queryDetails;
 
+
                     if (arr[2] == "coordinator")
                     {
 
@@ -180,9 +181,15 @@ namespace ERPortal.WebUI.Controllers
                              .Select(d => new { ListItemKey = d.UserAccountId, ListItemValue = d.UserAccount.FirstName + " " + d.UserAccount.LastName + " (" + d.UserAccount.UserRole + ")" }).ToList();
 
                     }
-                    else if (arr[2] == "operator")
+                    else if (arr[2] == "Consultant Enhanced Recovery")
                     {
                         ViewBag.ReciverList = ERAppActiveUsersContext.Collection().Where(x => x.ERApplicationId == appid && x.UserAccountId != userid && x.UserAccount.UserRole == "coordinator")
+                                .Select(d => new { ListItemKey = d.UserAccountId, ListItemValue = d.UserAccount.FirstName + " " + d.UserAccount.LastName + " (" + d.UserAccount.UserRole + ")" }).ToList();
+
+                    }
+                    else if (arr[2] == "operator")
+                    {
+                        ViewBag.ReciverList = ERAppActiveUsersContext.Collection().Where(x => x.ERApplicationId == appid && x.UserAccountId != userid && x.UserAccount.UserRole == "Consultant Enhanced Recovery")
                              .Select(d => new { ListItemKey = d.UserAccountId, ListItemValue = d.UserAccount.FirstName + " " + d.UserAccount.LastName + " (" + d.UserAccount.UserRole + ")" }).ToList();
 
                     }
@@ -200,27 +207,28 @@ namespace ERPortal.WebUI.Controllers
                 case "QueryCommentForward":
 
                     QueryCommentViewModel QueryCommentForward = new QueryCommentViewModel();
-                    QueryDetails qd  = QueryDetailsContext.Collection().Where(x => x.Id == queryId).FirstOrDefault();
+                    QueryDetails qd = QueryDetailsContext.Collection().Where(x => x.Id == queryId).FirstOrDefault();
                     queryDetails = new QueryDetails()
                     {
                         FileRefId = Guid.NewGuid().ToString(),
                         ERApplicationId = appid,
                         QueryParentId = qd.QueryParentId,
                     };
-                    
+
                     queryMaster = new QueryMaster()
                     {
                         Subject = QueryMasterContext.Collection().Where(d => d.Id == qd.QueryParentId).FirstOrDefault().Subject,
                     };
-                    comment = new Comment() {
-                    Text= commentContext.Collection().Where(c=>c.Id == qd.CommentRefId ).FirstOrDefault().Text,
+                    comment = new Comment()
+                    {
+                        Text = commentContext.Collection().Where(c => c.Id == qd.CommentRefId).FirstOrDefault().Text,
                     };
 
                     QueryCommentForward.QueryDetails = queryDetails;
                     QueryCommentForward.QueryMaster = queryMaster;
                     QueryCommentForward.Comment = comment;
-                   
-                    QueryUser queryUser = QueryUserContext.Collection().Where(x => x.QueryId ==qd.QueryParentId).FirstOrDefault();                    
+
+                    QueryUser queryUser = QueryUserContext.Collection().Where(x => x.QueryId == qd.QueryParentId).FirstOrDefault();
 
                     if (arr[2] == "coordinator")
                     {
@@ -265,8 +273,23 @@ namespace ERPortal.WebUI.Controllers
                     ForwardAppViewModel forwardAppViewModel = new ForwardAppViewModel();
                     ForwardApplication forwardApplication = new ForwardApplication();
                     //if(arr[2]=="HoD")
+                    if (arr[2] == "Consultant Enhanced Recovery")
+                    {
+                        ViewBag.ReciverList = UserAccountContext.Collection().Where(x => (x.UserRole == "coordinator") && x.Id != userid)
+                             .Select(d => new { ListItemKey = d.Id, ListItemValue = d.FirstName + " " + d.LastName + " (" + d.UserRole + ")" }).ToList();
+                    }
+                    else if (arr[2] == "coordinator")
+                    {
 
-                    forwardAppViewModel.ReciverId = UserAccountContext.Collection().Where(x => (x.UserRole == "Hod" || x.UserRole == "coordinator" || x.UserRole == "ADG") && x.Id != userid).ToList();
+                        ViewBag.ReciverList = UserAccountContext.Collection().Where(x => (x.UserRole == "Hod" || x.UserRole == "coordinator" || x.UserRole == "ADG") && x.Id != userid)
+                            .Select(d => new { ListItemKey = d.Id, ListItemValue = d.FirstName + " " + d.LastName + " (" + d.UserRole + ")" }).ToList();
+                    }
+                    else
+                    {
+                        ViewBag.ReciverList = UserAccountContext.Collection().Where(x => (x.UserRole == "Hod" || x.UserRole == "coordinator" || x.UserRole == "ADG") && x.Id != userid)
+                              .Select(d => new { ListItemKey = d.Id, ListItemValue = d.FirstName + " " + d.LastName + " (" + d.UserRole + ")" }).ToList();
+                    }
+
                     forwardApplication.FileRef = Guid.NewGuid().ToString();
                     forwardAppViewModel.ForwardApplication = forwardApplication;
                     _genericObject = forwardAppViewModel;
@@ -294,6 +317,10 @@ namespace ERPortal.WebUI.Controllers
         {
             string[] arr = Session["UserData"] as string[];
 
+
+            string dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss").Replace("/", "").Replace(":", "").Replace(" ", "");
+            queryCommentViewModel.QueryMaster.CustQueryId = "QMID" + dt;
+            queryCommentViewModel.QueryDetails.CustQueryId = "QDID" + dt;
             queryCommentViewModel.Comment.ERApplicationId = appid;
             queryCommentViewModel.Comment.UserAccountId = arr[0];
 
@@ -373,10 +400,9 @@ namespace ERPortal.WebUI.Controllers
                 Sender = userlist.Where(uu => uu.Id == (AuditTrailsContext.Collection().Where(q => q.QueryDetailsId == x.Id).Select(u => u.SenderId).FirstOrDefault()))
                  .Select(m => new { SenderName = m.FirstName + " " + m.LastName + " (" + m.UserRole + ")", SenderId = m.Id }).FirstOrDefault(),
                 Reciver = userlist.Where(uu => uu.Id == (AuditTrailsContext.Collection().Where(q => q.QueryDetailsId == x.Id).Select(u => u.ReceiverId).FirstOrDefault()))
-                 .Select(m => new { ReciverName = m.FirstName + " " + m.LastName + " (" + m.UserRole + ")", ReciverId= m.Id }).FirstOrDefault()
-                 
-            }).OrderBy(d=>d.CreatedAt.DateTime).GroupBy(d=>new { d.QueryParentId }).ToList();
-            
+                 .Select(m => new { ReciverName = m.FirstName + " " + m.LastName + " (" + m.UserRole + ")", ReciverId = m.Id }).FirstOrDefault()
+
+            }).OrderBy(d => d.CreatedAt.DateTime).GroupBy(d => new { d.QueryParentId, d.Subject }).ToList();
 
             return Json(FinalData, JsonRequestBehavior.AllowGet);
 
@@ -387,6 +413,7 @@ namespace ERPortal.WebUI.Controllers
         public JsonResult QueryReplySubmit(string queryid, QueryCommentViewModel queryCommentViewModel)
         {
             string[] arr = Session["UserData"] as string[];
+
             string userid = arr[0];
             string queryparent = queryCommentViewModel.QueryDetails.QueryParentId;
             string appid = queryCommentViewModel.QueryDetails.ERApplicationId;
@@ -412,6 +439,9 @@ namespace ERPortal.WebUI.Controllers
 
             queryCommentViewModel.Comment.UserAccountId = userid;
             queryCommentViewModel.Comment.ERApplicationId = appid;
+
+            string dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss").Replace("/", "").Replace(":", "").Replace(" ", "");
+            queryCommentViewModel.QueryDetails.CustQueryId = "QDID" + dt;
 
             AuditTrails auditTrails = new AuditTrails()
             {
@@ -485,7 +515,9 @@ namespace ERPortal.WebUI.Controllers
                 ReceiverId = queryUser.RecieverId,
                 Is_Active = true,
             };
-
+            string dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss").Replace("/", "").Replace(":", "").Replace(" ", "");
+            queryCommentViewModel.QueryMaster.CustQueryId = "QMID" + dt;
+            queryCommentViewModel.QueryDetails.CustQueryId = "QDID" + dt;
 
             AuditTrailsContext.Insert(auditTrails);
             QueryUserContext.Insert(queryUser);
@@ -511,7 +543,7 @@ namespace ERPortal.WebUI.Controllers
                 return Json("Something Went Wrong! Try Again Later");
             }
 
-           
+
         }
         public JsonResult GrantApplication()
         {

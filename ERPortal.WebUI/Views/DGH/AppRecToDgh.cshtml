@@ -494,7 +494,7 @@
                                    dd += ' <li class="left clearfix "><span class="chat_img pull-left">' +
                                   '	<span class="chat_img"> <img src="../Content/img/user-profile.png" alt="User" style="width:50px"> </span>' +
                                   '</span><div class="chat-body clearfix"><div class="header"><strong class="text-danger h5">' + statuscheck + '</strong> <small class="pull-right text-muted">' +
-                                  '<i class="fas fa-clock"></i> ' + ToChangeDateFormate(f.CreatedAt) + '</small></div>' +
+                                  '<i class="fas fa-clock"></i> ' + ToChangeDateFormate(f.CreatedAt) + '</small></div><div><p><b>Subject :</b> ' + f.Subject + '</p></div>' +
                                   '<p><b>Comments :</b> ' + f.Comments + '</p><div class="mb-2"><p>' + files + '</p ></div>' +
                                   '<div class="float-right" > <button class="btn btn-sm btn-success BtnQueryForward" data-page="QueryCommentForward" data-query-parentid="' + f.QueryParentId + '" data-query-id="' + f.Id +
                                   '" data-toggle="modal" data-target="#CommentModal" data-title="Query Forward"><i class="fas fa-forward"></i> Forward</button>' +replybtn+
@@ -525,12 +525,13 @@
                   }
               });
 
-          });
+    });
 
-      $(document).on('click', '.BtnQueryForward', function () {
-           ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd","Comment")",$(this).attr('data-page'),$(this).attr('data-query-id'));
+    $(document).on('click', '.BtnQueryForward', function () {
+        ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd","Comment")", $(this).attr('data-page'), $(this).attr('data-query-id'));
 
     });
+
     $(document).on('click', '.BtnQueryReply', function () {
          ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd","Comment")",$(this).attr('data-page'),$(this).attr('data-query-id'));
 

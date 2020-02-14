@@ -25,6 +25,8 @@ namespace ERPortal.Core.Models
         public string OrganisationId { get; set; }
         [Display(Name = "Organisation")]
         public virtual Organisation Organisation { get; set; }
+        public string DeptId { get; set; }
+        public virtual DepartmentType Dept { get; set; }
         public string UserRole { get; set; }
     }
 }

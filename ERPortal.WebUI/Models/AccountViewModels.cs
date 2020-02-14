@@ -85,6 +85,13 @@ namespace ERPortal.WebUI.Models
         [Display(Name = "Organisation")]
         public virtual Organisation OperatorName { get; set; }
         public IEnumerable<Organisation> Organisations { get; set; }
+
+        public string DepartmentId { get; set; }
+
+        [Display(Name = "Departments")]
+        public virtual DepartmentType Department { get; set; }
+        public IEnumerable<DepartmentType> DepartmentList { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
