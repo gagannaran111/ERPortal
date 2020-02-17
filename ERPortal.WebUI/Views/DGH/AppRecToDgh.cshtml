@@ -50,7 +50,7 @@
                                     <div class="col-lg-6"><h5><i class="fas fa-file-alt"></i> ER Screening Report Approval For DGH</h5></div>
                                     <div class="col-lg-6 ">
                                         <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 GeneratePDF" id="printapp"><i class="fas fa-print"></i> Print</a>
-                                        <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 ForwardApp d-none" id="forwardapp" data-toggle="modal" data-target="#CommentModal" data-page="ForwardApplication" data-title="Application Forward"><i class="fas fa-forward"></i> Forward/Approved</a>
+                                        <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 ForwardApp d-none" id="forwardapp" data-toggle="modal" data-target="#CommentModal" data-page="ForwardApplication" data-title="Application Forward"><i class="fas fa-forward"></i> Action</a>
                                         <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 QueryComment " id="QueryComment" data-toggle="modal" data-target="#CommentModal" data-page="QueryCommentRaised" data-title="Query Raised"><i class="fas fa-question"></i> Query</a>
                                         <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 GrantApp" id="grantapp" data-toggle="modal" data-target="#CommentModal" data-page="Comment" data-title="Application Grant"><i class="fas fa-check"></i> Grant</a>
                                     </div>
@@ -358,25 +358,32 @@
                          var files = "";
 
 
-                         $.each(result[index].Files, function (i, e) {
+                         $.each(element.Files, function (i, e) {
 
-                             files += '<a class="badge badge-info mr-2" href="' + result[index].Files[i].FilePath + '" target="blank"><i class="fas fa-file-download"></i> ' + result[index].Files[i].FileName + '</a>';
+                             files += '<a class="badge badge-info mr-2" href="../Content/UploadedFiles/' +e.FileName + '" target="_blank"><i class="fas fa-file-download"></i> ' +e.FileName + '</a>';
                          });
 
-                         if (result[index].FileStatus == 0) {
-                             statuscheck = "Application Forward To " + result[index].recivername + " by " + result[index].Sendername;
+                         if (element.FileStatus == 0) {
+                             statuscheck = "Forward To " + element.recivername + " by " + element.Sendername;
                          }
-                         else if (result[index].FileStatus == 1) {
-                             statuscheck = "Application Recommended by " + result[index].Sendername;
+                         else if (element.FileStatus == 1) {
+                             statuscheck = "Recommended by " + element.Sendername;
                          }
+                         else if (element.FileStatus == 2) {
+                             statuscheck = "Comment Back To "+ element.recivername +" by " + element.Sendername;
+                         }
+                         else if (element.FileStatus == 3) {
+                             statuscheck = "Comment Resolved By " + element.Sendername+ " and Review Application Again";
+                         }
+
                          else {
                              statuscheck = "";
                          }
                          dd += ' <li class="left clearfix "><span class="chat_img pull-left">' +
                              '	<span class="chat_img"> <img src="../Content/img/user-profile.png" alt="User" style="width:50px"> </span>' +
                              '</span><div class="chat-body clearfix"><div class="header"><strong class="text-danger">' + statuscheck + '</strong> <small class="pull-right text-muted">' +
-                             '<i class="fas fa-clock"></i> ' + ToChangeDateFormate(result[index].CreatedAt) + '</small></div>' +
-                             '<p>' + result[index].comments + '</p><div class="mb-2"><p>' + files + '</p ></div></div ></li >';
+                             '<i class="fas fa-clock"></i> ' + ToChangeDateFormate(element.CreatedAt) + '</small></div>' +
+                             '<p>' +element.comments + '</p><div class="mb-2"><p>' + files + '</p ></div></div ></li >';
                      });
                      $("#CommentTab .body-panel").html('<ul class="chat">' + dd + '</ul>');
                  }
@@ -394,7 +401,7 @@
     });
     $(document).on('change', '#ForwardApplication_FileStatus', function () {
         var value = $('#ForwardApplication_FileStatus option:selected').val();
-        if (value == "1" || value == "2") {
+        if (value == "1" || value == "2" || value=="3") {
             $('.ReciverIdSelectList').addClass('d-none');
         }
 

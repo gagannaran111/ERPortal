@@ -110,10 +110,17 @@ namespace ERPortal.WebUI.Controllers
                     var dd = SignInManager.UserManager.FindById(userid);
 
                     string userRole = context.Roles.Find(userRoleIds).Name.ToString();
-
-
-                    var userdata1 = userAccountContext.Collection().Where(x => x.Id == userid).FirstOrDefault();
-                    string[] userdata = new string[] { userid, userRoleIds, userRole, model.UserName,userdata1.Dept.DeptName};
+                    string[] userdata;
+                    if (userRole == "Admin")
+                    {                        
+                       userdata = new string[] { userid, userRoleIds, userRole, model.UserName,null };
+                    }
+                    else
+                    {
+                        var userdata1 = userAccountContext.Collection().Where(x => x.Id == userid).FirstOrDefault();
+                       string deptname = userdata1.DeptId != null ? userdata1.Dept.DeptName : null;
+                       userdata = new string[] { userid, userRoleIds, userRole, model.UserName, deptname };
+                    }
 
                     Session["UserData"] = userdata;
                     return RedirectToLocal(returnUrl);

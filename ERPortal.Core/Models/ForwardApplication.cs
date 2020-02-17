@@ -27,6 +27,10 @@ namespace ERPortal.Core.Models
         [Display(Name = "Application Forward")]
         Forward,       
         [Display(Name = "Application Recommended")]
-        Recommended
+        Recommended,
+        [Display(Name = "Application Comment Back")]
+        CommentBack,
+        [Display(Name ="Comment Resolved Review Application Again.")]
+        ReviewAgain
     }
 }
