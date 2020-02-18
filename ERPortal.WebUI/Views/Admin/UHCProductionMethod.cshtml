@@ -8,7 +8,7 @@
 @using (Html.BeginForm("AjaxAdd", "Admin", new { targetPage = "UHCProductionMethod" }, FormMethod.Post, new { @id = "myForm" }))
 {
     @Html.AntiForgeryToken()
-
+    @Html.HiddenFor(model => model.Id)
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 

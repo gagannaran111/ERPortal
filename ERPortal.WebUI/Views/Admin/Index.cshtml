@@ -56,8 +56,10 @@
                                         <td>@Organisation.Name</td>
                                         <td>@Organisation.Type</td>
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-warning" value="@Organisation.Id">Edit</button>
-                                            <button type="button" class="btn btn-danger" value="@Organisation.Id">Delete</button>
+                                           
+                                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#formModal" data-page="Organisation" data-title="Department" data-value="@Organisation.Id"><i class="fas fa-edit"></i></button>
+                                            <button type="button" class="btn btn-danger DeleteData" data-target="Organisation" data-value="@Organisation.Id"><i class="fas fa-trash"></i></button>
+
                                         </td>
                                     </tr>
                                 }
@@ -87,8 +89,10 @@
                                     <tr id="row_@FieldType.Id">
                                         <td>@FieldType.Type</td>
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-warning" value="@FieldType.Id">Edit</button>
-                                            <button type="button" class="btn btn-danger" value="@FieldType.Id">Delete</button>
+
+                                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#formModal" data-page="FieldType" data-title="Department" data-value="@FieldType.Id"><i class="fas fa-edit"></i></button>
+                                            <button type="button" class="btn btn-danger DeleteData" data-target="FieldType" data-value="@FieldType.Id"><i class="fas fa-trash"></i></button>
+
                                         </td>
                                     </tr>
                                 }
@@ -120,8 +124,11 @@
                                         <td>@UHCProductionMethod.Name</td>
                                         <td>@UHCProductionMethod.Description</td>
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-warning" value="@UHCProductionMethod.Id">Edit</button>
-                                            <button type="button" class="btn btn-danger" value="@UHCProductionMethod.Id">Delete</button>
+                                         
+
+                                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#formModal" data-page="UHCProductionMethod" data-title="UHCProductionMethod" data-value="@UHCProductionMethod.Id"><i class="fas fa-edit"></i></button>
+                                            <button type="button" class="btn btn-danger DeleteData" data-target="UHCProductionMethod" data-value="@UHCProductionMethod.Id"><i class="fas fa-trash"></i></button>
+
                                         </td>
                                     </tr>
                                 }
@@ -157,7 +164,7 @@
                                         <td>@ERScreeningInstitute.Address</td>
                                         <td>@ERScreeningInstitute.EmailID</td>
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-warning" value="@ERScreeningInstitute.Id">Edit</button>
+                                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#formModal" data-page="ERScreeningInstitute" data-title="ERScreeningInstitute" data-value="@ERScreeningInstitute.Id"><i class="fas fa-edit"></i></button>
                                             <button type="button" class="btn btn-danger" value="@ERScreeningInstitute.Id">Delete</button>
                                         </td>
                                     </tr>
@@ -178,27 +185,29 @@
                             {
                                 <table class="table table-striped table-bordered">
                                     <thead>
-                                        <tr>
-                                            <th scope="col">Id</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Is_Active</th>
-                                            <th scope="col">Created Date</th>
-                                            <th scope="col">Edit/Delete</th>
-                                        </tr>
+                                                                <tr>
+                                                                    <th scope="col">Id</th>
+                                                                    <th scope="col">Custom Status Id</th>
+                                                                    <th scope="col">Status</th>
+                                                                    <th scope="col">Is_Active</th>
+                                                                    <th scope="col">Created Date</th>
+                                                                    <th scope="col">Edit/Delete</th>
+                                                                </tr>
                                     </thead>
                                     <tbody>
                                         @foreach (var statusMaster in Model.StatusMasters)
                                         {
-                                            <tr id="row_@statusMaster.Id">
-                                                <td>@statusMaster.Id</td>
-                                                <td>@statusMaster.Status</td>
-                                                <td>@statusMaster.Is_Active</td>
-                                                <td>@statusMaster.CreatedAt.DateTime</td>
-                                                <td class="text-center">
-                                                    <button type="button" class="btn btn-warning" value="@statusMaster.Id">Edit</button>
-                                                    <button type="button" class="btn btn-danger" value="@statusMaster.Id">Delete</button>
-                                                </td>
-                                            </tr>
+                                        <tr id="row_@statusMaster.Id">
+                                            <td>@statusMaster.Id</td>
+                                            <td>@statusMaster.CustStatusId</td>
+                                            <td>@statusMaster.Status</td>
+                                            <td>@statusMaster.Is_Active</td>
+                                            <td>@statusMaster.CreatedAt.DateTime</td>
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#formModal" data-page="StatusMaster" data-title="StatusMaster" data-value="@statusMaster.Id"><i class="fas fa-edit"></i></button>                                              
+                                                <button type="button" class="btn btn-danger DeleteData" data-target="StatusMaster" data-value="@statusMaster.Id"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
                                         }
                                     </tbody>
                                 </table>
@@ -241,8 +250,9 @@
                                             <td>@department.Is_Active</td>
                                             <td>@department.CreatedAt.DateTime</td>
                                             <td class="text-center">
-                                                <button type="button" class="btn btn-warning" value="@department.Id">Edit</button>
-                                                <button type="button" class="btn btn-danger" value="@department.Id">Delete</button>
+                                             
+                                                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#formModal" data-page="Department" data-title="Department" data-value="@department.Id"><i class="fas fa-edit"></i></button>
+                                                <button type="button" class="btn btn-danger DeleteData" data-target="Department" data-value="@department.Id"><i class="fas fa-trash"></i></button>
                                             </td>
                                         </tr>
                                         }
@@ -292,10 +302,12 @@
             var button = $(event.relatedTarget); // Button that triggered the modal
             var targetPage = button.data('page'); // Extract page redirection from data-* attributes
             var modalTitle = button.data('title');// Extract Modal title from data-* attributes
+            var btnval = button.data('value');
             // Initiate an AJAX request here (and then updating in a callback)
             $("#formModalLabel").html("Add " + modalTitle);
             $.ajax({
                 url: "/Admin/AjaxAdd?targetPage=" + targetPage,
+                data: {Id:btnval},
                 success: function (result) {
                     $('#modalContent').html(result);
                     if ($("#saveButton").is(":hidden")) {
@@ -362,6 +374,26 @@
 
     });
 
+    $(document).on('click', '.DeleteData', function () {
+
+        var target = $(this).attr('data-target');
+        var id = $(this).attr('data-value');
+        $.ajax({
+            url: "@Url.Action("DeleteData","Admin")",
+            type: 'POST',
+            data: { targetdata:target,Id : id },
+            success: function (result) {
+                alert(result);
+            },
+            error: function () {
+            },
+            fail: function (xhr, textStatus, errorThrown) { }
+
+
+
+        });
+
+    });
 
 
 

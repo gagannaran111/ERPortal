@@ -4,8 +4,9 @@
     Layout = null;
 }
 
-@using (Html.BeginForm("AjaxAdd", "Admin",new { targetPage= "FieldType" }, FormMethod.Post, new { @id = "myForm" }))
+@using (Html.BeginForm("AjaxAdd", "Admin", new { targetPage = "FieldType" }, FormMethod.Post, new { @id = "myForm" }))
 {
+    @Html.HiddenFor(model => model.Id)
     @Html.AntiForgeryToken()
     <div class="form-group row">
         @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })

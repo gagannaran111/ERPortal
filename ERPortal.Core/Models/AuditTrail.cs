@@ -13,7 +13,7 @@ namespace ERPortal.Core.Models
         public string FileRefId { get; set; }
 
         public string StatusId { get; set; }
-        public virtual StatusMaster Status { get; set; }
+       // public virtual StatusMaster Status { get; set; }
         public string QueryDetailsId { get; set; }
         public string SenderId { get; set; }
         public virtual UserAccount Sender { get; set; }

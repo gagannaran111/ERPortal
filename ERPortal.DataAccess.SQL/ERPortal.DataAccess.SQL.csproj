@@ -135,6 +135,14 @@
     <Compile Include="Migrations\202002140906233_DepartmentTable.designer.cs">
       <DependentUpon>202002140906233_DepartmentTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202002180444551_StatusMasterAddColumn.cs" />
+    <Compile Include="Migrations\202002180444551_StatusMasterAddColumn.designer.cs">
+      <DependentUpon>202002180444551_StatusMasterAddColumn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202002180938341_RemoveForgeinKeyStatusMaster.cs" />
+    <Compile Include="Migrations\202002180938341_RemoveForgeinKeyStatusMaster.designer.cs">
+      <DependentUpon>202002180938341_RemoveForgeinKeyStatusMaster.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -211,6 +219,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202002140906233_DepartmentTable.resx">
       <DependentUpon>202002140906233_DepartmentTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002180444551_StatusMasterAddColumn.resx">
+      <DependentUpon>202002180444551_StatusMasterAddColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002180938341_RemoveForgeinKeyStatusMaster.resx">
+      <DependentUpon>202002180938341_RemoveForgeinKeyStatusMaster.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

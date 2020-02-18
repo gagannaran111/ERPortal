@@ -6,6 +6,7 @@
 
 @using (Html.BeginForm("AjaxAdd", "Admin", new { targetPage = "ERScreeningInstitute" }, FormMethod.Post, new { @id = "myForm" }))
 {
+    @Html.HiddenFor(model => model.Id)
     @Html.AntiForgeryToken()
     <div class="form-group row">
         @Html.LabelFor(model => model.InstituteName, htmlAttributes: new { @class = "control-label col-md-2" })

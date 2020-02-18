@@ -51,9 +51,10 @@ namespace ERPortal.WebUI.Controllers
         }
         public ActionResult AuditTrail()
         {
-            ViewBag.Application = ERApplicationContext.Collection().Select(x=>new {
+            ViewBag.Application = ERApplicationContext.Collection().Select(x => new
+            {
                 value = x.Id,
-                text =x.AppId
+                text = x.AppId
             }).ToList();
 
             return View();
@@ -71,25 +72,25 @@ namespace ERPortal.WebUI.Controllers
                     x.Sender,
                     x.ReceiverId,
                     x.StatusId,
-                    x.Status,
+                   // x.Status,
                     x.QueryDetailsId,
                     x.Is_Active,
                     x.FileRefId,
                     x.Id
-                }).OrderByDescending(d=>d.CreatedAt).ToList();
+                }).OrderByDescending(d => d.CreatedAt).ToList();
             return Json(AuditTrailList, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AjaxAdd(string targetPage)
+        public ActionResult AjaxAdd(string targetPage, string Id)
         {
             object _genericObject;
             switch (targetPage)
             {
                 case "FieldType":
-                    _genericObject = new FieldType();
+                    _genericObject = Id != null ? FieldTypeContext.Collection().Where(x => x.Id == Id).FirstOrDefault() : new FieldType();
                     break;
                 case "Organisation":
-                    _genericObject = new Organisation();
+                    _genericObject = Id != null ? OrganisationContext.Collection().Where(x => x.Id == Id).FirstOrDefault() : new Organisation();
                     break;
                 case "User":
                     _genericObject = new UserOrganisationViewModel()
@@ -99,16 +100,16 @@ namespace ERPortal.WebUI.Controllers
                     };
                     break;
                 case "UHCProductionMethod":
-                    _genericObject = new UHCProductionMethod();
+                    _genericObject = Id != null ? UHCProductionMethodContext.Collection().Where(x => x.Id == Id).FirstOrDefault() : new UHCProductionMethod();
                     break;
                 case "ERScreeningInstitute":
-                    _genericObject = new ERScreeningInstitute();
+                    _genericObject = Id != null ? ERScreeningInstituteContext.Collection().Where(x => x.Id == Id).FirstOrDefault() : new ERScreeningInstitute();
                     break;
                 case "StatusMaster":
-                    _genericObject = new StatusMaster();
+                    _genericObject = Id != null ? StatusMasterContext.Collection().Where(x => x.Id == Id).FirstOrDefault() : new StatusMaster();
                     break;
                 case "Department":
-                    _genericObject = new DepartmentType();
+                    _genericObject = Id != null ? DepartmentContext.Collection().Where(x => x.Id == Id).FirstOrDefault() : new DepartmentType();
                     break;
                 default:
                     _genericObject = null;
@@ -130,37 +131,78 @@ namespace ERPortal.WebUI.Controllers
         public ActionResult AjaxAdd(string targetPage, FormCollection collection)
         {
             object _genericObject = null;
+            string id = collection["Id"];
+            string msg = "";
             bool modelIsValid = false;
+
             switch (targetPage)
             {
                 case "FieldType":
-                    FieldType fieldType = new FieldType()
+                    var FieldType = FieldTypeContext.Collection().Where(x => x.Id == id).FirstOrDefault();
+
+                    if (FieldType != null)
                     {
-                        Type = collection["Type"]
-                    };
-                    modelIsValid = TryValidateModel(fieldType);
-                    if (modelIsValid)
-                    {
-                        FieldTypeContext.Insert(fieldType);
-                        FieldTypeContext.Commit();
+                        FieldType.Type = collection["Type"];
+
                     }
                     else
                     {
-                        _genericObject = fieldType;
+                        FieldType fieldType = new FieldType()
+                        {
+                            Type = collection["Type"]
+                        };
+                        modelIsValid = TryValidateModel(fieldType);
+                        if (modelIsValid)
+                        {
+                            FieldTypeContext.Insert(fieldType);
+                           
+                        }
+                        else
+                        {
+                            _genericObject = fieldType;
+                        }
                     }
+                    FieldTypeContext.Commit();
                     break;
                 case "Organisation":
-                    Organisation organisation = new Organisation(collection["Name"], collection["Type"]);
-                    modelIsValid = TryValidateModel(organisation);
-                    if (TryValidateModel(modelIsValid))
+                    var Organisation = OrganisationContext.Collection().Where(x => x.Id == id).FirstOrDefault();
+
+                    if (Organisation != null)
                     {
-                        OrganisationContext.Insert(organisation);
-                        OrganisationContext.Commit();
+                        switch (collection["Type"])
+                        {
+                            case "0":
+                                Organisation.Type = OrganisationType.Operator;
+                                break;
+                            case "1":
+                                Organisation.Type = OrganisationType.DGH;
+                                break;
+                            case "2":
+                                Organisation.Type = OrganisationType.ERCommittee;
+                                break;
+                            default:
+                                Organisation.Type = OrganisationType.Others;
+                                break;
+                        }
+                        Organisation.Name = collection["Name"];
+
                     }
                     else
                     {
-                        _genericObject = organisation;
+
+                        Organisation organisation = new Organisation(collection["Name"], collection["Type"]);
+                        modelIsValid = TryValidateModel(organisation);
+                        if (TryValidateModel(modelIsValid))
+                        {
+                            OrganisationContext.Insert(organisation);
+                            OrganisationContext.Commit();
+                        }
+                        else
+                        {
+                            _genericObject = organisation;
+                        }
                     }
+                    OrganisationContext.Commit();
                     break;
                 case "User":
                     UserAccount userAccount = new UserAccount()
@@ -187,82 +229,136 @@ namespace ERPortal.WebUI.Controllers
                     }
                     break;
                 case "UHCProductionMethod":
-                    UHCProductionMethod uHCProductionMethod = new UHCProductionMethod()
+                    var UHCProductionMethod = UHCProductionMethodContext.Collection().Where(x => x.Id == id).FirstOrDefault();
+
+                    if (UHCProductionMethod != null)
                     {
-                        Name = collection["Name"],
-                        Description = collection["Description"]
-                    };
-                    modelIsValid = TryValidateModel(uHCProductionMethod);
-                    if (modelIsValid)
-                    {
-                        UHCProductionMethodContext.Insert(uHCProductionMethod);
-                        UHCProductionMethodContext.Commit();
+                        UHCProductionMethod.Name = collection["Name"];
+                        UHCProductionMethod.Description = collection["Description"];
                     }
+
                     else
                     {
-                        _genericObject = uHCProductionMethod;
+                        UHCProductionMethod uHCProductionMethod = new UHCProductionMethod()
+                        {
+                            Name = collection["Name"],
+                            Description = collection["Description"]
+                        };
+                        modelIsValid = TryValidateModel(uHCProductionMethod);
+                        if (modelIsValid)
+                        {
+                            UHCProductionMethodContext.Insert(uHCProductionMethod);
+                           
+                        }
+                        else
+                        {
+                            _genericObject = uHCProductionMethod;
+                        }
                     }
+                    UHCProductionMethodContext.Commit();
                     break;
                 case "ERScreeningInstitute":
-                    ERScreeningInstitute ERScreeningInstitute = new ERScreeningInstitute()
+
+                    var ERScreeningInstitute = ERScreeningInstituteContext.Collection().Where(x => x.Id == id).FirstOrDefault();
+
+                    if (ERScreeningInstitute != null)
                     {
-                        InstituteName = collection["InstituteName"],
-                        ContactPerson = collection["ContactPerson"],
-                        Address = collection["Address"],
-                        EmailID = collection["EmailID"]
-                    };
-                    modelIsValid = TryValidateModel(ERScreeningInstitute);
-                    if (modelIsValid)
-                    {
-                        ERScreeningInstituteContext.Insert(ERScreeningInstitute);
-                        ERScreeningInstituteContext.Commit();
+                        ERScreeningInstitute.InstituteName = collection["InstituteName"];
+                        ERScreeningInstitute.ContactPerson = collection["ContactPerson"];
+                        ERScreeningInstitute.Address = collection["Address"];
+                        ERScreeningInstitute.EmailID = collection["EmailID"];
                     }
                     else
                     {
-                        _genericObject = ERScreeningInstitute;
+                        ERScreeningInstitute ERScreeningInstitute1 = new ERScreeningInstitute()
+                        {
+                            InstituteName = collection["InstituteName"],
+                            ContactPerson = collection["ContactPerson"],
+                            Address = collection["Address"],
+                            EmailID = collection["EmailID"]
+                        };
+                        modelIsValid = TryValidateModel(ERScreeningInstitute1);
+                        if (modelIsValid)
+                        {
+                            ERScreeningInstituteContext.Insert(ERScreeningInstitute1);
+                           
+                        }
+                        else
+                        {
+                            _genericObject = ERScreeningInstitute1;
+                        }
                     }
+                    ERScreeningInstituteContext.Commit();
                     break;
 
                 case "StatusMaster":
-                    StatusMaster statusMaster = new StatusMaster()
+                   
+                    var Status = StatusMasterContext.Collection().Where(x => x.Id == id).FirstOrDefault();
+
+                    if (Status != null)
                     {
-                        Status = collection["Status"],
-                        Is_Active = true
-                    };
-                    modelIsValid = TryValidateModel(statusMaster);
-                    if (modelIsValid)
-                    {
-                        StatusMasterContext.Insert(statusMaster);
-                        StatusMasterContext.Commit();
+                        Status.CustStatusId = collection["CustStatusId"];
+                        Status.Status = collection["Status"];
                     }
+
                     else
                     {
-                        _genericObject = statusMaster;
+                        StatusMaster statusMaster = new StatusMaster()
+                        {
+                            CustStatusId = collection["CustStatusId"],
+                            Status = collection["Status"],
+                            Is_Active = true
+                        };
+                        modelIsValid = TryValidateModel(statusMaster);
+                        if (modelIsValid)
+                        {
+                            StatusMasterContext.Insert(statusMaster);
+                          
+                        }
+                        else
+                        {
+                            _genericObject = statusMaster;
+                        }
                     }
+                    StatusMasterContext.Commit();
                     break;
 
                 case "Department":
-                    DepartmentType department = new DepartmentType()
+                
+                    var Dept = DepartmentContext.Collection().Where(x => x.Id == id).FirstOrDefault();
+
+                    if (Dept != null)
                     {
-                        DeptName = collection["DeptName"],
-                        SubDeptName=collection["SubDeptName"],
-                        Is_Active=true
-                    };
-                    modelIsValid = TryValidateModel(department);
-                    if (modelIsValid)
-                    {
-                        DepartmentContext.Insert(department);
-                        DepartmentContext.Commit();
+                        Dept.DeptName = collection["DeptName"];
+                        Dept.SubDeptName = collection["SubDeptName"];
+                        DepartmentContext.Update(Dept);
                     }
                     else
                     {
-                        _genericObject = department;
+                        DepartmentType department = new DepartmentType()
+                        {
+                            DeptName = collection["DeptName"],
+                            SubDeptName = collection["SubDeptName"],
+                            Is_Active = true
+                        };
+                        modelIsValid = TryValidateModel(department);
+                        if (modelIsValid)
+                        {
+
+                            DepartmentContext.Insert(department);
+                        }
+                        else
+                        {
+                            _genericObject = department;
+                        }
                     }
+                    DepartmentContext.Commit();
+
                     break;
                 default:
                     return Content("Error");
             }
-            if (modelIsValid)
+            if (_genericObject==null)
             {
                 return Content("Success");
             }
@@ -271,6 +367,55 @@ namespace ERPortal.WebUI.Controllers
                 return View(targetPage, _genericObject);
             }
 
+        }
+
+
+        [HttpPost]
+        public JsonResult DeleteData(string targetdata, string Id)
+        {
+            string msg = "Id : " + Id + " Delete Successfully";
+            switch (targetdata)
+            {
+                case "FieldType":
+
+                    FieldTypeContext.Delete(Id);
+                    FieldTypeContext.Commit();
+                    break;
+                case "Organisation":
+
+                    OrganisationContext.Delete(Id);
+                    OrganisationContext.Commit();
+                    break;
+                case "User":
+
+                    UserAccountContext.Delete(Id);
+                    UserAccountContext.Commit();
+                    break;
+                case "UHCProductionMethod":
+
+                    UHCProductionMethodContext.Delete(Id);
+                    UHCProductionMethodContext.Commit();
+                    break;
+                case "ERScreeningInstitute":
+
+                    ERScreeningInstituteContext.Delete(Id);
+                    ERScreeningInstituteContext.Commit();
+                    break;
+                case "StatusMaster":
+
+                    StatusMasterContext.Delete(Id);
+                    StatusMasterContext.Commit();
+                    break;
+                case "Department":
+                    DepartmentContext.Delete(Id);
+                    DepartmentContext.Commit();
+                    break;
+                default:
+                    msg = "Something Went Wrong. Try Again";
+                    break;
+            }
+
+            return Json(msg);
         }
     }
 }

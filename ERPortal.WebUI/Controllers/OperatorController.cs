@@ -108,7 +108,7 @@ namespace ERPortal.WebUI.Controllers
                 _ERApplication.ERApplications.ERScreeningDetail.ReportDocumentPath = FileRef;
 
                 ERApplicationContext.Insert(_ERApplication.ERApplications);
-                string auditstatus = StatusMasterContext.Collection().Where(status => status.Status == "Application Submitted").FirstOrDefault().Id;
+                string auditstatus = StatusMasterContext.Collection().Where(status => status.Status == "Application Submitted").FirstOrDefault().CustStatusId;
 
                 string CER = UserAccountContext.Collection().Where(x => x.UserRole == "Consultant Enhanced Recovery").Select(c => c.Id).FirstOrDefault();
 
@@ -119,7 +119,7 @@ namespace ERPortal.WebUI.Controllers
                     StatusId = auditstatus,
                    // QueryDetailsId = null,
                     SenderId = userdata[0],
-                    ReceiverId = CER, // Consultant Enhanced Recovery
+                    //ReceiverId = CER, // Consultant Enhanced Recovery
                     Is_Active = true,
                 };
                 List<string> lst = new List<string>() {
