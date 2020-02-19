@@ -89,9 +89,12 @@
                     if (result.length > 0) {
                         var dd = "";
                         $.each(result, function (index, element) {
-                            dd += "<tr><td>" + result[index].ERApplicationId + "</td><td>" + result[index].Sender.FirstName + " " + result[index].Sender.LastName + "(" + result[index].Sender.UserRole + ")</td >" +
-                                " <td>" + result[index].Receiver.FirstName + " " + result[index].Receiver.LastName + "(" + result[index].Receiver.UserRole + ")</td > <td>" + result[index].Status.Status + "</td><td>" +
-                                result[index].Is_Active + "</td><td>" + ToChangeDateFormate(result[index].CreatedAt) + "</td></tr>";
+                            reciver = element.Receiver == null ? "" : element.Receiver.FirstName + " " + element.Receiver.LastName + "(" + element.Receiver.UserRole + ")";
+                            sender = element.Sender == null ? "" : element.ERApplicationId + "</td><td>" + element.Sender.FirstName + " " + element.Sender.LastName + "(" + element.Sender.UserRole + ")";
+
+                            dd += "<tr><td>" + sender + " </td >" +
+                                " <td>" + reciver+ "</td > <td>" + element.Status.Status + "</td><td>" +
+                                element.Is_Active + "</td><td>" + ToChangeDateFormate(element.CreatedAt) + "</td></tr>";
 
                         });
                         $('#AuditTable tbody').html(dd);

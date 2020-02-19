@@ -63,7 +63,9 @@ namespace ERPortal.WebUI.Controllers
         public JsonResult AuditTrailData(string appid)
         {
             string Application = ERApplicationContext.Collection().Where(x => x.Id == appid).FirstOrDefault().AppId;
-            var AuditTrailList = AuditTrailContext.Collection().Where(s => s.ERApplicationId == appid)
+            List<StatusMaster> statusmaster = StatusMasterContext.Collection().ToList();
+            var AuditTrailAppData = AuditTrailContext.Collection().Where(s => s.ERApplicationId == appid).ToList();
+            var AuditTrailList = AuditTrailAppData
                 .Select(x => new
                 {
                     ERApplicationId = Application,
@@ -72,11 +74,13 @@ namespace ERPortal.WebUI.Controllers
                     x.Sender,
                     x.ReceiverId,
                     x.StatusId,
-                   // x.Status,
+                    
+                    //x.Status,
                     x.QueryDetailsId,
                     x.Is_Active,
                     x.FileRefId,
-                    x.Id
+                    x.Id,
+                    Status = statusmaster.Where(s => s.CustStatusId == x.StatusId).FirstOrDefault()
                 }).OrderByDescending(d => d.CreatedAt).ToList();
             return Json(AuditTrailList, JsonRequestBehavior.AllowGet);
         }

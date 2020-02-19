@@ -251,6 +251,7 @@
                 url: formUrl,
                 type: 'POST',
                 data: form.serialize(),
+                async: false,
                 success: function (result) {
 
                     if ('ERROR' != result) {
