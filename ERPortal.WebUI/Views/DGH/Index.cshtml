@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<ERPortal.Core.Models.ERApplication>
 
 @{
     ViewBag.Title = "Dashboard ER Proposal";
@@ -15,26 +15,33 @@
                         <thead class="bg-gradient-light">
                             <tr>
                                 <th>AppId</th>
+                                <th>Field Type</th>
+                                <th>Field Name</th>
+                                <th>Date Of Discovery</th>
                                 @*<th>Eamil</th>*@
                                 <th>Organisation</th>
                                 <th>Created Date</th>
-
+                                <th>Status</th>
                                 @*<th>Delete</th>
-                                    <th>Edit</th>*@
+        <th>Edit</th>*@
 
                             </tr>
                         </thead>
                         <tbody>
 
-                            @foreach (var x in ViewBag.ApplicationData)
+                            @foreach (var x in Model)
                             {
                                 string appid = !String.IsNullOrEmpty(x.AppId) ? x.AppId : "Not Found";
-                                <tr>
-                                    <td>@Html.ActionLink(appid, "AppRecToDgh", "DGH", new { appid = appid }, null) </td>                                   @*<td>@x.Email</td>*@
+                            <tr>
+                                <td>@Html.ActionLink(appid, "AppRecToDgh", "DGH", new { appid = appid }, null) </td>                                   @*<td>@x.Email</td>*@
+                                <td>@x.FieldType.Type</td>
+                                <td>@x.FieldName</td>
+                                <td>@x.DateOfDiscovery.ToShortDateString()</td>
 
-                                    <td>@x.Organisation.Name</td>
-                                    <td>@x.CreatedAt.DateTime</td>
-                                </tr>
+                                <td>@x.Organisation.Name</td>
+                                <td>@x.CreatedAt.DateTime</td>
+                                <td>@x.CreatedAt.DateTime</td>
+                            </tr>
 
                             }
 

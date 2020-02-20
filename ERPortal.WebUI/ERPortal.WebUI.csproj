@@ -703,6 +703,7 @@
     <Content Include="Views\Comment\QueryCommentForward.cshtml" />
     <Content Include="Views\Comment\QueryCommentReply.cshtml" />
     <Content Include="Views\Admin\Department.cshtml" />
+    <Content Include="Views\Comment\UploadApprovalLetter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

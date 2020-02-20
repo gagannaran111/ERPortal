@@ -11,26 +11,28 @@ namespace ERPortal.Core.Models
     {
         public string ERApplicationId { get; set; }
         public virtual ERApplication ERApplication { get; set; }
-        
-        public string Sender { get; set; }       
-        public string Reciever { get; set; }      
+
+        public string Sender { get; set; }
+        public string Reciever { get; set; }
         public string Subject { get; set; }
         public string CommentRefId { get; set; }
-       // public virtual  Comment Comment { get; set; }
+        // public virtual  Comment Comment { get; set; }
         public string FileRef { get; set; }
-        [Display(Name ="File Status")]
+        [Display(Name = "File Status")]
         public FileStatus FileStatus { get; set; }
         public Boolean Is_active { get; set; }
     }
     public enum FileStatus
     {
         [Display(Name = "Application Forward")]
-        Forward,       
+        Forward,
         [Display(Name = "Application Recommended")]
         Recommended,
         [Display(Name = "Application Comment Back")]
         CommentBack,
-        [Display(Name ="Comment Resolved Review Application Again.")]
-        ReviewAgain
+        [Display(Name = "Comment Resolved Review Application Again.")]
+        ReviewAgain,
+        [Display(Name = "Approval Letter")]
+        ApprovalLetter
     }
 }

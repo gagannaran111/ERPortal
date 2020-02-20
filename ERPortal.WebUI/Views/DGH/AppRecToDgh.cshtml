@@ -21,8 +21,8 @@
 @Html.HiddenFor(model => model.ERApplications.DGHFileAttachment)
 @Html.HiddenFor(model => model.ERApplications.DGHFileAttachmentForPilot)
 
-@{    
-   string[] arr = Session["UserData"] as string[];
+@{
+    string[] arr = Session["UserData"] as string[];
 }
 <div class="container-fluid">
 
@@ -31,7 +31,7 @@
         <div class="tab-content shadow-lg col-lg-12 ">
             <ul class="nav nav-tabs bg-gradient-light mt-3">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#ERProposalTab">ER Screening Report</a>
+                    <a class="nav-link ERProposaltablink active" data-toggle="tab" href="#ERProposalTab">ER Screening Report</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link commenttablink" data-toggle="tab" href="#CommentTab">Summary</a>
@@ -56,7 +56,7 @@
                                         <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 ForwardApp d-none" id="forwardapp" data-toggle="modal" data-target="#CommentModal" data-page="ForwardApplication" data-title="Application Forward"><i class="fas fa-forward"></i> Action</a>
                                         <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 d-none QueryComment " id="QueryComment" data-toggle="modal" data-target="#CommentModal" data-page="QueryCommentRaised" data-title="Query Raised"><i class="fas fa-question"></i> Query</a>
                                         <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 d-none GrantApp" id="grantapp" data-toggle="modal" data-target="#CommentModal" data-page="Comment" data-title="Application Grant"><i class="fas fa-check"></i> Grant</a>
-                                        <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 d-none UploadLetter" id="UploadLetter" data-toggle="modal" data-target="#CommentModal" data-page="UploadLetter" data-title="Upload Letter"><i class="fas fa-check"></i> Upload Letter</a>
+                                        <a href="#" class="btn btn-sm btn-outline-light float-right ml-1 d-none UploadLetter" id="UploadLetter" data-toggle="modal" data-target="#CommentModal" data-page="UploadApprovalLetter" data-title="Upload Approval Letter"><i class="fas fa-upload"></i> Upload Letter</a>
                                     </div>
                                 </div>
                             </div>
@@ -327,23 +327,32 @@
                 // deferLoading: 5
              });
 
-        BtnForwardCheckShowHideStatus("btnForward");
-      });
+        BtnForwardCheckShowHideStatus();
+        "@arr[2]" == "Consultant Enhanced Recovery" ? BtnUploadLetterCheckShowHideStatus() : null;
+        
+    });
     $(document).on('click', '.ForwardApp', function () {
           ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd", "Comment")", $(this).attr('data-page'), null);
-          setTimeout(function () {
-              BtnForwardCheckShowHideStatus("btnForward");
-          }, 1000);
-      });
-     $(document).on('click', '.QueryComment', function () {
+
+    });
+    $(document).on('click', '.UploadLetter', function () {
           ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd", "Comment")",$(this).attr('data-page'),null);
 
-      });
-     $(document).on('click', '.GrantApp', function () {
-          ShowCommentModal("@Model.ERApplications.Id",$(this).attr('data-title'),"@Url.Action("AjaxAdd", "Comment")",$(this).attr('data-page'),null);
-      });
+    });
+    $(document).on('click', '.QueryComment', function () {
+        ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd", "Comment")", $(this).attr('data-page'), null);
 
+    });
+    $(document).on('click', '.GrantApp', function () {
+        ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd", "Comment")", $(this).attr('data-page'), null);
+    });
 
+    // ERProposal tab link
+
+    $(document).on('click', '.ERProposaltablink', function () {
+        BtnForwardCheckShowHideStatus();
+        "@arr[2]" == "Consultant Enhanced Recovery" ? BtnUploadLetterCheckShowHideStatus() : null;
+    });
 
     // Forward Application
     $(document).on('click', '.commenttablink', function () {
@@ -381,8 +390,11 @@
                           else if (element.FileStatus == 3) {
                               statuscheck = "Comment Resolved By " + element.Sendername+ " and Review Application Again";
                           }
-
-                          else {
+                          else if (element.FileStatus == 4) {
+                              statuscheck = "Application Approval Letter Uploaded by " + element.Sendername;
+                          }
+                          else
+                          {
                               statuscheck = "";
                           }
                           dd += ' <li class="left clearfix "><span class="chat_img pull-left">' +
@@ -415,37 +427,9 @@
              $('.ReciverIdSelectList').removeClass('d-none');
           }
 
-      })
-    function BtnForwardCheckShowHideStatus(typebtn) {
+    })
 
-        var sendData = { btnType: typebtn, appid: "@Model.ERApplications.Id" };
-        $.ajax({
-               url: "@Url.Action("BtnCheckStatus", "Comment")",
-            type: 'POST',
-            data: sendData,
-            async: false,
-            success: function (result) {
-                       switch (result) {
-                           case "Show":
-                        $('.ForwardApp').removeClass('d-none');
-                               break;
-                           case "Hide":
-                               if ("@arr[2]" == "coordinator") {
-                                   $('.UploadLetter').removeClass('d-none');
-                               }
-                                  $('.ForwardApp').addClass('d-none');
-                               break;
-                           default:  alertModal("Something Went Wrong. Try Again Later");
-                       }
-                   },
-            error: function () {
-                       alertModal("Something Went Wrong. Try Again Later");
-                   },
-            fail: function (xhr, textStatus, errorThrown) {
-                       alertModal("Something Went Wrong. Try Again Later");
-                   }
-               });
-    }
+   
 
     // Query Comment
 
@@ -455,7 +439,7 @@
           url: "@Url.Action("QueryCommentSummary", "Comment", new { appid = Model.ERApplications.Id })",
               type:'POST',
               success: function (result) {
-                 
+
                   console.log(result);
                   if (result.length == 0) {
                       $("#QueryCommentTab .body-panel").html('<h3 class="text-danger ">Data Not Found</h3>');
@@ -498,7 +482,6 @@
                                   statuscheck = "";
                               }
 
-
                               if (f.Reciver.ReciverId == userid || f.Sender.SenderId == userid) {
                                   replybtn = '<button class="btn btn-sm btn-primary ml-2 BtnQueryReply" data-page="QueryCommentReply" data-query-parentid="' + f.QueryParentId + '" data-query-id="' + f.Id +
                                       '" data-toggle="modal" data-target="#CommentModal" data-title="Query Reply"><i class="fas fa-reply"></i> Reply</button>';
@@ -506,7 +489,6 @@
                               else {
                                   replybtn = "";
                               }
-
 
                               dd += ' <li class="left clearfix "><span class="chat_img pull-left">' +
                              '	<span class="chat_img"> <img src="../Content/img/user-profile.png" alt="User" style="width:50px"> </span>' +
@@ -545,18 +527,70 @@
       });
 
     $(document).on('click', '.BtnQueryForward', function () {
-          ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd","Comment")", $(this).attr('data-page'), $(this).attr('data-query-id'));
-
-      });
-
+        ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd","Comment")", $(this).attr('data-page'), $(this).attr('data-query-id'));
+    });
     $(document).on('click', '.BtnQueryReply', function () {
-          ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd","Comment")",$(this).attr('data-page'),$(this).attr('data-query-id'));
-
-
-      });
+        ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd","Comment")", $(this).attr('data-page'), $(this).attr('data-query-id'));
+    });
     $(document).on('click', '.BtnQueryResolved', function () {
-          ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd","Comment")",$(this).attr('data-page'),$(this).attr('data-query-id'));
-      });
+        ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd","Comment")", $(this).attr('data-page'), $(this).attr('data-query-id'));
+    });
 
+
+    // Create Functions
+
+    function BtnUploadLetterCheckShowHideStatus() {
+         var sendData = { btnType: "BtnUploadLetter", appid: "@Model.ERApplications.Id" };
+        $.ajax({
+            url: "@Url.Action("BtnCheckStatus", "Comment")",
+            type: 'POST',
+            data: sendData,
+            async: false,
+            success: function (result) {
+                switch (result) {
+                    case "Show":
+                       $('.UploadLetter').removeClass('d-none');
+                        break;
+                    case "Hide":
+                        $('.UploadLetter').addClass('d-none');
+                        break;
+                    default: alertModal("Something Went Wrong. Try Again Later");
+                }
+            },
+            error: function () {
+                alertModal("Something Went Wrong. Try Again Later");
+            },
+            fail: function (xhr, textStatus, errorThrown) {
+                alertModal("Something Went Wrong. Try Again Later");
+            }
+        });
+
+    }
+    function BtnForwardCheckShowHideStatus() {
+        var sendData = { btnType: "btnForward", appid: "@Model.ERApplications.Id" };
+        $.ajax({
+            url: "@Url.Action("BtnCheckStatus", "Comment")",
+            type: 'POST',
+            data: sendData,
+            async: false,
+            success: function (result) {
+                switch (result) {
+                    case "Show":
+                        $('.ForwardApp').removeClass('d-none');
+                        break;
+                    case "Hide":
+                        $('.ForwardApp').addClass('d-none');
+                        break;
+                    default: alertModal("Something Went Wrong. Try Again Later");
+                }
+            },
+            error: function () {
+                alertModal("Something Went Wrong. Try Again Later");
+            },
+            fail: function (xhr, textStatus, errorThrown) {
+                alertModal("Something Went Wrong. Try Again Later");
+            }
+        });
+    }
 
 </script>

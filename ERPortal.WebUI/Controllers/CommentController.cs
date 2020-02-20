@@ -339,6 +339,15 @@ namespace ERPortal.WebUI.Controllers
                     _genericObject = forwardAppViewModel;
                     break;
 
+                case "UploadApprovalLetter":
+                    UploadApprovalLetterViewModel uploadApprovalLetterViewModel = new UploadApprovalLetterViewModel();
+                    ForwardApplication forwardApplication1 = new ForwardApplication() {                     
+                    FileRef=Guid.NewGuid().ToString(),
+                    ERApplicationId=appid                    
+                    };
+                    uploadApprovalLetterViewModel.ForwardApplication = forwardApplication1;
+                    _genericObject = uploadApprovalLetterViewModel;
+                    break;
                 default:
                     _genericObject = null;
                     break;
@@ -355,7 +364,48 @@ namespace ERPortal.WebUI.Controllers
             }
 
         }
+        [HttpPost]
+        public JsonResult UploadApprovalLetter(string appid,UploadApprovalLetterViewModel uploadApprovalLetterViewModel)
+        {
+            string[] arr = Session["UserData"] as string[];
+            uploadApprovalLetterViewModel.Comment.ERApplicationId = uploadApprovalLetterViewModel.ForwardApplication.ERApplicationId;
+            uploadApprovalLetterViewModel.Comment.UserAccountId = arr[0];
+            
 
+            uploadApprovalLetterViewModel.ForwardApplication.CommentRefId = uploadApprovalLetterViewModel.Comment.Id;
+            uploadApprovalLetterViewModel.ForwardApplication.Sender = arr[0];
+            uploadApprovalLetterViewModel.ForwardApplication.Reciever = AuditTrailsContext.Collection().Where(x => x.ERApplicationId == appid && x.Is_Active == true && x.StatusId == "S101").FirstOrDefault().SenderId;
+            uploadApprovalLetterViewModel.ForwardApplication.FileStatus = FileStatus.ApprovalLetter;
+            uploadApprovalLetterViewModel.ForwardApplication.Is_active = true;
+
+            AuditTrails auditTrails = new AuditTrails() {
+                SenderId = arr[0],
+                ReceiverId= uploadApprovalLetterViewModel.ForwardApplication.Reciever,
+                FileRefId = uploadApprovalLetterViewModel.ForwardApplication.FileRef,
+                ERApplicationId = appid,
+                Is_Active=true,
+                StatusId="S116"
+            };
+            AuditTrailsContext.Insert(auditTrails);
+            ForwardApplicationContext.Insert(uploadApprovalLetterViewModel.ForwardApplication);
+            commentContext.Insert(uploadApprovalLetterViewModel.Comment);
+            
+            if (TryValidateModel(uploadApprovalLetterViewModel))
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    commentContext.Commit();
+                    ForwardApplicationContext.Commit();
+                    AuditTrailsContext.Commit();                    
+                    scope.Complete();
+                    return Json("Successfully Approval Letter Uploaded", JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                return Json("Something Went Wrong! Try Again Later");
+            }
+        }
 
         public JsonResult GrantApplication()
         {
@@ -393,6 +443,9 @@ namespace ERPortal.WebUI.Controllers
             string statuscheck = "Hide";
             int recievecheck = 0;
             int approvedcount = 0;
+            string dgid = "";
+            int countdgid = 0;
+            int countapprovalletter = 0;
             switch (btnType)
             {
                 case "btnForward":
@@ -430,14 +483,23 @@ namespace ERPortal.WebUI.Controllers
                     {
                         statuscheck = "Hide";
                     }
+                    dgid = UserAccountContext.Collection().Where(u => u.UserRole == "DG").FirstOrDefault().Id;
+                    countdgid = AuditTrailsContext.Collection().Where(x => x.ERApplicationId == appid && x.Is_Active == true && x.SenderId == dgid && x.StatusId == "S105").Count();
+                    statuscheck = arr[2] == "coordinator" && countdgid == 0 ? "Show" : statuscheck;
 
                     break;
+                case "BtnUploadLetter":
+                    dgid = UserAccountContext.Collection().Where(u => u.UserRole == "DG").FirstOrDefault().Id;
+                    countdgid = AuditTrailsContext.Collection().Where(x => x.ERApplicationId == appid && x.Is_Active == true && x.SenderId == dgid && x.StatusId == "S105").Count();
+
+                    countapprovalletter = AuditTrailsContext.Collection().Where(x => x.ERApplicationId == appid && x.Is_Active == true && x.StatusId == "S116").Count();
+                    statuscheck =  countapprovalletter == 0 && countdgid==1 ? "Show" : statuscheck;
+                    break;
+
                 default:
                     return Json("ERROR", JsonRequestBehavior.AllowGet);
             }
-            string dgid = UserAccountContext.Collection().Where(u => u.UserRole == "DG").FirstOrDefault().Id;
-            int countdgid = AuditTrailsContext.Collection().Where(x => x.ERApplicationId == appid && x.Is_Active == true && x.SenderId == dgid && x.StatusId == "S105").Count();
-            statuscheck = arr[2] == "coordinator" && countdgid == 0 ? "Show" : statuscheck;
+          
             return Json(statuscheck, JsonRequestBehavior.AllowGet);
         }
 

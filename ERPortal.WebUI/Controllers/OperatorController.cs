@@ -43,27 +43,42 @@ namespace ERPortal.WebUI.Controllers
             ERAppActiveUsersContext = _ERAppActiveUsersContext;
             StatusMasterContext = _StatusMasterContext;
             UserAccountContext = _UserAccountContext;
-           
+
         }
 
         // GET: Operator
 
-    
-        public ActionResult Index()
-        {          
-            string[] userdata = Session["UserData"] as string[];
-            string userid = userdata[0];
-            var er = ERAppActiveUsersContext.Collection().Where(x => x.UserAccountId == userid).ToList();
-            var results = (from F in er
-                           join FT in ERApplicationContext.Collection().ToList() on F.ERApplicationId equals FT.Id
-                           where F.UserAccountId == userdata[0]
-                           select FT);
 
-            ViewBag.ApplicationData = results;
+        public ActionResult Index()
+        {   
             return View();
         }
+        [HttpPost]
+        public JsonResult OperatorDashboard()
+        {
+            string[] userdata = Session["UserData"] as string[];
+            string userid = userdata[0];
+            List<ERApplication> erapp = ERApplicationContext.Collection().ToList();
+            List<ERAppActiveUsers> activeuser = ERAppActiveUsersContext.Collection().Where(x => x.UserAccountId == userid && x.Is_Active == true).Distinct().ToList();
 
-       
+            var applicationdata = erapp.Join(activeuser, x => x.Id, y => y.ERApplicationId, (x, y) => new
+            {
+                x.Id,
+                x.AppId,
+                x.OrganisationId,
+                x.Organisation,
+                x.FieldType,
+                x.FieldTypeId,
+                x.CreatedAt,
+                y.Dept_Id,
+                y.UserAccountId,
+                y.UserAccount,
+                y.Status
+            }).ToList();
+
+            return Json(applicationdata);
+        }
+
         public ActionResult SubmitERProposal(string appid)
         {
             ViewBag.Title = "Submit Proposal";
@@ -90,7 +105,7 @@ namespace ERPortal.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult SubmitERProposal(OperatorERProposalViewModel _ERApplication,string FileRef)
+        public ActionResult SubmitERProposal(OperatorERProposalViewModel _ERApplication, string FileRef)
         {
             ViewBag.Title = "Submit Proposal";
             string[] userdata = Session["UserData"] as string[];
@@ -100,7 +115,7 @@ namespace ERPortal.WebUI.Controllers
                 ViewBag.RefId = Guid.NewGuid().ToString();
                 return View(_ERApplication);
             }
-          //  _ERApplication.ERApplications.FieldName
+            //  _ERApplication.ERApplications.FieldName
             else
             {
                 string dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss").Replace("/", "").Replace(":", "").Replace(" ", "");
@@ -117,7 +132,7 @@ namespace ERPortal.WebUI.Controllers
                     ERApplicationId = _ERApplication.ERApplications.Id,
                     FileRefId = FileRef,
                     StatusId = auditstatus,
-                   // QueryDetailsId = null,
+                    // QueryDetailsId = null,
                     SenderId = userdata[0],
                     //ReceiverId = CER, // Consultant Enhanced Recovery
                     Is_Active = true,
@@ -131,7 +146,7 @@ namespace ERPortal.WebUI.Controllers
                     ERAppActiveUsers eRAppActiveUsers = new ERAppActiveUsers()
                     {
                         ERApplicationId = _ERApplication.ERApplications.Id,
-                        UserAccountId = x, 
+                        UserAccountId = x,
                         Dept_Id = null,
                         Is_Active = true,
                         Status = null

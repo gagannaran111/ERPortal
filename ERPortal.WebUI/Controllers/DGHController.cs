@@ -53,8 +53,8 @@ namespace ERPortal.WebUI.Controllers
                            where F.UserAccountId == userdata[0]
                            select FT);
 
-            ViewBag.ApplicationData = results;
-            return View();
+            //ViewBag.ApplicationData = results;
+            return View(results);
         }
         public ActionResult AppRecToDgh(string appid)
         {
