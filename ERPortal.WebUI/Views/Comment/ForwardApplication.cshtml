@@ -19,7 +19,7 @@
     <div class="form-group row">
         @Html.Label("Action", htmlAttributes: new { @class = "col-sm-3 col-form-label" })
         <div class="col-sm-6 d-flex align-items-center">
-            @Html.EnumDropDownListFor(model => model.ForwardApplication.FileStatus, "Choose...", new { @class = "form-control" })
+            @Html.EnumDropDownListFor(model => model.ForwardApplication.FileStatus,"Choose...", new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.ForwardApplication.FileStatus, "", new { @class = "text-danger" })
         </div>
     </div>

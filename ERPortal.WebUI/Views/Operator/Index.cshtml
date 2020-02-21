@@ -62,7 +62,9 @@
                                 <th>Field Name</th>
                                 <th>Organisation</th>
                                 <th>Created Date</th>
+                                <th>Approval Letter</th>
                                 <th>App Status</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -70,11 +72,7 @@
                     </table>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6" id="dghform">
-
-
-        </div>
+        </div>       
     </div>
 </div>
 <script>
@@ -95,8 +93,7 @@
 
 
 
-        });
-        $('#dghform').html();
+        });      
     });
     //$(document).ajaxStart(function () {
     //    alert('ajax start');
@@ -114,9 +111,25 @@
             success: function (result) {
                 console.log(result);
                 var dd = "";
-
+                var status = "";
+              
                 $.each(result, function (i, e) {
-                    dd += "<tr><td><a href='@Url.Action("SubmitERProposal","Operator")?appid="+e.AppId+"'>"+e.AppId+"</a></td><td>"+e.FieldType.Type+"</td><td>"+e.FieldName+"</td><td>"+e.Organisation.Name+"</td><td>"+ToChangeDateFormate(e.CreatedAt)+"</td><td></td></tr>";
+                    var files = "";
+                    if (e.ApprovalLetter != null) {
+                        $.each(e.ApprovalLetter, function (i1, e1) {
+
+                            files += '<a class="btn btn-sm btn-primary text-truncate" style="max-width: 120px;" href="../Content/UploadedFiles/' + e1.FileName + '" target="_blank"><i class="fas fa-file-download"></i> ' + e1.FileName + '</a>';
+                        });
+                    }
+                    status = e.Status == "AP" ? "<kbd class='bg-success'>Approved</kbd>"
+                        : e.Status == "NA" ? "<kbd class='bg-warning'>New Application</kbd>"
+                            : e.Status == "PWM" ? "<kbd class='bg-dark'>Pending With Me</kbd>"
+                                : e.Status == "UP" ? "<kbd class='bg-info'>Under Proccessing</kbd>"
+                                    : "<kbd class='bg-Warning'></kbd>";
+
+                    dd += "<tr><td><a href='@Url.Action("SubmitERProposal","Operator")?appid=" + e.AppId + "'>" +
+                        e.AppId + "</a></td><td>" + e.FieldType.Type + "</td><td>" + e.FieldName + "</td><td>" +
+                        e.Organisation.Name + "</td><td>" + ToChangeDateFormate(e.CreatedAt) + "</td><td>"+files+"</td><td>"+status+"</td></tr>";
 
                 });
                 $("#usertable tbody").html(dd);

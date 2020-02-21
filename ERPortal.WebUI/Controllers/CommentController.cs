@@ -431,7 +431,8 @@ namespace ERPortal.WebUI.Controllers
                 comments = commentContext.Collection().Where(c => c.Id == x.CommentRefId)
                .Select(m => m.Text).FirstOrDefault(),
                 Files = UploadFileContext.Collection().Where(f => f.FIleRef == x.FileRef && x.Is_active == true).ToList()
-            }).OrderByDescending(x => x.CreatedAt).ToList();
+            }).OrderByDescending(x => x.CreatedAt).GroupBy(g=>g.FileRef)
+            .ToList();
 
             return Json(ForwardSummaryData, JsonRequestBehavior.AllowGet);
         }

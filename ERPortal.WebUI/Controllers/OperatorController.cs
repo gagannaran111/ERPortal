@@ -50,7 +50,7 @@ namespace ERPortal.WebUI.Controllers
 
 
         public ActionResult Index()
-        {   
+        {
             return View();
         }
         [HttpPost]
@@ -60,20 +60,35 @@ namespace ERPortal.WebUI.Controllers
             string userid = userdata[0];
             List<ERApplication> erapp = ERApplicationContext.Collection().ToList();
             List<ERAppActiveUsers> activeuser = ERAppActiveUsersContext.Collection().Where(x => x.UserAccountId == userid && x.Is_Active == true).Distinct().ToList();
-
+         
             var applicationdata = erapp.Join(activeuser, x => x.Id, y => y.ERApplicationId, (x, y) => new
             {
                 x.Id,
                 x.AppId,
-                x.OrganisationId,
                 x.Organisation,
                 x.FieldType,
-                x.FieldTypeId,
+                x.FieldName,
                 x.CreatedAt,
                 y.Dept_Id,
-                y.UserAccountId,
                 y.UserAccount,
-                y.Status
+                Status = AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true).Count() == 1 ? "NA"
+                 : AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true && w.StatusId == "S116").Count() > 0 ? "AP"
+                 : AuditTrailContext.Collection().Where(d => d.ERApplicationId == x.Id && d.Is_Active == true && (d.SenderId == userid || d.ReceiverId == userid))
+                 .OrderByDescending(o => o.CreatedAt).Select(s => new { StatusId = s.ReceiverId == userid ? "PWM" : s.SenderId == userid ? "UP" : "" }).FirstOrDefault().StatusId,
+                FileRef = AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true && w.StatusId == "S116").Count() == 0 ? null
+                : AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true && w.StatusId == "S116").FirstOrDefault().FileRefId
+            }).Select(a => new
+            {
+                a.Id,
+                a.AppId,
+                a.Organisation,
+                a.FieldType,
+                a.FieldName,
+                a.CreatedAt,
+                a.Dept_Id,
+                a.UserAccount,
+                a.Status,
+                ApprovalLetter = a.FileRef != null ? UploadFileContext.Collection().Where(f => f.FIleRef == a.FileRef).ToList() : null
             }).ToList();
 
             return Json(applicationdata);

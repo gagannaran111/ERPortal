@@ -251,24 +251,27 @@ namespace ERPortal.WebUI.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
                     await this.UserManager.AddToRoleAsync(user.Id, model.UserRoles);
-                    var response = (from user1 in context.Users
-                                    select new
-                                    {
-                                        UserId = user1.Id,
-                                        Username = user1.UserName,
-                                        Email = user1.Email,
-                                        RoleNames = (from userRole in user1.Roles
-                                                     join role in context.Roles on userRole.RoleId
-                                                     equals role.Id
-                                                     select role.Name).ToList()
-                                    }).ToList().Select(p => new Users_in_Role_ViewModel()
-                                    {
-                                        UserId = p.UserId,
-                                        Username = p.Username,
-                                        Email = p.Email,
-                                        Role = string.Join(",", p.RoleNames)
-                                    });
 
+
+
+                    //var response = (from user1 in context.Users
+                    //                select new
+                    //                {
+                    //                    UserId = user1.Id,
+                    //                    Username = user1.UserName,
+                    //                    Email = user1.Email,
+                    //                    RoleNames = (from userRole in user1.Roles
+                    //                                 join role in context.Roles on userRole.RoleId
+                    //                                 equals role.Id
+                    //                                 select role.Name).ToList()
+                    //                }).ToList().Select(p => new Users_in_Role_ViewModel()
+                    //                {
+                    //                    UserId = p.UserId,
+                    //                    Username = p.Username,
+                    //                    Email = p.Email,
+                    //                    Role = string.Join(",", p.RoleNames)
+                    //                });
+                    var response = userAccountContext.Collection().ToList();
                     userAccountContext.Insert(userAccount);
                     userAccountContext.Commit();
 
