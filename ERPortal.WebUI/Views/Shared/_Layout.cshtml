@@ -381,6 +381,7 @@
         $.ajax({
             url: urlpath,
             data: senddata,
+            async:false,
             success: function (result) {
                 console.log(result);
                 $('#CommentModalLabel').text(title);

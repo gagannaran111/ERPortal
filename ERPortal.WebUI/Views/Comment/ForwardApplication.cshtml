@@ -3,7 +3,7 @@
 @{
     Layout = null;
 }
-@using (Ajax.BeginForm("ForwardApplicationSubmit", "Comment", new { appid = ViewBag.appid }, new AjaxOptions
+@using (Ajax.BeginForm("ApplicationActionSubmit", "Comment", new { appid = ViewBag.appid }, new AjaxOptions
 {
     HttpMethod = "POST",
     OnSuccess = "OnSuccessComment(data)",
@@ -47,7 +47,7 @@
 
     <div class="form-group row" id="FileDiv">
         <div class="col-lg-12">
-            <h6>ER Screening Report Documents</h6>
+            <h6>Documents</h6>
         </div>
         <div class="col-lg-6">
             <div class="form-check form-check-inline">

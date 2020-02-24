@@ -51,7 +51,7 @@ namespace ERPortal.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> ForwardApplicationSubmit(ForwardAppViewModel forwardAppViewModel, string appid)
+        public async Task<JsonResult> ApplicationActionSubmit(ForwardAppViewModel forwardAppViewModel, string appid)
         {
             ForwardApplication forwardApplication;
             ERAppActiveUsers eRAppActiveUsers;
@@ -418,7 +418,7 @@ namespace ERPortal.WebUI.Controllers
             var userlist = UserAccountContext.Collection().ToList();
             var ForwardSummaryData = forapptbl.Select(x => new
             {
-                recivername = userlist.Where(c => c.Id == x.Reciever)
+                Recivername = userlist.Where(c => c.Id == x.Reciever)
                 .Select(m => m.FirstName + " " + m.LastName + " (" + m.UserRole + ")").FirstOrDefault(),
                 Sendername = userlist.Where(c => c.Id == x.Sender)
                .Select(m => m.FirstName + " " + m.LastName + " (" + m.UserRole + ")").FirstOrDefault(),
