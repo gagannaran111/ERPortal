@@ -41,7 +41,8 @@
 
     <link href="~/Content/css/editor.css" rel="stylesheet" />
     <script src="~/Scripts/editor.js"></script>
-
+    <link href="~/Content/css/DashboardStyle.css" rel="stylesheet" />
+    <link href="~/Content/css/Loader.css" rel="stylesheet" />
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -70,63 +71,76 @@
 
 </head>
 <body class="bg-light">
-    <nav class="shadow navbar navbar-expand-md navbar-dark fixed-top bg-custom-1">
-        <a class="navbar-brand" href="#"><img src="~/Content/img/Icon_Design_trans_white.png" class="d-inline-block align-top" alt="" style="max-height:35px;"></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <div class="containerloader d-none" >
 
-        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-            <ul class="navbar-nav mr-auto">
-                @*<li class="nav-item active">
-                        @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
-                    </li>
-                    <li class="nav-item">
-                        @Html.ActionLink("Operator", "Index", "Operator", null, new { @class = "nav-link" })
-                    </li>
-                    <li class="nav-item">
-                        @Html.ActionLink("DGH", "Index", "DGH", null, new { @class = "nav-link" })
-                    </li>
-                    <li class="nav-item">
-                        @Html.ActionLink("ER Committee", "Index", "ERCommittee", null, new { @class = "nav-link" })
-                    </li>
+        <svg class="loader" viewBox="0 0 340 340">
+            <circle cx="170" cy="170" r="160" stroke="#E2007C" />
+            <circle cx="170" cy="170" r="135" stroke="#404041" />
+            <circle cx="170" cy="170" r="110" stroke="#E2007C" />
+            <circle cx="170" cy="170" r="85" stroke="#404041" />
+        </svg>
+    </div>
 
-                    <li class="nav-item">
-                        @Html.ActionLink("Account", "Register", "Account", null, new { @class = "nav-link" })
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </li>*@
-            </ul>
-            @*<form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                </form>*@
-            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                <input type="submit" class="btn btn-info ml-2" id="LogOff" value="LogOff" />
-            }
-        </div>
-    </nav>
+    <div class="container-fluid">
+        <nav class="shadow navbar navbar-expand-md navbar-dark fixed-top bg-custom-1">
+            <a class="navbar-brand" href="#"><img src="~/Content/img/Icon_Design_trans_white.png" class="d-inline-block align-top" alt="" style="max-height:35px;"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-    <div class="page-wrapper chiller-theme toggled">
-        <a id="show-sidebar" class="btn btn-sm  " style="background-color:#212529;" href="#">
-            <i class="fas fa-bars text-light"></i>
-        </a>
-        @Html.Partial("SideNavBar")
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    @*<li class="nav-item active">
+                            @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Operator", "Index", "Operator", null, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("DGH", "Index", "DGH", null, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("ER Committee", "Index", "ERCommittee", null, new { @class = "nav-link" })
+                        </li>
 
-        <main class="page-content">
-            <div class="container-fluid">
-                @RenderBody()
+                        <li class="nav-item">
+                            @Html.ActionLink("Account", "Register", "Account", null, new { @class = "nav-link" })
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown01">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </li>*@
+                </ul>
+                @*<form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                    </form>*@
+                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="submit" class="btn btn-info ml-2" id="LogOff" value="LogOff" />
+                }
             </div>
+        </nav>
 
-        </main>
+        <div class="page-wrapper chiller-theme toggled">
+            <a id="show-sidebar" class="btn btn-sm  " style="background-color:#212529;" href="#">
+                <i class="fas fa-bars text-light"></i>
+            </a>
+            @Html.Partial("SideNavBar")
+
+            <main class="page-content">
+                <div class="container-fluid">
+
+                    @RenderBody()
+                </div>
+
+            </main>
+        </div>
     </div>
     @RenderSection("scripts", required: false)
 
@@ -191,8 +205,11 @@
     <button type="button" style="display:none" id="btnCommentViewModal" class="btn btn-primary" data-toggle="modal" data-target="#formDetailModal" data-page="Comment" data-title="View Comment"></button>
     @*<button type="button" style="display:none" id="opertor1" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="ERScreeningDetail" data-title="ERScreening Detail"></button>*@
 
+
+
 </body>
 </html>
+
 <script type="text/javascript">
     $(document).ready(function () {
 
@@ -253,16 +270,19 @@
                 data: form.serialize(),
                 async: false,
                 success: function (result) {
-
+                    console.log(result);
                     if ('ERROR' != result) {
 
                         $('#modalContentComment').html('<div class="alert alert-success" role="alert"> '+ result +'  </div >');
                          if ($("#btnCommentSave").is(":visible")) {
-                            $('#btnCommentSave').fadeOut();
+                             $('#btnCommentSave').fadeOut();
                         }
-                    } else {
+                    }
+                    else {
                         $('#modalContentComment').html(result);
-
+                          if ($("#btnCommentSave").is(":visible")) {
+                              $('#btnCommentSave').fadeOut();
+                          }
                         if (result == "Query Reply Successfully") {
                             $('.Querycommenttablink').click();
                         }
@@ -358,6 +378,7 @@
                 datatype: 'json',
                 success: function (data) {
                     if (data) {
+                        console.log(data);
                         var txt = "";
                         if (data.length > 0) {
                             for (var i = 0; i < data.length; i++) {
@@ -421,5 +442,12 @@
         });
 
     }
-
+    $(document).ajaxStart(function () {
+        $(".containerloader").removeClass('d-none');
+        console.log('loaderstart');
+    });
+    $(document).ajaxComplete(function () {
+        $(".containerloader").addClass('d-none');
+        console.log('loadercomplete');
+    });
 </script>

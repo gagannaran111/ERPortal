@@ -96,6 +96,8 @@ namespace ERPortal.WebUI.Controllers
 
         public ActionResult SubmitERProposal(string appid)
         {
+            string[] userdata = Session["UserData"] as string[];
+            string userid = userdata[0];
             ViewBag.Title = "Submit Proposal";
             ViewBag.RefId = Guid.NewGuid().ToString();
             OperatorERProposalViewModel viewModel = new OperatorERProposalViewModel();
@@ -108,10 +110,12 @@ namespace ERPortal.WebUI.Controllers
             else
             {
                 viewModel.ERApplications = new ERApplication();
+                viewModel.ERApplications.Organisation = UserAccountContext.Collection().Where(x => x.Id == userid).FirstOrDefault().Organisation;
+                viewModel.ERApplications.OrganisationId = viewModel.ERApplications.Organisation.Id;
             }
             viewModel.FieldTypes = FieldTypeContext.Collection().ToList();
             viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection().ToList();
-            viewModel.organisationTypes = OrganisationContext.Collection().ToList();
+          //  viewModel.organisationTypes = OrganisationContext.Collection().ToList();
             viewModel.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
 
             //viewModel.UploadFiles = UploadFileContext.Collection();
@@ -181,7 +185,7 @@ namespace ERPortal.WebUI.Controllers
 
             }
 
-            return Json("Application Ref No : " + _ERApplication.ERApplications.AppId, JsonRequestBehavior.AllowGet);
+            return Json(_ERApplication.ERApplications.AppId, JsonRequestBehavior.AllowGet);
         }
         #region // Not Used
         public ActionResult AjaxAdd(string targetPage)

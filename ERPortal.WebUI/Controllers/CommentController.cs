@@ -57,7 +57,7 @@ namespace ERPortal.WebUI.Controllers
             ERAppActiveUsers eRAppActiveUsers;
             string[] arr = Session["UserData"] as string[];
             bool modelIsValid = false;
-            string msg = "";
+            string msg = "ERROR";
             forwardAppViewModel.Comment.ERApplicationId = appid;
             forwardAppViewModel.Comment.UserAccountId = arr[0];
 
@@ -116,9 +116,7 @@ namespace ERPortal.WebUI.Controllers
                        
                     }
                     break;
-                case FileStatus.ReviewAgain:
-                    auditstatus = "S106";
-                    msg = "Comment Resolved Successfully";
+                case FileStatus.ReviewAgain:                  
                     string DGID = UserAccountContext.Collection().Where(x => x.UserRole == "DG").FirstOrDefault().Id;
                     int countdgid = ERAppActiveUsersContext.Collection().Where(x => x.UserAccountId == DGID && x.ERApplicationId == appid && x.Is_Active == true).Count();
                     if (countdgid > 0)
@@ -128,10 +126,15 @@ namespace ERPortal.WebUI.Controllers
                     else
                     {
                         reciverlist = ForwardApplicationContext.Collection().Where(x => x.ERApplicationId == appid && x.Sender == userid && (x.FileStatus == FileStatus.Forward || x.FileStatus == FileStatus.ReviewAgain) && x.Is_active == false).Select(d => d.Reciever).Distinct().ToArray();
+                        if (reciverlist == null || reciverlist.Length == 0)
+                            return Json("There Have No Comment Recieved To Resolve", JsonRequestBehavior.AllowGet);                        
+
                     }
+                    auditstatus = "S106";
+                    msg = "Comment Resolved Successfully";
                     break;
 
-                default: return Json("ERROR", JsonRequestBehavior.AllowGet);
+                default: return Json(msg, JsonRequestBehavior.AllowGet);
             }
 
             foreach (string x in reciverlist)
@@ -181,7 +184,7 @@ namespace ERPortal.WebUI.Controllers
             }
             else
             {
-                return Json("ERROR", JsonRequestBehavior.AllowGet);
+                return Json(msg, JsonRequestBehavior.AllowGet);
             }
         }
 

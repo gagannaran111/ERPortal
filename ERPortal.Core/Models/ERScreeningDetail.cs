@@ -10,10 +10,10 @@ namespace ERPortal.Core.Models
     {
         // Operator Section
         [Required(ErrorMessage ="Enter Institute")]
-        [Display(Name = "ERScreening Institute Id")]
+        [Display(Name = "ER Screening Institute Id")]
         public string ERScreeningInstituteId { get; set; }
         
-        [Display(Name = "ERScreening Institute")]
+        [Display(Name = "ER Screening Institute")]
         public virtual ERScreeningInstitute ERScreeningInstitute { get; set; }
         [Display(Name = "Report Document Path")]             
         public string ReportDocumentPath { get; set; }

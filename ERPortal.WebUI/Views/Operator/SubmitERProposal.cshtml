@@ -12,9 +12,9 @@
                 <li class="nav-item">
                     <a class="nav-link active" data-toggle="tab" href="#ERProposalTab">ER Screening Report</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link Querycommenttablink" data-toggle="tab" href="#QueryCommentTab">Query</a>
-                </li>
+                @*<li class="nav-item">
+                        <a class="nav-link Querycommenttablink" data-toggle="tab" href="#QueryCommentTab">Query</a>
+                    </li>*@
             </ul>
             <div id="ERProposalTab" class="container-fluid tab-pane active mt-3">
                 <div class="justify-content-center">
@@ -31,6 +31,8 @@
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(model => model.ERApplications.ERScreeningDetailId)
                         @Html.HiddenFor(model => model.ERApplications.AppId)
+                        @Html.HiddenFor(model => model.ERApplications.OrganisationId)
+                        @Html.HiddenFor(model => model.ERApplications.ERScreeningDetail.ReportDocumentPath,new { id="ReportDocument" })
 
 
                         <div class="alert alert-success alert-dismissible showmsg d-none statussuccess">
@@ -48,20 +50,22 @@
                                     <div class="form-horizontal">
                                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
+
                                         @*<div class="form-group row">
-                                                @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
-                                                <div class="col-sm-6 d-flex align-items-center">
-                                                    @Html.EditorFor(model => model.ERApplications.Organisation.Name, new { htmlAttributes = new { @class = "form-control disabled", @readonly = "readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.ERApplications.Organisation, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>*@
+                                @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                                <div class="col-sm-6 d-flex align-items-center">
+                                    @Html.DropDownListFor(model => model.ERApplications.OrganisationId, new SelectList(Model.organisationTypes, "Id", "Name"), "Select Organisation Type", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ERApplications.OrganisationId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>*@
                                         <div class="form-group row">
                                             @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                             <div class="col-sm-6 d-flex align-items-center">
-                                                @Html.DropDownListFor(model => model.ERApplications.OrganisationId, new SelectList(Model.organisationTypes, "Id", "Name"), "Select Organisation Type", new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(model => model.ERApplications.OrganisationId, "", new { @class = "text-danger" })
+                                                @Html.DisplayFor(model => model.ERApplications.Organisation.Name, new { @class = "form-control" })
                                             </div>
                                         </div>
+
+
                                         <div class="form-group row">
                                             @Html.LabelFor(model => model.ERApplications.FieldType, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                             <div class="col-sm-6 d-flex align-items-center">
@@ -97,7 +101,7 @@
                                         <div class="form-group row">
                                             @Html.LabelFor(model => model.ERApplications.DateOfDiscovery, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                             <div class="col-sm-6 d-flex align-items-center">
-                                                @Html.EditorFor(model => model.ERApplications.DateOfDiscovery, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @Value = "" } })
+                                                @Html.EditorFor(model => model.ERApplications.DateOfDiscovery, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text"} })
                                                 @Html.ValidationMessageFor(model => model.ERApplications.DateOfDiscovery, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -195,7 +199,7 @@
 
 
                                         <div class="form-group row">
-                                            @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstituteId, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
+                                            @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstitute, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                             <div class="col-sm-6 d-flex align-items-center">
                                                 @Html.DropDownListFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstituteId, new SelectList(Model.eRScreeningInstitutes, "Id", "InstituteName"), "Select ER Screening Institute", new { @class = "form-control" })
                                                 @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstituteId, "", new { @class = "text-danger" })
@@ -252,7 +256,7 @@
                                             </div>
                                         </div>
                                         <hr />
-                                        <div class="form-group row" id="FileDiv">
+                                        <div class="form-group row d-none" id="FileDiv">
                                             <div class="col-lg-12">
                                                 <h6>ERScreening Report Documents</h6>
                                             </div>
@@ -271,10 +275,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
-
-
                                         <div class="form-group row justify-content-center">
 
                                             <button type="submit" class="btn btn-primary" id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>
@@ -299,14 +299,15 @@
 </div>
 <script type="text/javascript">
     function OnSuccess(response) {
-        alertModal(response);
-        // $('#disabledForm').attr('disabled', 'disabled')
-        $('#operatorform').find('input,select,radio').prop('disabled', true);
-        $('#ERAppSubmit').hide();
-        $('.statussuccess').empty().append(response).removeClass('d-none');
-         setTimeout(function () {
-                $('.fileDelete').addClass('d-none');
-            }, 500);
+        //alertModal(response);
+        
+        //$('#operatorform').find('input,select,radio').prop('disabled', true);
+        //$('#ERAppSubmit').hide();
+        //$('.statussuccess').empty().append(response).removeClass('d-none');
+        // setTimeout(function () {
+        //        $('.fileDelete, .FileDiv').addClass('d-none');
+        //    }, 500);
+        window.location.href = "@Url.Action("Index","Operator")";
     }
 
     function OnFailure() {
@@ -330,19 +331,18 @@
         if ($('#ERApplications_AppId').val() != "") {
 
             $('#operatorform').find('input,select,radio').prop('disabled', true);
-            $('#FileDiv').addClass('d-none');
+            // $('#FileDiv').addClass('d-none');
             $('#ERAppSubmit').hide();
             $('.statussuccess').empty().append('Application Ref. No. : ' + $('#ERApplications_AppId').val()).removeClass('d-none');
-            if ('@Model.ERApplications.ERScreeningDetail' != null) {
-                GetUploadFilesData('#UploadFilesData', '');
+            GetUploadFilesData('#UploadFilesData', $('#ReportDocument').val());
             setTimeout(function () {
                 $('.fileDelete').addClass('d-none');
-            }, 1000);
-            }
-
-
-
+            });
         }
+        else {
+            $('#FileDiv').removeClass('d-none');
+        }
+
 
         $(document.body).on('change', '#ERApplications_HydrocarbonType', function () {
             var selectedOption = $(this).children(":selected").text();
@@ -518,9 +518,6 @@
             }
         });
 
-        $(document).on('keypress', 'input[type="date"]', function (event) {
-            event.preventDefault();
-        });
 
         $(document).on('change', 'input[name="ERApplications.DateOfLastCommercialProduction"]', function () {
 
@@ -562,10 +559,10 @@
                       var counter = 1;
                       var subject = "";
                       var replybtn = "";
-                      var resolvedbtn = "";                     
+                      var resolvedbtn = "";
                       $.each(result, function (index, element) {
                           if (element[0].Subject != subject) {
-                              subject = element[0].Subject;                              
+                              subject = element[0].Subject;
                               dd += "<div class=''><div class='alert alert-success h5'>Query : " + counter + " Subject : " + subject + "</div>";
                               counter++;
                           }
@@ -578,7 +575,7 @@
                               });
                               if (f.Status == "Query Rasied") {
                                   statuscheck = "Query Rasied To " + f.Reciver.ReciverName + " by " + f.Sender.SenderName;
-                                                                
+
                               }
                               else if (f.Status == "Query Reply") {
                                   statuscheck = "Query Reply To " + f.Reciver.ReciverName + " by " + f.Sender.SenderName;
@@ -589,8 +586,8 @@
                               else {
                                   statuscheck = "";
                               }
-                            
-                              
+
+
                               if (f.Reciver.ReciverId == userid || f.Sender.SenderId == userid) {
                                   replybtn = '<button class="btn btn-sm btn-primary ml-2 BtnQueryReply" data-page="QueryCommentReply" data-query-parentid="' + f.QueryParentId + '" data-query-id="' + f.Id +
                                       '" data-toggle="modal" data-target="#CommentModal" data-title="Query Reply"><i class="fas fa-reply"></i> Reply</button>';
@@ -598,8 +595,8 @@
                               else {
                                   replybtn = "";
                               }
-                                       
-                                     
+
+
                                    dd += ' <li class="left clearfix "><span class="chat_img pull-left">' +
                                   '	<span class="chat_img"> <img src="../Content/img/user-profile.png" alt="User" style="width:50px"> </span>' +
                                   '</span><div class="chat-body clearfix"><div class="header"><strong class="text-danger h5">' + statuscheck + '</strong> <small class="pull-right text-muted">' +
@@ -617,7 +614,7 @@
                                   resolvedbtn = "";
                               }
                           });
-                          dd += resolvedbtn + "</div></div>";                         
+                          dd += resolvedbtn + "</div></div>";
                       });
 
                           //  var subject = "<div class='col alert alert-info'><h5 class=''>Subject : " + result[1].Subject + "</h4></div>"

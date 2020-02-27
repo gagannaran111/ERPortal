@@ -1,0 +1,35 @@
+﻿.deckdivred {
+    border-left: 6px solid #dc3545;
+    background-color: #f4f8fa;
+    box-shadow: 2px 2px 4px #ffd3d7;
+}
+
+.deckdivblue {
+    border-left: 6px solid #007bff;
+    background-color: #f4f8fa;
+    box-shadow: 2px 2px 4px #cce5fd;
+}
+
+.deckdivgreen {
+    border-left: 6px solid #28a745;
+    background-color: #f4f8fa;
+    box-shadow: 2px 2px 4px #d3fbdc;
+}
+
+.deckdivyellow {
+    border-left: 6px solid #ffc107;
+    background-color: #f4f8fa;
+    box-shadow: 2px 2px 4px #fdf2d0;
+}
+
+.deckdivblack {
+    border-left: 6px solid #343a40;
+    background-color: #f4f8fa;
+    box-shadow: 2px 2px 4px #bbbdc0;
+}
+
+.deckdivInfo {
+    border-left: 6px solid #17a2b8;
+    /*background-color: #f4f8fa;*/
+    box-shadow: 2px 2px 4px #c3edf3;
+}

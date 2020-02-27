@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Dashboard ER Proposal";
 }
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
@@ -10,58 +11,88 @@
                 <div class="card-header bg-gradient-info text-light">
                     <h5><i class="fas fa-table"></i> ER Screening Report</h5>
                 </div>
-                <div class="card-body">
-                    <table class="table table-striped table-bordered" id="usertable">
-                        <thead class="bg-gradient-light">
-                            <tr>
-                                <th>Application Id</th>
-                                <th>Field Type</th>
-                                <th>Field Name</th>
-                                <th>Organisation</th>
-                                <th>Created Date</th>
-                                <th>Approval Letter</th>
-                                <th>App Status</th>
 
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                <div class="card-body">
+                    <div class="card-deck ">
+                        <div class="card d-flex deckdivblue" data-val="All">
+                            <div class="card-body align-items-center d-flex justify-content-center text-primary">
+                                <p class="card-title text-center h6"><span class="badge badge-primary mr-2 Allapp"> </span>All Application</p>
+                            </div>
+                        </div>
+                        <div class="card d-flex  deckdivyellow" data-val="New Application">
+                            <div class="card-body align-items-center d-flex justify-content-center text-warning">
+                                <p class="card-title text-center h6"><span class="badge badge-warning mr-2 newapp"> </span> New Applications</p>
+                            </div>
+                        </div>
+                        <div class="card d-flex  deckdivInfo" data-val="Under Proccessing">
+                            <div class="card-body align-items-center d-flex justify-content-center text-info">
+                                <div><p class="card-title text-center h6"><span class="badge badge-info mr-2 underproccessingapp"> </span>Under Proccessing</p></div>
+                            </div>
+                        </div>
+                        <div class="card d-flex deckdivblack" data-val="Pending With Me">
+                            <div class="card-body align-items-center d-flex justify-content-center text-dark">
+                                <p class="card-title text-center h6"><span class="badge badge-dark mr-2 pendingwithmeapp"> </span>Pending With Me</p>
+                            </div>
+                        </div>
+                        <div class="card d-flex  deckdivgreen" data-val="Approved">
+                            <div class="card-body align-items-center d-flex justify-content-center text-success">
+                                <p class="card-title text-center h6"><span class="badge badge-success mr-2 approvedapp"> </span>Approved</p>
+                            </div>
+                        </div>
+                        <div class="card d-flex deckdivred" data-val="Reject">
+                            <div class="card-body align-items-center d-flex justify-content-center text-danger">
+                                <p class="card-title text-center h6"><span class="badge badge-danger mr-2 rejectapp"> </span>Reject</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="mt-lg-4 mt-md-3">
+                        <table class="table table-striped table-bordered" id="usertable">
+                            <thead class="bg-gradient-light">
+                                <tr>
+                                    <th>Application Id</th>
+                                    <th>Field Type</th>
+                                    <th>Field Name</th>
+                                    <th>Organisation</th>
+                                    <th>Created Date</th>
+                                    <th>Approval Letter</th>
+                                    <th>App Status</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>      
+        </div>
     </div>
 </div>
 <script>
     $(document).ready(function () {
-          UserTableData();
-        $('#usertable').DataTable(
-            {
-                scrollY: '50vh',
-                scrollCollapse: true,
-                paging: true,
-                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
 
-                //processing: true,
-                // deferLoading: 5
-            });     
-        
+        UserTableData();
     });
-      function UserTableData() {
+    var table;
+    function UserTableData() {
         $.ajax({
             url: "@Url.Action("DGHDashboard","DGH")",
             type: 'POST',
             async: false,
-            beforeSend: function (xhr ) {
-               // alert('before');
-               // xhr.overrideMimeType( "text/plain; charset=x-user-defined" );
-            },            
             success: function (result) {
+
                 console.log(result);
                 var dd = "";
                 var status = "";
+                var newappcount = 0;
+                var approvalappcount = 0;
+                var rejectappcount = 0;
+                var underproccessingappcount = 0;
+                var pendingappcount = 0;
+                var totalappcount = 0;
                 $.each(result, function (i, e) {
-                      var files = "";
+                    var files = "";
                     if (e.ApprovalLetter != null) {
                         $.each(e.ApprovalLetter, function (i1, e1) {
 
@@ -73,12 +104,34 @@
                             : e.Status == "PWM" ? "<kbd class='bg-dark'>Pending With Me</kbd>"
                                 : e.Status == "UP" ? "<kbd class='bg-info'>Under Proccessing</kbd>"
                                     : "<kbd class='bg-Warning'>Revert Back</kbd>";
+
+                    e.Status == "AP" ? approvalappcount++
+                        : e.Status == "NA" ? newappcount++
+                            : e.Status == "PWM" ? pendingappcount++
+                                : e.Status == "UP" ? underproccessingappcount++
+                                    : 0;
+                    totalappcount = approvalappcount + newappcount + pendingappcount + underproccessingappcount;
                     dd += "<tr><td><a href='@Url.Action("AppRecToDgh","DGH")?appid=" + e.AppId + "'>" +
                         e.AppId + "</a></td><td>" + e.FieldType.Type + "</td><td>" + e.FieldName + "</td><td>" +
                         e.Organisation.Name + "</td><td>" + ToChangeDateFormate(e.CreatedAt) + "</td><td>" + files + "</td><td>" + status + "</td></tr>";
 
                 });
                 $("#usertable tbody").html(dd);
+                $('.newapp').html(newappcount);
+                $('.underproccessingapp').html(underproccessingappcount);
+                $('.rejectapp').html(rejectappcount);
+                $('.approvedapp').html(approvalappcount);
+                $('.pendingwithmeapp').html(pendingappcount);
+                $('.Allapp').html(totalappcount);                
+                 table = $('#usertable').DataTable(
+                    {
+                        scrollY: '50vh',
+                        scrollCollapse: true,
+                        paging: true,
+                        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                        //processing: true,
+                        // deferLoading: 5
+                    })                
             },
             error: function () {
                 alertModal("Something Went Wrong. Try Again Later");
@@ -86,8 +139,26 @@
             fail: function (xhr, textStatus, errorThrown) {
                 alertModal("Something Went Wrong. Try Again Later");
             }
-
-
-        }).done();
+        })
     }
+
+    var statustext = "All";
+    var filtertype = "Status";
+    $(document).on('click', '.card-deck .card', function () {
+      
+        $('input[type="search"]').val('Pending With Me');
+        statustext = $(this).attr('data-val');
+        filtertype = "Status";
+          table.draw();
+    });
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        switch (filtertype) {
+            case "Status":
+                Status = data[6];
+                statustext = statustext == "All" ? "" : statustext;
+                return Status == statustext || statustext == "" ? true : false;
+            default: return false;
+        }
+    })       
+        
 </script>

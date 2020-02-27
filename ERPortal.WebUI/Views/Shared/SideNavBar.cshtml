@@ -34,11 +34,10 @@
                     }
                     else
                     {
-                        <span class="user-role">
+                        <span class="user-role text-warning">
                             @arr[2]
                         </span>
                     }
-
                     <span class="user-role"></span>
                     <span class="user-status">
                         <i class="fa fa-circle text-success"></i>
@@ -69,58 +68,86 @@
             @if (Session["UserData"] != null)
             {
                 string[] arr = Session["UserData"] as string[];
-                <ul>
-                    <li class="header-menu">
-                        <span>General</span>
+            <ul>
+                <li class="header-menu">
+                    <span>General</span>
+                </li>
+                @if (arr[2] == "operator")
+                {
+
+                    <li class="sidebar-content">
+                        <a href="@Url.Action("Index", "Operator")">
+                            <i class="fa fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                            @*<span class="badge badge-pill badge-warning">New</span>*@
+                        </a>
                     </li>
-                    @if (arr[2] == "operator")
-                    {
-                        <li class="sidebar-content">
-                            <a href="@Url.Action("Index", "Operator")">
-                                <i class="fa fa-tachometer-alt"></i>
-                                <span>Dashboard</span>
-                                @*<span class="badge badge-pill badge-warning">New</span>*@
-                            </a>
+                    <li class="sidebar-content">
+                        <a href="@Url.Action("SubmitERProposal", "Operator")">
+                            <i class="fa fa-edit"></i>
+                            <span>Er Screening Applciation</span>
+                            @*<span class="badge badge-pill badge-warning">New</span>*@
+                        </a>
+                    </li>
+                }
+                else if (arr[2] == "HoD" || arr[2] == "coordinator" || arr[2] == "ADG" || arr[2] == "Consultant Enhanced Recovery" || arr[2] == "DG")
+                {
+                    <li class="sidebar-content">
+                        <a href="@Url.Action("Index", "DGH")">
+                            <i class="fa fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                            @*<span class="badge badge-pill badge-warning">New</span>*@
+                        </a>
+                    </li>
+                }
+
+                else if (arr[2] == "Admin")
+                {
+                    <li class="sidebar-content">
+                        <a href="@Url.Action("Index", "Admin")">
+                            <i class="fa fa-list"></i>
+                            <span>Manager</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-content">
+                        <a href="@Url.Action("Register", "Account")">
+                            <i class="fa fa-user"></i>
+                            <span>Register User</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-content">
+                        <a href="@Url.Action("AuditTrail", "Admin")">
+                            <i class="fa fa-table"></i>
+                            <span>Report</span>
+                        </a>
+                    </li>
+
+
+                    @*<li class="sidebar-dropdown">
+                <a href="#">
+                    <i class="fa fa-user-secret"></i>
+                    <span>Admin</span>
+
+                </a>
+                <div class="sidebar-submenu">
+                    <ul>
+                        <li>
+                            @/*Html.ActionLink("Manager", "Index", "Admin", null, new { @class = "nav-link" })*/
+
                         </li>
-                    }
-                    else if (arr[2] == "HoD" || arr[2] == "coordinator" || arr[2] == "ADG" || arr[2] == "Consultant Enhanced Recovery" ||  arr[2] == "DG" )
-                    {
-                        <li class="sidebar-content">
-                            <a href="@Url.Action("Index", "DGH")">
-                                <i class="fa fa-tachometer-alt"></i>
-                                <span>Dashboard</span>
-                                @*<span class="badge badge-pill badge-warning">New</span>*@
-                            </a>
+                        <li>
+                            @/*Html.ActionLink("Register User", "Register", "Account", null, new { @class = "nav-link" })*/
                         </li>
-                    }
+                        <li>
+                            @/*Html.ActionLink("Report", "AuditTrail", "Admin", null, new { @class = "nav-link" })*/
 
-                    else if (arr[2] == "Admin")
-                    {
-                        <li class="sidebar-dropdown">
-                            <a href="#">
-                                <i class="fa fa-user-secret"></i>
-                                <span>Admin</span>
-                                @*<span class="badge badge-pill badge-warning">New</span>*@
-                            </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        @Html.ActionLink("Manager", "Index", "Admin", null, new { @class = "nav-link" })
-
-                                    </li>
-                                    <li>
-                                        @Html.ActionLink("Register User", "Register", "Account", null, new { @class = "nav-link" })
-                                    </li>
-                                    <li>
-                                        @Html.ActionLink("Report", "AuditTrail", "Admin", null, new { @class = "nav-link" })
-
-                                    </li>
-
-                                </ul>
-                            </div>
                         </li>
-                    }
-                </ul>
+
+                    </ul>
+                </div>
+            </li>*@
+                }
+            </ul>
             }
             else
             {

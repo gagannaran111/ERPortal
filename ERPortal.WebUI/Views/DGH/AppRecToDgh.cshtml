@@ -334,10 +334,10 @@
        
         var list = "@arr[2]" == "Consultant Enhanced Recovery" ? ["1", "2", "3", "4"]
             : "@arr[2]" == "coordinator" ? ["1", "2", "4"] : ["0", "3", "4"];
-
         $('#ForwardApplication_FileStatus option').filter(function () {
             return $.inArray(this.value, list) !== -1
         }).remove();
+        $('#ForwardApplication_FileStatus').val('');
     });
     $(document).on('click', '.UploadLetter', function () {
           ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd", "Comment")",$(this).attr('data-page'),null);

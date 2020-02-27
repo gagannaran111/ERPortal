@@ -103,8 +103,8 @@
                                 <th>Email</th>
                                 <th>Organisation</th>
                                 <th>Department</th>
-                                <th>Delete</th>
-                                <th>Edit</th>
+                                @*<th>Delete</th>
+                                <th>Edit</th>*@
                             </tr>
                         </thead>
                         <tbody>
@@ -123,12 +123,12 @@
                                 {
                                     <td></td>
                                 }
-                                <td>
-                                    <button class="btn btn-danger" data-UserId="@x.Id"><i class="fas fa-trash"></i></button>
+                                @*<td>
+                                    <button class="btn btn-sm btn-danger" data-UserId="@x.Id"><i class="fas fa-trash"></i></button>
                                 </td>
                                 <td>
-                                    <button class="btn btn-primary" data-UserId="@x.Id"><i class="fas fa-edit"></i></button>
-                                </td>
+                                    <button class="btn btn-sm btn-primary" data-UserId="@x.Id"><i class="fas fa-edit"></i></button>
+                                </td>*@
                             </tr>
 
                             }
@@ -155,7 +155,7 @@
             $.each(data, function (index, element) {
                 td += "<tr><td>" + element.FirstName +" "+ element.LastName+ "</td><td>" + element.UserRole + "</td><td>" + element.EmailID + "</td><td>" + element.Organisation.Name + "</td><td>"+deptname+"</td> <td>"
 
-                    + "<button class='btn btn-danger' data-UserId=" +element.UserId + "><i class='fas fa-trash'></i></button></td><td><button class='btn btn-primary' data-UserId=" + element.UserId + "><i class='fas fa-edit'></i></button></td></tr>"
+                    + "<button class='btn btn-sm  btn-danger' data-UserId=" +element.UserId + "><i class='fas fa-trash'></i></button></td><td><button class='btn btn-sm btn-primary' data-UserId=" + element.UserId + "><i class='fas fa-edit'></i></button></td></tr>"
 
             });
             console.log(data);

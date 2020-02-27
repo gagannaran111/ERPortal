@@ -46,7 +46,7 @@
                                 <tr>
                                     <th scope="col">Organisation</th>
                                     <th scope="col">Type</th>
-                                    <th scope="col" class="text-center">Manage</th>
+                                    <th scope="col" class="text-center">Edit/Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -57,8 +57,8 @@
                                         <td>@Organisation.Type</td>
                                         <td class="text-center">
 
-                                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#formModal" data-page="Organisation" data-title="Department" data-value="@Organisation.Id"><i class="fas fa-edit"></i></button>
-                                            <button type="button" class="btn btn-danger DeleteData" data-target="Organisation" data-value="@Organisation.Id"><i class="fas fa-trash"></i></button>
+                                            <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#formModal" data-page="Organisation" data-title="Department" data-value="@Organisation.Id"><i class="fas fa-edit"></i></button>
+                                            <button type="button" class="btn btn-sm btn-danger DeleteData" data-target="Organisation" data-value="@Organisation.Id"><i class="fas fa-trash"></i></button>
 
                                         </td>
                                     </tr>
@@ -68,7 +68,7 @@
 
                         <br />
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="Organisation" data-title="Organisation">Add new Organisation</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#formModal" data-page="Organisation" data-title="Organisation">Add new Organisation</button>
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Field Type</th>
-                                    <th scope="col" class="text-center">Manage</th>
+                                    <th scope="col" class="text-center">Edit/Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -90,8 +90,8 @@
                                         <td>@FieldType.Type</td>
                                         <td class="text-center">
 
-                                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#formModal" data-page="FieldType" data-title="Department" data-value="@FieldType.Id"><i class="fas fa-edit"></i></button>
-                                            <button type="button" class="btn btn-danger DeleteData" data-target="FieldType" data-value="@FieldType.Id"><i class="fas fa-trash"></i></button>
+                                            <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#formModal" data-page="FieldType" data-title="Department" data-value="@FieldType.Id"><i class="fas fa-edit"></i></button>
+                                            <button type="button" class="btn btn-sm btn-danger DeleteData" data-target="FieldType" data-value="@FieldType.Id"><i class="fas fa-trash"></i></button>
 
                                         </td>
                                     </tr>
@@ -101,7 +101,7 @@
 
                         <br />
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="FieldType" data-title="Field Type">Add new Field Type</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#formModal" data-page="FieldType" data-title="Field Type">Add new Field Type</button>
                     </div>
                 </div>
             </div>
@@ -114,7 +114,7 @@
                                 <tr>
                                     <th scope="col">Method Name</th>
                                     <th scope="col">Description</th>
-                                    <th scope="col" class="text-center">Manage</th>
+                                    <th scope="col" class="text-center">Edit/Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -126,8 +126,8 @@
                                         <td class="text-center">
 
 
-                                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#formModal" data-page="UHCProductionMethod" data-title="UHCProductionMethod" data-value="@UHCProductionMethod.Id"><i class="fas fa-edit"></i></button>
-                                            <button type="button" class="btn btn-danger DeleteData" data-target="UHCProductionMethod" data-value="@UHCProductionMethod.Id"><i class="fas fa-trash"></i></button>
+                                            <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#formModal" data-page="UHCProductionMethod" data-title="UHCProductionMethod" data-value="@UHCProductionMethod.Id"><i class="fas fa-edit"></i></button>
+                                            <button type="button" class="btn btn-sm btn-danger DeleteData" data-target="UHCProductionMethod" data-value="@UHCProductionMethod.Id"><i class="fas fa-trash"></i></button>
 
                                         </td>
                                     </tr>
@@ -136,7 +136,7 @@
                         </table>
                         <br />
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="UHCProductionMethod" data-title="UHC Production Method">Add new UHC Production Method</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#formModal" data-page="UHCProductionMethod" data-title="UHC Production Method">Add new UHC Production Method</button>
                     </div>
                 </div>
             </div>
@@ -152,7 +152,7 @@
                                     <th scope="col">Address</th>
                                     <th scope="col">Email Id</th>
 
-                                    <th scope="col" class="text-center">Manage</th>
+                                    <th scope="col" class="text-center">Edit/Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -164,8 +164,8 @@
                                         <td>@ERScreeningInstitute.Address</td>
                                         <td>@ERScreeningInstitute.EmailID</td>
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#formModal" data-page="ERScreeningInstitute" data-title="ERScreeningInstitute" data-value="@ERScreeningInstitute.Id"><i class="fas fa-edit"></i></button>
-                                            <button type="button" class="btn btn-danger" value="@ERScreeningInstitute.Id"><i class="fas fa-trash"></i></button>
+                                            <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#formModal" data-page="ERScreeningInstitute" data-title="ERScreeningInstitute" data-value="@ERScreeningInstitute.Id"><i class="fas fa-edit"></i></button>
+                                            <button type="button" class="btn btn-sm btn-danger" value="@ERScreeningInstitute.Id"><i class="fas fa-trash"></i></button>
                                         </td>
                                     </tr>
                                 }
@@ -173,7 +173,7 @@
                         </table>
                         <br />
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="ERScreeningInstitute" data-title="ERScreening Institute">Add new ERScreening Institute</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#formModal" data-page="ERScreeningInstitute" data-title="ERScreening Institute">Add new ERScreening Institute</button>
                     </div>
                 </div>
             </div>
@@ -204,8 +204,8 @@
                                                 <td>@statusMaster.Is_Active</td>
                                                 <td>@statusMaster.CreatedAt.DateTime</td>
                                                 <td class="text-center">
-                                                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#formModal" data-page="StatusMaster" data-title="StatusMaster" data-value="@statusMaster.Id"><i class="fas fa-edit"></i></button>
-                                                    <button type="button" class="btn btn-danger DeleteData" data-target="StatusMaster" data-value="@statusMaster.Id"><i class="fas fa-trash"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#formModal" data-page="StatusMaster" data-title="StatusMaster" data-value="@statusMaster.Id"><i class="fas fa-edit"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-danger DeleteData" data-target="StatusMaster" data-value="@statusMaster.Id"><i class="fas fa-trash"></i></button>
                                                 </td>
                                             </tr>
                                         }
@@ -219,7 +219,7 @@
                         }
                         <br />
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="StatusMaster" data-title="Status">Add New Status</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#formModal" data-page="StatusMaster" data-title="Status">Add New Status</button>
                     </div>
                 </div>
             </div>
@@ -250,8 +250,8 @@
                                                 <td>@department.CreatedAt.DateTime</td>
                                                 <td class="text-center">
 
-                                                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#formModal" data-page="Department" data-title="Department" data-value="@department.Id"><i class="fas fa-edit"></i></button>
-                                                    <button type="button" class="btn btn-danger DeleteData" data-target="Department" data-value="@department.Id"><i class="fas fa-trash"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#formModal" data-page="Department" data-title="Department" data-value="@department.Id"><i class="fas fa-edit"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-danger DeleteData" data-target="Department" data-value="@department.Id"><i class="fas fa-trash"></i></button>
                                                 </td>
                                             </tr>
                                         }
@@ -265,7 +265,7 @@
                         }
                         <br />
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formModal" data-page="Department" data-title="Department">Add New Department</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#formModal" data-page="Department" data-title="Department">Add New Department</button>
                     </div>
                 </div>
             </div>
