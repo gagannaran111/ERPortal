@@ -4,44 +4,7 @@
 }
 
 
-<div class="container-fluid">
-    <div class="row mb-3">
-        <div class="col-sm">
-
-            @*<div class="card-deck ">
-                    <div class="card d-flex  deckdivgreen">
-                        <div class="card-body align-items-center d-flex justify-content-center text-success">
-
-                            <div>
-                                <h6 class="card-title text-center">@Html.ActionLink("Submit ER Screening Report", "SubmitERProposal", "Operator", null, new { @class = "text-success" })</h6>
-                            </div>
-                            <div><i class="fas fa-file h3"></i> </div>
-                        </div>
-                    </div>
-                    <div class="card d-flex  deckdivblue">
-                        <div class="card-body align-items-center d-flex justify-content-center text-primary">
-                            <div><i class="fas fa- h3"></i> </div>
-                            <div><h6 class="card-title text-center">ER Screening Report Submission Status</h6></div>
-                        </div>
-                    </div>
-                    <div class="card d-flex  deckdivblack">
-                        <div class="card-body align-items-center d-flex justify-content-center text-dark">
-                            <h6 class="card-title text-center">Submitted ER Proposals</h6>
-                        </div>
-                    </div>
-                    <div class="card d-flex  deckdivyellow">
-                        <div class="card-body align-items-center d-flex justify-content-center text-success">
-                            <h6 class="card-title text-center">ER Proposal Submission Status</h6>
-                        </div>
-                    </div>
-                    <div class="card d-flex deckdivred">
-                        <div class="card-body align-items-center d-flex justify-content-center text-danger">
-                            <h6 class="card-title text-center">View Submitted Proposals</h6>
-                        </div>
-                    </div>
-                </div>*@
-        </div>
-    </div>
+<div class="container-fluid">   
     <div class="row">
         <div class="col-md-12">
             <div class="card shadow-lg">
@@ -101,40 +64,39 @@
     </div>
 </div>
 <script>
-    $(document).ready(function () {
+    $(document).ready(()=> {
         UserTableData();
       
-    });
-    //$(document).ajaxStart(function () {
-    //    alert('ajax start');
-    //});
+    });  
     var table;
-    function UserTableData() {
+    const UserTableData = () => {
         $.ajax({
             url: "@Url.Action("OperatorDashboard","Operator")",
             type: 'POST',
             async: false,
-            beforeSend: function (xhr ) {
-               // alert('before');
-               // xhr.overrideMimeType( "text/plain; charset=x-user-defined" );
+            beforeSend: function (xhr) {
+                // alert('before');
+                // xhr.overrideMimeType( "text/plain; charset=x-user-defined" );
             },
-            success: function (result) {
-                console.log(result);
-                var dd = "";
-                var status = "";
-                var newappcount = 0;
-                var approvalappcount = 0;
-                var rejectappcount = 0;
-                var underproccessingappcount = 0;
-                var pendingappcount = 0;
-                var totalappcount = 0;
-                $.each(result, function (i, e) {
-                    var files = "";
+            success: (result) => {
+                let dd = "";
+                let status = "";
+                let newappcount = 0;
+                let approvalappcount = 0;
+                let rejectappcount = 0;
+                let underproccessingappcount = 0;
+                let pendingappcount = 0;
+                let totalappcount = 0;
+
+
+                for (let e of result) {
+                    let files = "";
                     if (e.ApprovalLetter != null) {
-                        $.each(e.ApprovalLetter, function (i1, e1) {
+
+                        for (let e1 of e.ApprovalLetter) {
 
                             files += '<a class="btn btn-sm btn-primary text-truncate" style="max-width: 120px;" href="../Content/UploadedFiles/' + e1.FileName + '" target="_blank"><i class="fas fa-file-download"></i> ' + e1.FileName + '</a>';
-                        });
+                        };
                     }
                     status = e.Status == "AP" ? "<kbd class='bg-success'>Approved</kbd>"
                         : e.Status == "NA" ? "<kbd class='bg-warning'>New Application</kbd>"
@@ -148,19 +110,19 @@
                                 : e.Status == "UP" ? underproccessingappcount++
                                     : 0;
 
+                    totalappcount = approvalappcount + newappcount + pendingappcount + underproccessingappcount;
+                    dd += `<tr><td><a href='@Url.Action("SubmitERProposal","Operator")?appid=${e.AppId}'>
+                        ${e.AppId}</a></td><td> ${e.FieldType.Type}</td><td>${e.FieldName}</td><td>
+                        ${e.Organisation.Name}</td><td>${ToChangeDateFormate(e.CreatedAt)}</td><td>${files}</td><td>${status}</td></tr>`;
+                };
 
-                    dd += "<tr><td><a href='@Url.Action("SubmitERProposal","Operator")?appid=" + e.AppId + "'>" +
-                        e.AppId + "</a></td><td>" + e.FieldType.Type + "</td><td>" + e.FieldName + "</td><td>" +
-                        e.Organisation.Name + "</td><td>" + ToChangeDateFormate(e.CreatedAt) + "</td><td>"+files+"</td><td>"+status+"</td></tr>";
-
-                });
-                $("#usertable tbody").html(dd); 
+                $("#usertable tbody").html(dd);
                 $('.newapp').html(newappcount);
                 $('.underproccessingapp').html(underproccessingappcount);
                 $('.rejectapp').html(rejectappcount);
                 $('.approvedapp').html(approvalappcount);
-                $('.Allapp').html(totalappcount);     
-                 table = $('#usertable').DataTable(
+                $('.Allapp').html(totalappcount);
+                table = $('#usertable').DataTable(
                     {
                         scrollY: '50vh',
                         scrollCollapse: true,
@@ -169,48 +131,36 @@
                         //processing: true,
                         // deferLoading: 5
                     })
+                console.log(result);
             },
-            error: function () {
+            error: () => {
                 alertModal("Something Went Wrong. Try Again Later");
             },
-            fail: function (xhr, textStatus, errorThrown) {
+            fail: (xhr, textStatus, errorThrown) => {
                 alertModal("Something Went Wrong. Try Again Later");
             }
 
 
         }).done();
-    }
-
-    var statustext = "All";
-    var filtertype = "Status";
-    $(document).on('click', '.card-deck .card', function () {
-      
-        $('input[type="search"]').val('Pending With Me');
-        statustext = $(this).attr('data-val');
-        filtertype = "Status";
-          table.draw();
+    };
+  
+    const filterData = {type:"Status",statustext:"All"};    
+    
+    $(document).on('click', '.card-deck .card', ({currentTarget }) => {  
+        let DatasetAttrVal =  currentTarget.dataset;        
+        filterData.statustext = DatasetAttrVal.val;
+        filterData.type = "Status";
+        table.draw();
     });  
-    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        switch (filtertype) {
+    $.fn.dataTable.ext.search.push((settings, data, dataIndex)=> {
+        switch (filterData.type) {
             case "Status":
                 Status = data[6];
-                statustext = statustext == "All" ? "" : statustext;
-                return Status == statustext || statustext == "" ? true : false;
+                filterData.statustext = filterData.statustext == "All" ? "" : filterData.statustext;
+                return Status == filterData.statustext || filterData.statustext == "" ? true : false;
             default: return false;
         }
-    })
-
+      
+    })      
     
-    const dd = [2,3,4,5];
-    const [red, blue, green, black] = dd;
-    var ee = [...dd, 6, 7];
-    ee = [...ee, 8];
-    const aa = dipatech => 
-        dipatech;
-    console.log(dd);
-    console.log(ee);
-    console.log(aa('vaibhav'));
-    //console.log(blue);
-    console.log('dsfa');
-        
 </script>

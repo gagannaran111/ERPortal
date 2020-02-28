@@ -70,34 +70,34 @@
     </div>
 </div>
 <script>
-    $(document).ready(function () {
+    $(document).ready(()=> {
 
         UserTableData();
     });
     var table;
-    function UserTableData() {
+    const UserTableData = () => {
         $.ajax({
             url: "@Url.Action("DGHDashboard","DGH")",
             type: 'POST',
             async: false,
-            success: function (result) {
+            success: (result)=> {
 
                 console.log(result);
-                var dd = "";
-                var status = "";
-                var newappcount = 0;
-                var approvalappcount = 0;
-                var rejectappcount = 0;
-                var underproccessingappcount = 0;
-                var pendingappcount = 0;
-                var totalappcount = 0;
-                $.each(result, function (i, e) {
+                let dd = "";
+                let status = "";
+                let newappcount = 0;
+                let approvalappcount = 0;
+                let rejectappcount = 0;
+                let underproccessingappcount = 0;
+                let pendingappcount = 0;
+                let totalappcount = 0;
+                for(let e of result) {
                     var files = "";
                     if (e.ApprovalLetter != null) {
-                        $.each(e.ApprovalLetter, function (i1, e1) {
+                         for (let e1 of e.ApprovalLetter) {
 
                             files += '<a class="btn btn-sm btn-primary text-truncate" style="max-width: 120px;" href="../Content/UploadedFiles/' + e1.FileName + '" target="_blank"><i class="fas fa-file-download"></i> ' + e1.FileName + '</a>';
-                        });
+                        };
                     }
                     status = e.Status == "AP" ? "<kbd class='bg-success'>Approved</kbd>"
                         : e.Status == "NA" ? "<kbd class='bg-warning'>New Application</kbd>"
@@ -111,19 +111,18 @@
                                 : e.Status == "UP" ? underproccessingappcount++
                                     : 0;
                     totalappcount = approvalappcount + newappcount + pendingappcount + underproccessingappcount;
-                    dd += "<tr><td><a href='@Url.Action("AppRecToDgh","DGH")?appid=" + e.AppId + "'>" +
-                        e.AppId + "</a></td><td>" + e.FieldType.Type + "</td><td>" + e.FieldName + "</td><td>" +
-                        e.Organisation.Name + "</td><td>" + ToChangeDateFormate(e.CreatedAt) + "</td><td>" + files + "</td><td>" + status + "</td></tr>";
-
-                });
+                    dd += `<tr><td><a href='@Url.Action("SubmitERProposal","Operator")?appid=${e.AppId}'>
+                        ${e.AppId}</a></td><td> ${e.FieldType.Type}</td><td>${e.FieldName}</td><td>
+                        ${e.Organisation.Name}</td><td>${ToChangeDateFormate(e.CreatedAt)}</td><td>${files}</td><td>${status}</td></tr>`;
+                };
                 $("#usertable tbody").html(dd);
                 $('.newapp').html(newappcount);
                 $('.underproccessingapp').html(underproccessingappcount);
                 $('.rejectapp').html(rejectappcount);
                 $('.approvedapp').html(approvalappcount);
                 $('.pendingwithmeapp').html(pendingappcount);
-                $('.Allapp').html(totalappcount);                
-                 table = $('#usertable').DataTable(
+                $('.Allapp').html(totalappcount);
+                table = $('#usertable').DataTable(
                     {
                         scrollY: '50vh',
                         scrollCollapse: true,
@@ -131,34 +130,35 @@
                         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                         //processing: true,
                         // deferLoading: 5
-                    })                
+                    })
             },
-            error: function () {
+            error:()=> {
                 alertModal("Something Went Wrong. Try Again Later");
             },
-            fail: function (xhr, textStatus, errorThrown) {
+            fail: (xhr, textStatus, errorThrown)=> {
                 alertModal("Something Went Wrong. Try Again Later");
             }
         })
-    }
+    };
 
-    var statustext = "All";
-    var filtertype = "Status";
-    $(document).on('click', '.card-deck .card', function () {
-      
-        $('input[type="search"]').val('Pending With Me');
-        statustext = $(this).attr('data-val');
-        filtertype = "Status";
-          table.draw();
-    });
-    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        switch (filtertype) {
+    const filterData = {type:"Status",statustext:"All"};
+
+    
+      $(document).on('click', '.card-deck .card', ({currentTarget }) => {  
+        let DatasetAttrVal =  currentTarget.dataset;        
+        filterData.statustext = DatasetAttrVal.val;
+        filterData.type = "Status";
+        table.draw();
+    });  
+    $.fn.dataTable.ext.search.push((settings, data, dataIndex)=> {
+        switch (filterData.type) {
             case "Status":
                 Status = data[6];
-                statustext = statustext == "All" ? "" : statustext;
-                return Status == statustext || statustext == "" ? true : false;
+                filterData.statustext = filterData.statustext == "All" ? "" : filterData.statustext;
+                return Status == filterData.statustext || filterData.statustext == "" ? true : false;
             default: return false;
         }
-    })       
-        
+
+    })
+
 </script>
