@@ -99,10 +99,10 @@
                             files += '<a class="btn btn-sm btn-primary text-truncate" style="max-width: 120px;" href="../Content/UploadedFiles/' + e1.FileName + '" target="_blank"><i class="fas fa-file-download"></i> ' + e1.FileName + '</a>';
                         };
                     }
-                    status = e.Status == "AP" ? "<kbd class='bg-success'>Approved</kbd>"
-                        : e.Status == "NA" ? "<kbd class='bg-warning'>New Application</kbd>"
-                            : e.Status == "PWM" ? "<kbd class='bg-dark'>Pending With Me</kbd>"
-                                : e.Status == "UP" ? "<kbd class='bg-info'>Under Proccessing</kbd>"
+                    status = e.Status == "AP" ? "<kbd class='bg-success'>" + statusAP + "</kbd>"
+                        : e.Status == "NA" ? "<kbd class='bg-warning'>" + statusNA + "</kbd>"
+                            : e.Status == "PWM" ? "<kbd class='bg-dark'>" + statusPWM + "</kbd>"
+                                : e.Status == "UP" ? "<kbd class='bg-info'>" + statusUP + "</kbd>"
                                     : "<kbd class='bg-Warning'>Revert Back</kbd>";
 
                     e.Status == "AP" ? approvalappcount++
@@ -111,7 +111,7 @@
                                 : e.Status == "UP" ? underproccessingappcount++
                                     : 0;
                     totalappcount = approvalappcount + newappcount + pendingappcount + underproccessingappcount;
-                    dd += `<tr><td><a href='@Url.Action("SubmitERProposal","Operator")?appid=${e.AppId}'>
+                    dd += `<tr><td><a href='@Url.Action("AppRecToDGH","DGH")?appid=${e.AppId}'>
                         ${e.AppId}</a></td><td> ${e.FieldType.Type}</td><td>${e.FieldName}</td><td>
                         ${e.Organisation.Name}</td><td>${ToChangeDateFormate(e.CreatedAt)}</td><td>${files}</td><td>${status}</td></tr>`;
                 };
@@ -141,9 +141,15 @@
         })
     };
 
-    const filterData = {type:"Status",statustext:"All"};
-
     
+    const statusAll = "All";
+    const statusAP = "Approved";
+    const statusNA = "New Application";
+    const statusUP = "Under Proccessing";
+    const statusPWM = "Pending With Me";
+    const statusRJ = "Reject";    
+    const filterData = { type: "Status", statustext: statusAll};
+
       $(document).on('click', '.card-deck .card', ({currentTarget }) => {  
         let DatasetAttrVal =  currentTarget.dataset;        
         filterData.statustext = DatasetAttrVal.val;
@@ -154,7 +160,7 @@
         switch (filterData.type) {
             case "Status":
                 Status = data[6];
-                filterData.statustext = filterData.statustext == "All" ? "" : filterData.statustext;
+                filterData.statustext = filterData.statustext == statusAll ? "" : filterData.statustext;
                 return Status == filterData.statustext || filterData.statustext == "" ? true : false;
             default: return false;
         }

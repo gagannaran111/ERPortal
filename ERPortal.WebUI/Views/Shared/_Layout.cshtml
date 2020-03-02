@@ -211,7 +211,7 @@
 </html>
 
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(()=> {
 
         $(".datetimetext").datetimepicker({
              format:'Y/m/d',
@@ -229,10 +229,10 @@
                 $(this).parent().addClass("active");
             }
         });
-        $("#close-sidebar").click(function () {
+        $("#close-sidebar").click(()=> {
             $(".page-wrapper").removeClass("toggled");
         });
-        $("#show-sidebar").click(function () {
+        $("#show-sidebar").click(()=> {
             $(".page-wrapper").addClass("toggled");
         });
     });
@@ -247,9 +247,9 @@
         $('#btnCommentViewModal').click();
     });
 
-    $(document).on("click", ".GeneratePDF", function (e) {
+    $(document).on("click", ".GeneratePDF", function(e){
         e.preventDefault();
-        var cssfile = "";
+        let cssfile = "";
         cssfile = "/Content/css/PrintingData.css";
         $(".container-fluid").printThis({
             importCSS: true,
@@ -259,17 +259,17 @@
             pageTitle: "",
             loadCSS: cssfile
         });
+    });
 
-      });
-    $('#btnCommentSave').click(function () {
-        var form = $('#modalContentComment').find('form');
-        var formUrl = form.attr('action');
+    $('#btnCommentSave').click(() => {
+        let form = $('#modalContentComment').find('form');
+        let formUrl = form.attr('action');
             $.ajax({
                 url: formUrl,
                 type: 'POST',
                 data: form.serialize(),
                 async: false,
-                success: function (result) {
+                success: (result)=> {
                     console.log(result);
                     if ('ERROR' != result) {
 
@@ -288,61 +288,55 @@
                         }
                     }
                 },
-                error: function (result) {
+                error: (result)=> {
 
                       $('#modalContentComment').html(result);
                 },
-                fail: function (xhr, textStatus, errorThrown) {
+                fail: (xhr, textStatus, errorThrown)=> {
                     $('#modalContentComment').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
 
                 }
-
-
              });
 
     });
 
-    $(document).on('click', '.UploadFile', function (e) {
-            e.preventDefault();
-         var refid = $(this).attr('filerefid');
-         var divid = $(this).attr('divid');
-         var inputfile = $(this).attr('inputfile');
-            var sendData = function () {
-                var data = new FormData();
-                data.append("file", $("#"+inputfile).get(0).files[0]);
-                data.append("RefId", refid);
-                return data;
-            }();
-             $.ajax({
-                url: "@Url.Action("LoadUploadFile","Comment")",
-                type: 'POST',
-                 data: sendData,
-                 contentType: false,
-                processData: false,
-                 success: function (result) {
-                     if (result == "File upload Success") {
-                         $("input[type='file']").val("");
-                         GetUploadFilesData("#"+divid,refid );
-                     }
-                },
-                 error: function () {
-
-                    alert( "Something Went Wrong. Try Again");
-                },
-                fail: function (xhr, textStatus, errorThrown) {
-
-                 }
-
-             });
-
-      });
-
-    $(document).on("click", '.fileDelete', function (e) {
+    $(document).on('click', '.UploadFile', (e)=> {
         e.preventDefault();
-        var divId = $(this).attr('data-divid');
-        var fileid = $(this).attr('data-fileid');
-        var refid = $(this).attr('data-fileref');
-          var sendData = { FileId:fileid };
+        let DatasetAttrVal = e.currentTarget.dataset;
+        let refid = DatasetAttrVal.filerefid;
+        let divid = DatasetAttrVal.divid;
+        let inputfile = DatasetAttrVal.inputfile;
+        let data = new FormData();
+        data.append("file", $(inputfile).get(0).files[0]);
+        data.append("RefId", refid);
+
+        $.ajax({
+            url: "@Url.Action("LoadUploadFile","Comment")",
+            type: 'POST',
+            data: data,
+            contentType: false,
+            processData: false,
+            success: (result) => {
+                if (result == "File upload Success") {
+                    $("input[type='file']").val("");
+                    GetUploadFilesData("#" + divid, refid);
+                }
+            },
+            error: () => {
+                alert("Something Went Wrong. Try Again");
+            },
+            fail: (xhr, textStatus, errorThrown) => {
+            }
+        });
+    });
+
+    $(document).on("click", '.fileDelete', (e)=> {
+        e.preventDefault();
+        let DatasetAttrVal = e.currentTarget.dataset;
+        let divId = DatasetAttrVal.divid;
+        let fileid = DatasetAttrVal.fileid;
+        let refid = DatasetAttrVal.fileref;
+        let sendData = { FileId: fileid };
         $.ajax({
             type: 'POST',
             contentType: 'application/json; charset=utf-8',
@@ -350,60 +344,59 @@
             data: JSON.stringify(sendData),
             datatype: 'json',
             async: false,
-            success: function (data) {
+            success: (data) =>{
                // alertModal(data);
                 GetUploadFilesData(divId, refid);
             },
-            error: function () {
+            error: ()=> {
                 alertModal("Something Went Wrong. Try Again");
             },
         });
 
     });
 
-
-     function alertModal(msg) {
-         $('#btnalertmodal').click();
-         $('#modalContentAlert').html("<strong>" + msg + "</strong>");
+    const alertModal = (msg) => {
+        $('#btnalertmodal').click();
+        $('#modalContentAlert').html("<strong>" + msg + "</strong>");
     }
 
-    function GetUploadFilesData(divId, refid) {
+    const GetUploadFilesData = (divId, refid)=> {
         $(divId).html("No files attached");
-            var sendData = { RefId:refid };
+            let sendData = { RefId:refid };
             $.ajax({
                 type: 'POST',
                 contentType: 'application/json; charset=utf-8',
                 url: '@Url.Action("GetUploadFiles", "Comment")',
                 data: JSON.stringify(sendData),
                 datatype: 'json',
-                success: function (data) {
+                success: (data)=> {
                     if (data) {
                         console.log(data);
-                        var txt = "";
+                        let txt = "";
                         if (data.length > 0) {
-                            for (var i = 0; i < data.length; i++) {
-                                txt += "<div class='badge badge-warning mr-2 mb-2'><a class='text-dark' href='@Url.Content("~/Content/UploadedFiles/")" +
-                                    data[i].FileName + "' target='_blank'>" + data[i].FileName + "</a><a class='fileDelete small text-danger' data-fileid='" +
-                                    data[i].Id + "' data-fileref='"+ data[i].FIleRef+"' data-divid ='"+divId+"'  href='#'><i class='ml-1 fa fa-times'></i></a></div>";
+                            for (let file of data) {
+                                txt += `<div class='badge badge-warning mr-2 mb-2'><a class='text-dark' href='@Url.Content("~/Content/UploadedFiles/") 
+                                    ${file.FileName}' target='_blank'>${file.FileName}</a><a class='fileDelete small text-danger' data-fileid='
+                                    ${file.Id}' data-fileref='${file.FIleRef}' data-divid ='${divId}'  href='#'><i class='ml-1 fa fa-times'></i></a></div>`;
                             }
                             $(divId).html(txt);
                             $(divId).fadeIn("slow");
                         }
                     }
                 },
-                 error: function () {
+                 error: ()=> {
                     alertModal( "Something Went Wrong. Try Again");
                 },
             })
     }
-    function ShowCommentModal(appid, title, urlpath,targetpage,queryid) {
+    const ShowCommentModal = (appid, title, urlpath,targetpage,queryid)=> {
         $('#modalContentComment').empty();
-        var senddata = { appid: appid, targetPage : targetpage,queryId: queryid };
+        let senddata = { appid: appid, targetPage : targetpage,queryId: queryid };
         $.ajax({
             url: urlpath,
             data: senddata,
             async:false,
-            success: function (result) {
+            success: (result)=> {
                 console.log(result);
                 $('#CommentModalLabel').text(title);
                 $('#modalContentComment').html(result);
@@ -412,27 +405,27 @@
                 }
               //  editor('#modalContentComment textarea');
             },
-            error: function () {
+            error: ()=> {
                 $('#modalContentComment').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
 
             },
-            fail: function (xhr, textStatus, errorThrown) {
+            fail: (xhr, textStatus, errorThrown)=> {
                 $('#modalContentComment').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
 
             }
         });
 
     }
-    function ToChangeDateFormate(value) {
-        var pattern = /Date\(([^)]+)\)/;
-        var results = pattern.exec(value);
-        var dt = new Date(parseFloat(results[1]));
+    const ToChangeDateFormate= (value)=> {
+        let pattern = /Date\(([^)]+)\)/;
+        let results = pattern.exec(value);
+        let dt = new Date(parseFloat(results[1]));
 
         return (dt.getMonth() + 1) + "/" + dt.getDate() + "/" + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
     }
 
 
-     function editor(textareaid) {
+    const editor =(textareaid)=> {
         $(textareaid).Editor({
 
             "insert_img": false,
@@ -442,11 +435,11 @@
         });
 
     }
-    $(document).ajaxStart(function () {
+    $(document).ajaxStart(()=> {
         $(".containerloader").removeClass('d-none');
         console.log('loaderstart');
     });
-    $(document).ajaxComplete(function () {
+    $(document).ajaxComplete(()=> {
         $(".containerloader").addClass('d-none');
         console.log('loadercomplete');
     });

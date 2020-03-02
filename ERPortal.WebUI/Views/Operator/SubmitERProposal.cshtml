@@ -263,7 +263,7 @@
                                             <div class="col-lg-6">
                                                 <div class="form-check form-check-inline">
                                                     @Html.TextBox("file", "", new { type = "file", id = "txtFile" })
-                                                    <button type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" filerefid="@ViewBag.RefId" divid="UploadFilesData" inputfile="txtFile" style="z-index:99999999"><i class="fas fa-upload"></i> Upload</button>
+                                                    <button type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" data-filerefid="@ViewBag.RefId" data-divid="UploadFilesData" data-inputfile="#txtFile" style="z-index:99999999"><i class="fas fa-upload"></i> Upload</button>
                                                     @*<input type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" filerefid="@ViewBag.RefId" divid="UploadFilesData" inputfile="txtFile" style="z-index:99999999" />*@
                                                 </div>
                                             </div>
@@ -298,7 +298,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    function OnSuccess(response) {
+    const OnSuccess=(response)=> {
         //alertModal(response);
         
         //$('#operatorform').find('input,select,radio').prop('disabled', true);
@@ -307,13 +307,15 @@
         // setTimeout(function () {
         //        $('.fileDelete, .FileDiv').addClass('d-none');
         //    }, 500);
+        console.log(response);
         window.location.href = "@Url.Action("Index","Operator")";
     }
 
-    function OnFailure() {
+    const OnFailure = (response) => {
+        console.log(response);
         alertModal("Try Again Error Occured.");
     }
-    $(document).ready(function () {
+    $(document).ready(()=> {
 
         $.each($('#ERApplications_ImplementaionType option'), function (index, element) {
             if ($(this).val() == "1" || $(this).val() == "0") {
@@ -335,7 +337,7 @@
             $('#ERAppSubmit').hide();
             $('.statussuccess').empty().append('Application Ref. No. : ' + $('#ERApplications_AppId').val()).removeClass('d-none');
             GetUploadFilesData('#UploadFilesData', $('#ReportDocument').val());
-            setTimeout(function () {
+            setTimeout(()=> {
                 $('.fileDelete').addClass('d-none');
             });
         }
@@ -345,8 +347,9 @@
 
 
         $(document.body).on('change', '#ERApplications_HydrocarbonType', function () {
-            var selectedOption = $(this).children(":selected").text();
-            var actionDiv = $("#uhcProdnMethodDiv");
+            let selectedOption = $(this).children(":selected").text();
+            let actionDiv = $("#uhcProdnMethodDiv");
+
             if ("UHC" == selectedOption && actionDiv.is(":hidden")) {
                 actionDiv.val('').fadeIn("slow");
                 $('#ERApplications_FieldGIIP').prop('disabled', false);
@@ -375,7 +378,7 @@
         });
 
         $(document).on("change", "input[name='ERApplications.ERScreeningStatus']", function () {
-            var actionDiv = $('#FileDiv');
+            let actionDiv = $('#FileDiv');
 
             if ($(this).val() == "True") {
                 $("#opertor1").click();
@@ -387,27 +390,27 @@
         });
 
 
-        $('#formModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var targetPage = button.data('page'); // Extract page redirection from data-* attributes
-            var modalTitle = button.data('title');// Extract Modal title from data-* attributes
+        $('#formModal').on('show.bs.modal', (event)=> {
+            let button = $(event.relatedTarget); // Button that triggered the modal
+            let targetPage = button.data('page'); // Extract page redirection from data-* attributes
+            let modalTitle = button.data('title');// Extract Modal title from data-* attributes
             // Initiate an AJAX request here (and then updating in a callback)
             $("#formModalLabel").html("Add " + modalTitle);
             $.ajax({
                 url: "/Operator/AjaxAdd?targetPage=" + targetPage,
-                success: function (result) {
+                success: (result)=> {
                     $('#modalContent').html(result);
                     if ($("#saveButton").is(":hidden")) {
                         $('#saveButton').show();
                     }
                 },
-                error: function () {
+                error: ()=> {
                     $('#modalContent').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
                     if ($("#saveButton").is(":visible")) {
                         $('#saveButton').fadeOut();
                     }
                 },
-                fail: function (xhr, textStatus, errorThrown) {
+                fail: (xhr, textStatus, errorThrown)=> {
                     $('#modalContent').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
                     if ($("#saveButton").is(":visible")) {
                         $('#saveButton').fadeOut();
@@ -415,50 +418,50 @@
                 }
             });
         });
-        $('#formDetailModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var targetPage = button.data('page'); // Extract page redirection from data-* attributes
-            var modalTitle = button.data('title');// Extract Modal title from data-* attributes
-            var RefId = button.attr('form-ref-id');
+        $('#formDetailModal').on('show.bs.modal',  (event)=> {
+            let button = $(event.relatedTarget); // Button that triggered the modal
+            let targetPage = button.data('page'); // Extract page redirection from data-* attributes
+            let modalTitle = button.data('title');// Extract Modal title from data-* attributes
+            let RefId = button.attr('form-ref-id');
             // Initiate an AJAX request here (and then updating in a callback)
             $("#formModalLabelView").html(modalTitle);
             $.ajax({
                 url: "/Operator/AjaxViewDetails?targetPage=" + targetPage + "&&RefId=" + RefId,
-                success: function (result) {
+                success: (result)=> {
                     $('#modalContentView').html(result);
                     if (targetPage == "ERScreeningDetailView") {
 
                         GetUploadFilesData('#DetailViewFile', $('#eRScreeningDetail_ReportDocumentPath').val());
-                        setTimeout(function () {
+                        setTimeout( ()=> {
                             $('.fileDelete').remove();
                         }, 500);
                     }
                 },
-                error: function () {
+                error: ()=> {
                     $('#modalContentView').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
 
                 },
-                fail: function (xhr, textStatus, errorThrown) {
+                fail: (xhr, textStatus, errorThrown)=> {
                     $('#modalContentView').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
 
                 }
             });
         });
 
-        $(document).on('submit', '#myForm', function (e) {
+        $(document).on('submit', '#myForm', (e)=> {
             // stop default form submission
             e.preventDefault();
 
             // if ($('#UploadFilesData').find('div').length != 0 && ) {
 
-            var formUrl = $('#myForm').attr('action');
+            let formUrl = $('#myForm').attr('action');
 
             $.ajax({
                 url: formUrl,
                 type: 'POST',
                 data: $('#myForm').serialize(),
-                success: function (result) {
-                    var res = result.split(",");
+                success: (result)=> {
+                    let res = result.split(",");
                     if ('Success' == res[0]) {
                         if (res[2] == "ERScreeningDetail") {
 
@@ -476,11 +479,11 @@
                         $('#modalContent').html(result);
                     }
                 },
-                error: function (result) {
+                error: (result)=> {
 
                     $('#modalContent').html(result);
                 },
-                fail: function (xhr, textStatus, errorThrown) {
+                fail: (xhr, textStatus, errorThrown)=> {
                     $('#modalContent').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
                     if ($("#saveButton").is(":visible")) {
                         $('#saveButton').fadeOut();
@@ -500,7 +503,7 @@
         //});
 
         $(document).on("change", "input[name='ERApplications.PresentlyUnderProduction']", function (e) {
-            var actionDiv = $("#DateOfLastCommercialProductionDiv");
+            let actionDiv = $("#DateOfLastCommercialProductionDiv");
             if ($('#ERApplications_DateOfInitialCommercialProduction').val() != '') {
                 if ($(this).val() == "False") {
                     actionDiv.val('').fadeIn("slow");
@@ -519,21 +522,21 @@
         });
 
 
-        $(document).on('change', 'input[name="ERApplications.DateOfLastCommercialProduction"]', function () {
+        $(document).on('change', 'input[name="ERApplications.DateOfLastCommercialProduction"]', ()=> {
 
             CheckERScreeningEligibility();
         });
-        $(document).on('change', 'input[name="ERApplications.FieldOIIP"]', function () {
+        $(document).on('change', 'input[name="ERApplications.FieldOIIP"]', ()=> {
 
             checkMandatoryPilot();
         });
-        $(document).on('change', 'input[name="ERApplications.FieldGIIP"]', function () {
+        $(document).on('change', 'input[name="ERApplications.FieldGIIP"]', ()=> {
 
             checkMandatoryPilot();
         });
     });
 
-    $(document).on('change', '#ERApplications_DateOfDiscovery', function () {
+    $(document).on('change', '#ERApplications_DateOfDiscovery', ()=> {
         CheckEligibleToFillERForm();
     });
 
@@ -560,19 +563,22 @@
                       var subject = "";
                       var replybtn = "";
                       var resolvedbtn = "";
-                      $.each(result, function (index, element) {
+                      for(let element of result)
+                      {
                           if (element[0].Subject != subject) {
                               subject = element[0].Subject;
                               dd += "<div class=''><div class='alert alert-success h5'>Query : " + counter + " Subject : " + subject + "</div>";
                               counter++;
                           }
                           dd += "<div class='alert alert-light border border-danger'><p class='h5 float-right'>Query Between " + element[0].Sender.SenderName +" and "+ element[0].Reciver.ReciverName+"</p><hr/>";
-                          $.each(result[index], function (i, f) {
-                              var files = "";
-
-                              $.each(f.Files, function (j, e) {
+                          for(let f of element)
+                          {
+                              let files = "";
+                              for (let e of f.Files)
+                              {
                                   files += '<a class="badge badge-success mr-2" href="' + e.FilePath + '" target="blank"><i class="fas fa-file-download"></i> ' + e.FileName + '</a>';
-                              });
+                              };
+                            
                               if (f.Status == "Query Rasied") {
                                   statuscheck = "Query Rasied To " + f.Reciver.ReciverName + " by " + f.Sender.SenderName;
 
@@ -586,8 +592,6 @@
                               else {
                                   statuscheck = "";
                               }
-
-
                               if (f.Reciver.ReciverId == userid || f.Sender.SenderId == userid) {
                                   replybtn = '<button class="btn btn-sm btn-primary ml-2 BtnQueryReply" data-page="QueryCommentReply" data-query-parentid="' + f.QueryParentId + '" data-query-id="' + f.Id +
                                       '" data-toggle="modal" data-target="#CommentModal" data-title="Query Reply"><i class="fas fa-reply"></i> Reply</button>';
@@ -613,9 +617,9 @@
                               else {
                                   resolvedbtn = "";
                               }
-                          });
+                          };
                           dd += resolvedbtn + "</div></div>";
-                      });
+                      };
 
                           //  var subject = "<div class='col alert alert-info'><h5 class=''>Subject : " + result[1].Subject + "</h4></div>"
                           $("#QueryCommentTab .body-panel").html('<ul class="chat">' + dd + '</ul>');
@@ -637,12 +641,12 @@
     //  Function  //
     ////////////////
 
-    function checkMandatoryPilot() {
+    const checkMandatoryPilot = ()=> {
 
-        var FieldOIIP = $('#ERApplications_FieldOIIP');
-        var FieldGIIP = $('#ERApplications_FieldGIIP');
-        var pilotprodprofile = $('#ERApplications_PilotProductionProfile');
-        var pilotdesign = $('input[name="ERApplications.PilotDesign"]:eq(0)');
+        let FieldOIIP = $('#ERApplications_FieldOIIP');
+        let FieldGIIP = $('#ERApplications_FieldGIIP');
+        let pilotprodprofile = $('#ERApplications_PilotProductionProfile');
+        let pilotdesign = $('input[name="ERApplications.PilotDesign"]:eq(0)');
 
         if (FieldGIIP.val() != '' && $('#ERApplications_HydrocarbonType option:selected').val() == '1') {
 
@@ -677,14 +681,14 @@
 
 
     }
-    function CheckEligibleToFillERForm() {
-        var dateofdiscoveryval = $('#ERApplications_DateOfDiscovery').val().split('-');
-        var dateofdiscovery = $('#ERApplications_DateOfDiscovery');
-        var currentdate = new Date();
-        var diffYear = "";
-        var diffmonth = "";
-        var diffdate = "";
-        var msg = "Date Of Discovery Less Then 3 Years. So You Cannot Fill ER Proposal";
+    const CheckEligibleToFillERForm =()=> {
+        let dateofdiscoveryval = $('#ERApplications_DateOfDiscovery').val().split('-');
+        let dateofdiscovery = $('#ERApplications_DateOfDiscovery');
+        let currentdate = new Date();
+        let diffYear = "";
+        let diffmonth = "";
+        let diffdate = "";
+        let msg = "Date Of Discovery Less Then 3 Years. So You Cannot Fill ER Proposal";
 
         diffYear = currentdate.getFullYear() - parseInt(dateofdiscoveryval[0]);
         diffmonth = parseInt((currentdate.getMonth() + 1)) - parseInt(dateofdiscoveryval[1]);
@@ -711,18 +715,18 @@
         }
 
     }
-    function CheckERScreeningEligibility() {
+    const CheckERScreeningEligibility = ()=> {
 
-        var dateofinitial = $('#ERApplications_DateOfInitialCommercialProduction').val();
-        var dateoflastsubmission = $('#ERApplications_DateOfLastCommercialProduction').val();
-        var initialdatesplit = dateofinitial.split("-");
-        var currentdate = new Date();
-        var diffYear = "";
-        var diffmonth = "";
-        var diffdate = "";
+        let dateofinitial = $('#ERApplications_DateOfInitialCommercialProduction').val();
+        let dateoflastsubmission = $('#ERApplications_DateOfLastCommercialProduction').val();
+        let initialdatesplit = dateofinitial.split("-");
+        let currentdate = new Date();
+        let diffYear = "";
+        let diffmonth = "";
+        let diffdate = "";
 
         if (dateoflastsubmission != '') {
-            var lastdatesplit = dateoflastsubmission.split("-");
+            let lastdatesplit = dateoflastsubmission.split("-");
             diffYear = parseInt(lastdatesplit[0]) - parseInt(initialdatesplit[0]);
             diffmonth = parseInt(lastdatesplit[1]) - parseInt(initialdatesplit[1]);
             diffdate = parseInt(lastdatesplit[2]) - parseInt(initialdatesplit[2]);

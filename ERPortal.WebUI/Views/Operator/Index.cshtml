@@ -143,8 +143,14 @@
 
         }).done();
     };
-  
-    const filterData = {type:"Status",statustext:"All"};    
+
+    const statusAll = "All";
+    const statusAP = "Approved";
+    const statusNA = "New Application";
+    const statusUP = "Under Proccessing";
+    const statusPWM = "Pending With Me";
+    const statusRJ = "Reject";    
+    const filterData = {type:"Status",statustext:statusAll};    
     
     $(document).on('click', '.card-deck .card', ({currentTarget }) => {  
         let DatasetAttrVal =  currentTarget.dataset;        
@@ -156,7 +162,7 @@
         switch (filterData.type) {
             case "Status":
                 Status = data[6];
-                filterData.statustext = filterData.statustext == "All" ? "" : filterData.statustext;
+                filterData.statustext = filterData.statustext == statusAll ? "" : filterData.statustext;
                 return Status == filterData.statustext || filterData.statustext == "" ? true : false;
             default: return false;
         }

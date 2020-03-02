@@ -57,7 +57,7 @@
         <div class="col-lg-6">
             <div class="form-check form-check-inline">
                 @Html.TextBox("file", "", new { type = "file", id = "txtFile" })
-                <button type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" filerefid="@Model.QueryDetails.FileRefId" divid="UploadFilesData" inputfile="txtFile" style="z-index:99999999"><i class="fas fa-upload"></i> Upload</button>
+                <button type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" data-filerefid="@Model.QueryDetails.FileRefId" data-divid="UploadFilesData" data-inputfile="txtFile" style="z-index:99999999"><i class="fas fa-upload"></i> Upload</button>
                 @*<input type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" filerefid="@ViewBag.RefId" divid="UploadFilesData" inputfile="txtFile" style="z-index:99999999" />*@
             </div>
         </div>

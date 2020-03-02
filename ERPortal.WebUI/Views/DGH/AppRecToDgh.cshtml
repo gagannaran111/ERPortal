@@ -309,12 +309,11 @@
 
 
 <script>
+    const UserRoleCER = "Consultant Enhanced Recovery";
+    const UserRoleCoord = "coordinator";
 
+    $(document).ready(()=>{
 
-    $(document).ready(function () {
-        $('.btnCommentView').click(function () {
-            $('a[href="#CommentTab"]').click();
-        });
         $('.tblComment').DataTable(
             {
                 // scrollY: '50vh',
@@ -326,106 +325,118 @@
             }
         );
         BtnForwardCheckShowHideStatus();
-        "@arr[2]" == "Consultant Enhanced Recovery" ? BtnUploadLetterCheckShowHideStatus() : null;
+        "@arr[2]" == UserRoleCER ? BtnUploadLetterCheckShowHideStatus() : null;
     });
 
-    $(document).on('click', '.ForwardApp', function () {
-        ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd", "Comment")", $(this).attr('data-page'), null);
-       
-        var list = "@arr[2]" == "Consultant Enhanced Recovery" ? ["1", "2", "3", "4"]
-            : "@arr[2]" == "coordinator" ? ["1", "2", "4"] : ["0", "3", "4"];
+    $(document).on('click', '.ForwardApp', ({currentTarget})=> {
+        let DatasetAttrVal = currentTarget.dataset;
+
+        ShowCommentModal("@Model.ERApplications.Id", DatasetAttrVal.title, "@Url.Action("AjaxAdd", "Comment")", DatasetAttrVal.page, null);
+
+        let list = "@arr[2]" == UserRoleCER ? ["1", "2", "3", "4"]
+            : "@arr[2]" == UserRoleCoord ? ["1", "2", "4"] : ["0", "3", "4"];
         $('#ForwardApplication_FileStatus option').filter(function () {
             return $.inArray(this.value, list) !== -1
         }).remove();
         $('#ForwardApplication_FileStatus').val('');
     });
-    $(document).on('click', '.UploadLetter', function () {
-          ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd", "Comment")",$(this).attr('data-page'),null);
+    $(document).on('click', '.UploadLetter', ({currentTarget }) => {
+        let DatasetAttrVal = currentTarget.dataset;
+          ShowCommentModal("@Model.ERApplications.Id", DatasetAttrVal.title, "@Url.Action("AjaxAdd", "Comment")",DatasetAttrVal.page,null);
 
     });
-    $(document).on('click', '.QueryComment', function () {
-        ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd", "Comment")", $(this).attr('data-page'), null);
+    $(document).on('click', '.QueryComment', ({ currentTarget }) => {
+        let DatasetAttrVal = currentTarget.dataset;
+        ShowCommentModal("@Model.ERApplications.Id", DatasetAttrVal.title, "@Url.Action("AjaxAdd", "Comment")", DatasetAttrVal.page, null);
 
     });
-    $(document).on('click', '.GrantApp', function () {
-        ShowCommentModal("@Model.ERApplications.Id", $(this).attr('data-title'), "@Url.Action("AjaxAdd", "Comment")", $(this).attr('data-page'), null);
+    $(document).on('click', '.GrantApp', ({currentTarget})=> {
+         let DatasetAttrVal = currentTarget.dataset;
+        ShowCommentModal("@Model.ERApplications.Id",  DatasetAttrVal.title, "@Url.Action("AjaxAdd", "Comment")", DatasetAttrVal.page, null);
     });
 
     // ERProposal tab link
 
-    $(document).on('click', '.ERProposaltablink', function () {
+    $(document).on('click', '.ERProposaltablink', ()=> {
         BtnForwardCheckShowHideStatus();
-        "@arr[2]" == "Consultant Enhanced Recovery" ? BtnUploadLetterCheckShowHideStatus() : null;
+        "@arr[2]" == UserRoleCER ? BtnUploadLetterCheckShowHideStatus() : null;
     });
 
     // Forward Application
-    $(document).on('click', '.commenttablink', function () {
+    $(document).on('click', '.commenttablink', ()=> {
 
         $.ajax({
             url: "@Url.Action("ApplicationSummary", "Comment", new { appid = Model.ERApplications.Id })",
-            success: function (result) {
+            success: (result)=> {
 
                 console.log(result);
                 if (result.length == 0) {
                     $("#CommentTab .body-panel").html('<h3 class="text-danger ">Data Not Found</h3>');
                 }
                 else {
-                    var dd = "";
-                    var statuscheck = "";
-                    $.each(result, function (ii, ee) {
-                        var arrayelement = ee.length;
-                        var reciver = "";
-                        $.each(ee, function (index, element) {
-                            var files = "";
-                            $.each(element.Files, function (i, e) {
+                    let dd = "";
+                    let statuscheck = "";
+                    for (let ee of result)
+                    {
+                        let arrayelement = ee.length;
+                        let reciver = "";
+                        let countelement = 0;
+                        for (let element of ee)
+                        {
+                            let files = "";
+                            countelement++;   
+                            
+                            for (let e of element.Files)
+                            {
                                 files += '<a class="badge badge-info mr-2" href="../Content/UploadedFiles/' + e.FileName + '" target="_blank"><i class="fas fa-file-download"></i> ' + e.FileName + '</a>';
-                            });
+                            };
 
                             reciver += arrayelement > 1 ? element.Recivername + "," : element.Recivername;
 
-                            if (arrayelement - 1 == index) {
+                            if (arrayelement == countelement) {
                                 reciver = reciver.includes(',') == true ? reciver.substr(0,reciver.length-1) : reciver;
-                                if (element.FileStatus == 0) {
-                                    statuscheck = "Forward To " + reciver + " by " + element.Sendername;
-                                }
-                                else if (element.FileStatus == 1) {
-                                    statuscheck = "Recommended by " + element.Sendername;
-                                }
-                                else if (element.FileStatus == 2) {
-                                    statuscheck = "Comment Back To " + reciver + " by " + element.Sendername;
-                                }
-                                else if (element.FileStatus == 3) {
-                                    statuscheck =reciver + " Review Application Again. Comment Resolved By " + element.Sendername;
-                                }
-                                else if (element.FileStatus == 4) {
-                                    statuscheck = "Application Approval Letter Uploaded by " + element.Sendername;
-                                }
-                                else {
-                                    statuscheck = "";
-                                }
-                                dd += ' <li class="left clearfix "><span class="chat_img pull-left">' +
-                                    '	<span class="chat_img"> <img src="../Content/img/user-profile.png" alt="User" style="width:50px"> </span>' +
-                                    '</span><div class="chat-body clearfix"><div class="header"><strong class="text-danger">' + statuscheck + '</strong> <small class="pull-right text-muted">' +
-                                    '<i class="fas fa-clock"></i> ' + ToChangeDateFormate(element.CreatedAt) + '</small></div>' +
-                                    '<p>' + element.comments + '</p><div class="mb-2"><p>' + files + '</p ></div></div ></li >';
+                                switch (element.FileStatus) {
+                                    case 0:
+                                        statuscheck = "Forward To " + reciver + " by " + element.Sendername;
+                                        break;
+                                    case 1:
+                                        statuscheck = "Recommended by " + element.Sendername;
+                                        break;
+                                    case 2:
+                                        statuscheck = "Comment Back To " + reciver + " by " + element.Sendername;
+                                        break;
+                                    case 3:
+                                        statuscheck =reciver + " Review Application Again. Comment Resolved By " + element.Sendername;
+                                        break;
+                                    case 4:
+                                        statuscheck = "Application Approval Letter Uploaded by " + element.Sendername;
+                                        break;
+                                    default: statuscheck = "";
+                                        break;
+                                }                               
+                                dd += `<li class="left clearfix "><span class="chat_img pull-left">
+                                    <span class="chat_img"><img src="../Content/img/user-profile.png" alt="User" style="width:50px"> </span>
+                                    </span><div class="chat-body clearfix"><div class="header"><strong class="text-danger">${statuscheck}</strong> <small class="pull-right text-muted">
+                                    <i class="fas fa-clock"></i> ${ToChangeDateFormate(element.CreatedAt)}</small></div>
+                                    <p>${element.comments}</p><div class="mb-2"><p>${files}</p ></div></div ></li >`;
                             }
-                        });
-                    });
+                        };
+                    };
                     $("#CommentTab .body-panel").html('<ul class="chat">' + dd + '</ul>');
                 }
             },
-            error: function () {
+            error: ()=> {
                 alertModal("Something Went Wrong. Try Again Later");
             },
-            fail: function (xhr, textStatus, errorThrown) {
+            fail: (xhr, textStatus, errorThrown)=> {
                 alertModal("Something Went Wrong. Try Again Later");
             }
         });
 
     });
 
-    $(document).on('change', '#ForwardApplication_FileStatus', function () {
-          var value = $('#ForwardApplication_FileStatus option:selected').val();
+    $(document).on('change', '#ForwardApplication_FileStatus', ()=> {
+          let value = $('#ForwardApplication_FileStatus option:selected').val();
           if (value == "1" || value == "2" || value=="3") {
               $('.ReciverIdSelectList').addClass('d-none');
               $(".ReciverIdSelectList option:selected").prop("selected", false);
@@ -433,7 +444,6 @@
           else {
               $('.ReciverIdSelectList').removeClass('d-none');
           }
-
     })
 
 
@@ -545,56 +555,58 @@
 
 
     // Create Functions
+    const Show = "Show";
+    const Hide = "Hide";
+    const BtnUploadLetterCheckShowHideStatus= ()=> {
 
-    function BtnUploadLetterCheckShowHideStatus() {
-         var sendData = { btnType: "BtnUploadLetter", appid: "@Model.ERApplications.Id" };
+         let sendData = { btnType: "BtnUploadLetter", appid: "@Model.ERApplications.Id" };
         $.ajax({
             url: "@Url.Action("BtnCheckStatus", "Comment")",
             type: 'POST',
             data: sendData,
             async: false,
-            success: function (result) {
+            success:  (result)=> {
                 switch (result) {
-                    case "Show":
+                    case Show:
                        $('.UploadLetter').removeClass('d-none');
                         break;
-                    case "Hide":
+                    case Hide:
                         $('.UploadLetter').addClass('d-none');
                         break;
                     default: alertModal("Something Went Wrong. Try Again Later");
                 }
             },
-            error: function () {
+            error: ()=> {
                 alertModal("Something Went Wrong. Try Again Later");
             },
-            fail: function (xhr, textStatus, errorThrown) {
+            fail: (xhr, textStatus, errorThrown)=> {
                 alertModal("Something Went Wrong. Try Again Later");
             }
         });
 
     }
-    function BtnForwardCheckShowHideStatus() {
-        var sendData = { btnType: "btnForward", appid: "@Model.ERApplications.Id" };
+    const BtnForwardCheckShowHideStatus = ()=> {
+        let sendData = { btnType: "btnForward", appid: "@Model.ERApplications.Id" };
         $.ajax({
             url: "@Url.Action("BtnCheckStatus", "Comment")",
             type: 'POST',
             data: sendData,
             async: false,
-            success: function (result) {
+            success: (result)=> {
                 switch (result) {
-                    case "Show":
+                    case Show:
                         $('.ForwardApp').removeClass('d-none');
                         break;
-                    case "Hide":
+                    case Hide:
                         $('.ForwardApp').addClass('d-none');
                         break;
                     default: alertModal("Something Went Wrong. Try Again Later");
                 }
             },
-            error: function () {
+            error: ()=> {
                 alertModal("Something Went Wrong. Try Again Later");
             },
-            fail: function (xhr, textStatus, errorThrown) {
+            fail: (xhr, textStatus, errorThrown)=> {
                 alertModal("Something Went Wrong. Try Again Later");
             }
         });
