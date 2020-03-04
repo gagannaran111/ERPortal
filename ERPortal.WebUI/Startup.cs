@@ -35,7 +35,7 @@ namespace ERPortal.WebUI
                 //Here we create a Admin super user who will maintain the website                   
 
                 var user = new ApplicationUser();
-                user.UserName = "shanu";
+                user.UserName = "gagan@gmail.com";
                 user.Email = "gagan@gmail.com";
 
                 string userPWD = "Gn@123";
@@ -118,10 +118,10 @@ namespace ERPortal.WebUI
 
             }
             // creating Creating coordinator role     
-            if (!roleManager.RoleExists("coordinator"))
+            if (!roleManager.RoleExists("Coordinator"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
-                role.Name = "coordinator";
+                role.Name = "Coordinator";
                 roleManager.Create(role);
 
             }
@@ -134,10 +134,10 @@ namespace ERPortal.WebUI
 
             }
             // creating Creating operator role     
-            if (!roleManager.RoleExists("operator"))
+            if (!roleManager.RoleExists("Operator"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
-                role.Name = "operator";
+                role.Name = "Operator";
                 roleManager.Create(role);
 
             }
@@ -150,34 +150,34 @@ namespace ERPortal.WebUI
 
             }
             // creating Creating technical officer role     
-            if (!roleManager.RoleExists("technical officer"))
+            if (!roleManager.RoleExists("Technical Officer"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
-                role.Name = "technical officer";
+                role.Name = "Technical Officer";
                 roleManager.Create(role);
 
             }
             // creating Creating state nodal officer role     
-            if (!roleManager.RoleExists("state nodal officer"))
+            if (!roleManager.RoleExists("State Nodal Officer"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
-                role.Name = "state nodal officer";
+                role.Name = "State Nodal Officer";
                 roleManager.Create(role);
 
             }
             // creating Creating state technical officer role     
-            if (!roleManager.RoleExists("state technical officer"))
+            if (!roleManager.RoleExists("State Technical Officer"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
-                role.Name = "state technical officer";
+                role.Name = "State Technical Officer";
                 roleManager.Create(role);
 
             }
             // creating Creating state district officer role     
-            if (!roleManager.RoleExists("state district officer"))
+            if (!roleManager.RoleExists("State District Officer"))
             {
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
-                role.Name = "state district officer";
+                role.Name = "State District Officer";
                 roleManager.Create(role);
 
             }

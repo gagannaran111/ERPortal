@@ -86,8 +86,9 @@ namespace ERPortal.WebUI.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login(LoginViewModel model)
         {
+            string returnUrl = "";
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -112,16 +113,19 @@ namespace ERPortal.WebUI.Controllers
                     string userRole = context.Roles.Find(userRoleIds).Name.ToString();
                     string[] userdata;
                     if (userRole == "Admin")
-                    {                        
-                       userdata = new string[] { userid, userRoleIds, userRole, model.UserName,null };
+                    {
+                        userdata = new string[] { userid, userRoleIds, userRole, model.UserName, null, model.UserName };
                     }
                     else
                     {
                         var userdata1 = userAccountContext.Collection().Where(x => x.Id == userid).FirstOrDefault();
-                       string deptname = userdata1.DeptId != null ? userdata1.Dept.DeptName : null;
-                       userdata = new string[] { userid, userRoleIds, userRole, model.UserName, deptname };
+                        string deptname = userdata1.DeptId != null ? userdata1.Dept.DeptName : null;
+                        string NameOfUser = userdata1.FirstName + " " + userdata1.LastName;
+                        userdata = new string[] { userid, userRoleIds, userRole, model.UserName, deptname, NameOfUser };
                     }
-
+                    returnUrl = userRole == "Admin" ? Url.Action("Index", "Admin")
+                        : userRole == "opreator" ? Url.Action("Index", "Operator")
+                        : Url.Action("Index", "DGH");
                     Session["UserData"] = userdata;
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:

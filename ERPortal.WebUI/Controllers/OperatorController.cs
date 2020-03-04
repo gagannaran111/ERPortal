@@ -29,7 +29,13 @@ namespace ERPortal.WebUI.Controllers
         IRepository<ERAppActiveUsers> ERAppActiveUsersContext;
         IRepository<StatusMaster> StatusMasterContext;
         IRepository<UserAccount> UserAccountContext;
-        public OperatorController(IRepository<ERApplication> _ERApplicationContext, IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<Organisation> _OrganisationContext, IRepository<ForwardApplication> _ForwardApplicationContext, IRepository<AuditTrails> _AuditTrailContext, IRepository<ERAppActiveUsers> _ERAppActiveUsersContext, IRepository<StatusMaster> _StatusMasterContext, IRepository<UserAccount> _UserAccountContext)
+        public OperatorController(IRepository<ERApplication> _ERApplicationContext,
+            IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext,
+            IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext,
+            IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<Organisation> _OrganisationContext,
+            IRepository<ForwardApplication> _ForwardApplicationContext, IRepository<AuditTrails> _AuditTrailContext,
+            IRepository<ERAppActiveUsers> _ERAppActiveUsersContext, IRepository<StatusMaster> _StatusMasterContext,
+            IRepository<UserAccount> _UserAccountContext)
         {
             ERApplicationContext = _ERApplicationContext;
             FieldTypeContext = _FieldTypeContext;
@@ -60,7 +66,7 @@ namespace ERPortal.WebUI.Controllers
             string userid = userdata[0];
             List<ERApplication> erapp = ERApplicationContext.Collection().ToList();
             List<ERAppActiveUsers> activeuser = ERAppActiveUsersContext.Collection().Where(x => x.UserAccountId == userid && x.Is_Active == true).Distinct().ToList();
-         
+
             var applicationdata = erapp.Join(activeuser, x => x.Id, y => y.ERApplicationId, (x, y) => new
             {
                 x.Id,
@@ -71,10 +77,10 @@ namespace ERPortal.WebUI.Controllers
                 x.CreatedAt,
                 y.Dept_Id,
                 y.UserAccount,
-                Status = AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true).Count() == 1 ? "NA"
-                 : AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true && w.StatusId == "S116").Count() > 0 ? "AP"
+                Status = AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true).Count() == 1 ? AppStatus.NA.ToString()
+                 : AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true && w.StatusId == "S116").Count() > 0 ? AppStatus.AP.ToString()
                  : AuditTrailContext.Collection().Where(d => d.ERApplicationId == x.Id && d.Is_Active == true && (d.SenderId == userid || d.ReceiverId == userid))
-                 .OrderByDescending(o => o.CreatedAt).Select(s => new { StatusId = s.ReceiverId == userid ? "PWM" : s.SenderId == userid ? "UP" : "" }).FirstOrDefault().StatusId,
+                 .OrderByDescending(o => o.CreatedAt).Select(s => new { StatusId = s.ReceiverId == userid ? AppStatus.PWM.ToString() : s.SenderId == userid ? AppStatus.UP.ToString() : "" }).FirstOrDefault().StatusId,
                 FileRef = AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true && w.StatusId == "S116").Count() == 0 ? null
                 : AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true && w.StatusId == "S116").FirstOrDefault().FileRefId
             }).Select(a => new
@@ -115,7 +121,7 @@ namespace ERPortal.WebUI.Controllers
             }
             viewModel.FieldTypes = FieldTypeContext.Collection().ToList();
             viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection().ToList();
-          //  viewModel.organisationTypes = OrganisationContext.Collection().ToList();
+            //  viewModel.organisationTypes = OrganisationContext.Collection().ToList();
             viewModel.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
 
             //viewModel.UploadFiles = UploadFileContext.Collection();
@@ -144,7 +150,7 @@ namespace ERPortal.WebUI.Controllers
                 ERApplicationContext.Insert(_ERApplication.ERApplications);
                 string auditstatus = StatusMasterContext.Collection().Where(status => status.Status == "Application Submitted").FirstOrDefault().CustStatusId;
 
-                string CER = UserAccountContext.Collection().Where(x => x.UserRole == "Consultant Enhanced Recovery").Select(c => c.Id).FirstOrDefault();
+                string CER = UserAccountContext.Collection().Where(x => x.UserRole == UserRoleType.ConsultantEnhancedRecovery.GetDisplayName()).Select(c => c.Id).FirstOrDefault();
 
                 AuditTrails auditTrails = new AuditTrails()
                 {

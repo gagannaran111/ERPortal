@@ -10,8 +10,8 @@ using ERPortal.Core.ViewModels;
 using System.Transactions;
 using System.Data.Entity;
 using System.Threading.Tasks;
-
-
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 namespace ERPortal.WebUI.Controllers
 {
     [CustomAuthenticationFilter]
@@ -101,33 +101,33 @@ namespace ERPortal.WebUI.Controllers
                     senderid = ForwardApplicationContext.Collection().Where(x => x.Reciever == userid && x.ERApplicationId == appid && (x.FileStatus == FileStatus.Forward || x.FileStatus == FileStatus.ReviewAgain) && x.Is_active == true).FirstOrDefault().Sender;
                     reciverlist = new string[] { senderid };
                     msg = "Successfully Comment Back";
-                    if (arr[2] == "DG")
+                    if (arr[2] == UserRoleType.DG.ToString())
                     {
-                        await ForwardApplicationContext.Collection().Where(x => x.ERApplicationId == appid && x.Sender == senderid && x.Reciever == userid && (x.FileStatus == FileStatus.Forward || x.FileStatus == FileStatus.ReviewAgain) && x.Is_active == true).ForEachAsync(x => x.Is_active = false); 
+                        await ForwardApplicationContext.Collection().Where(x => x.ERApplicationId == appid && x.Sender == senderid && x.Reciever == userid && (x.FileStatus == FileStatus.Forward || x.FileStatus == FileStatus.ReviewAgain) && x.Is_active == true).ForEachAsync(x => x.Is_active = false);
                         await AuditTrailsContext.Collection().Where(x => x.ERApplicationId == appid && x.SenderId == senderid && x.ReceiverId == userid && x.Is_Active == true).ForEachAsync(x => x.Is_Active = false);
 
                     }
                     else
                     {
-                        await ForwardApplicationContext.Collection().Where(x => x.ERApplicationId == appid && x.Sender == senderid && (x.FileStatus == FileStatus.Forward || x.FileStatus==FileStatus.ReviewAgain) && x.Is_active == true).ForEachAsync(x => x.Is_active = false);
+                        await ForwardApplicationContext.Collection().Where(x => x.ERApplicationId == appid && x.Sender == senderid && (x.FileStatus == FileStatus.Forward || x.FileStatus == FileStatus.ReviewAgain) && x.Is_active == true).ForEachAsync(x => x.Is_active = false);
                         await ForwardApplicationContext.Collection().Where(x => x.ERApplicationId == appid && x.FileStatus == FileStatus.Recommended && x.Reciever == senderid && x.Is_active == true).ForEachAsync(d => d.Is_active = false);
                         await AuditTrailsContext.Collection().Where(x => x.ERApplicationId == appid && x.StatusId == "S105" && x.Is_Active == true).ForEachAsync(d => d.Is_Active = false);
                         await AuditTrailsContext.Collection().Where(x => x.ERApplicationId == appid && x.SenderId == senderid && x.Is_Active == true).ForEachAsync(x => x.Is_Active = false);
-                       
+
                     }
                     break;
-                case FileStatus.ReviewAgain:                  
-                    string DGID = UserAccountContext.Collection().Where(x => x.UserRole == "DG").FirstOrDefault().Id;
+                case FileStatus.ReviewAgain:
+                    string DGID = UserAccountContext.Collection().Where(x => x.UserRole == UserRoleType.DG.ToString()).FirstOrDefault().Id;
                     int countdgid = ERAppActiveUsersContext.Collection().Where(x => x.UserAccountId == DGID && x.ERApplicationId == appid && x.Is_Active == true).Count();
                     if (countdgid > 0)
                     {
-                        reciverlist = new string[] { DGID };// ForwardApplicationContext.Collection().Where(x => x.ERApplicationId == appid && x.Sender == userid && x.Reciever == DGID && (x.FileStatus == FileStatus.Forward ||x.FileStatus == FileStatus.ReviewAgain) && x.Is_active == false).Select(d => d.Reciever).Distinct().ToArray();
+                        reciverlist = new string[] { DGID };
                     }
                     else
                     {
                         reciverlist = ForwardApplicationContext.Collection().Where(x => x.ERApplicationId == appid && x.Sender == userid && (x.FileStatus == FileStatus.Forward || x.FileStatus == FileStatus.ReviewAgain) && x.Is_active == false).Select(d => d.Reciever).Distinct().ToArray();
                         if (reciverlist == null || reciverlist.Length == 0)
-                            return Json("There Have No Comment Recieved To Resolve", JsonRequestBehavior.AllowGet);                        
+                            return Json("NCR", JsonRequestBehavior.AllowGet);
 
                     }
                     auditstatus = "S106";
@@ -184,6 +184,7 @@ namespace ERPortal.WebUI.Controllers
             }
             else
             {
+                msg = "ERROR";
                 return Json(msg, JsonRequestBehavior.AllowGet);
             }
         }
@@ -308,32 +309,34 @@ namespace ERPortal.WebUI.Controllers
                 case "ForwardApplication":
                     ForwardAppViewModel forwardAppViewModel = new ForwardAppViewModel();
                     ForwardApplication forwardApplication = new ForwardApplication();
-                    //if(arr[2]=="HoD")
-                    if (arr[2] == "Consultant Enhanced Recovery")
+                    //if(arr[2]=="HoD")                   
+                    if (arr[2] == UserRoleType.ConsultantEnhancedRecovery.GetDisplayName())
                     {
-                        ViewBag.ReciverList = UserAccountContext.Collection().Where(x => (x.UserRole == "coordinator") && x.Id != userid)
+                        ViewBag.ReciverList = UserAccountContext.Collection().Where(x => (x.UserRole == UserRoleType.Coordinator.ToString()) && x.Id != userid)
                              .Select(d => new { ListItemKey = d.Id, ListItemValue = d.FirstName + " " + d.LastName + " (" + d.UserRole + ")" }).ToList();
                     }
-                    else if (arr[2] == "coordinator")
+                    else if (arr[2] == UserRoleType.Coordinator.ToString())
                     {
                         int CountForward = ForwardApplicationContext.Collection().Where(x => x.ERApplicationId == appid && x.Is_active == true && x.Sender == userid && (x.FileStatus == FileStatus.ReviewAgain || x.FileStatus == FileStatus.Forward)).Count();
                         int CountRecommended = ForwardApplicationContext.Collection().Where(x => x.ERApplicationId == appid && x.Is_active == true && x.Reciever == userid && x.FileStatus == FileStatus.Recommended).Count();
                         if (CountForward == CountRecommended && CountForward != 0 && CountRecommended != 0)
                         {
-                            ViewBag.ReciverList = UserAccountContext.Collection().Where(x => x.UserRole == "DG" && x.Id != userid)
+                            ViewBag.ReciverList = UserAccountContext.Collection().Where(x => x.UserRole == UserRoleType.DG.ToString() && x.Id != userid)
                           .Select(d => new { ListItemKey = d.Id, ListItemValue = d.FirstName + " " + d.LastName + " (" + d.UserRole + ")" }).ToList();
 
                         }
                         else
                         {
-                            ViewBag.ReciverList = UserAccountContext.Collection().Where(x => (x.UserRole == "Hod" || x.UserRole == "coordinator" || x.UserRole == "ADG") && x.Id != userid)
+                            ViewBag.ReciverList = UserAccountContext.Collection().Where(x => (x.UserRole == UserRoleType.Hod.ToString()
+                            || x.UserRole == UserRoleType.Coordinator.ToString() || x.UserRole == UserRoleType.ADG.ToString()) && x.Id != userid )
                                 .Select(d => new { ListItemKey = d.Id, ListItemValue = d.FirstName + " " + d.LastName + " (" + d.UserRole + ")" }).ToList();
                         }
 
                     }
                     else
                     {
-                        ViewBag.ReciverList = UserAccountContext.Collection().Where(x => (x.UserRole == "Hod" || x.UserRole == "coordinator" || x.UserRole == "ADG") && x.Id != userid)
+                        ViewBag.ReciverList = UserAccountContext.Collection().Where(x => (x.UserRole == UserRoleType.Hod.ToString()
+                        || x.UserRole == UserRoleType.Coordinator.ToString() || x.UserRole == UserRoleType.ADG.ToString()) && x.Id != userid)
                               .Select(d => new { ListItemKey = d.Id, ListItemValue = d.FirstName + " " + d.LastName + " (" + d.UserRole + ")" }).ToList();
                     }
 
@@ -344,9 +347,10 @@ namespace ERPortal.WebUI.Controllers
 
                 case "UploadApprovalLetter":
                     UploadApprovalLetterViewModel uploadApprovalLetterViewModel = new UploadApprovalLetterViewModel();
-                    ForwardApplication forwardApplication1 = new ForwardApplication() {                     
-                    FileRef=Guid.NewGuid().ToString(),
-                    ERApplicationId=appid                    
+                    ForwardApplication forwardApplication1 = new ForwardApplication()
+                    {
+                        FileRef = Guid.NewGuid().ToString(),
+                        ERApplicationId = appid
                     };
                     uploadApprovalLetterViewModel.ForwardApplication = forwardApplication1;
                     _genericObject = uploadApprovalLetterViewModel;
@@ -368,12 +372,12 @@ namespace ERPortal.WebUI.Controllers
 
         }
         [HttpPost]
-        public JsonResult UploadApprovalLetter(string appid,UploadApprovalLetterViewModel uploadApprovalLetterViewModel)
+        public JsonResult UploadApprovalLetter(string appid, UploadApprovalLetterViewModel uploadApprovalLetterViewModel)
         {
             string[] arr = Session["UserData"] as string[];
             uploadApprovalLetterViewModel.Comment.ERApplicationId = uploadApprovalLetterViewModel.ForwardApplication.ERApplicationId;
             uploadApprovalLetterViewModel.Comment.UserAccountId = arr[0];
-            
+
 
             uploadApprovalLetterViewModel.ForwardApplication.CommentRefId = uploadApprovalLetterViewModel.Comment.Id;
             uploadApprovalLetterViewModel.ForwardApplication.Sender = arr[0];
@@ -381,25 +385,26 @@ namespace ERPortal.WebUI.Controllers
             uploadApprovalLetterViewModel.ForwardApplication.FileStatus = FileStatus.ApprovalLetter;
             uploadApprovalLetterViewModel.ForwardApplication.Is_active = true;
 
-            AuditTrails auditTrails = new AuditTrails() {
+            AuditTrails auditTrails = new AuditTrails()
+            {
                 SenderId = arr[0],
-                ReceiverId= uploadApprovalLetterViewModel.ForwardApplication.Reciever,
+                ReceiverId = uploadApprovalLetterViewModel.ForwardApplication.Reciever,
                 FileRefId = uploadApprovalLetterViewModel.ForwardApplication.FileRef,
                 ERApplicationId = appid,
-                Is_Active=true,
-                StatusId="S116"
+                Is_Active = true,
+                StatusId = "S116"
             };
             AuditTrailsContext.Insert(auditTrails);
             ForwardApplicationContext.Insert(uploadApprovalLetterViewModel.ForwardApplication);
             commentContext.Insert(uploadApprovalLetterViewModel.Comment);
-            
+
             if (TryValidateModel(uploadApprovalLetterViewModel))
             {
                 using (TransactionScope scope = new TransactionScope())
                 {
                     commentContext.Commit();
                     ForwardApplicationContext.Commit();
-                    AuditTrailsContext.Commit();                    
+                    AuditTrailsContext.Commit();
                     scope.Complete();
                     return Json("Successfully Approval Letter Uploaded", JsonRequestBehavior.AllowGet);
                 }
@@ -434,7 +439,7 @@ namespace ERPortal.WebUI.Controllers
                 comments = commentContext.Collection().Where(c => c.Id == x.CommentRefId)
                .Select(m => m.Text).FirstOrDefault(),
                 Files = UploadFileContext.Collection().Where(f => f.FIleRef == x.FileRef && x.Is_active == true).ToList()
-            }).OrderByDescending(x => x.CreatedAt).GroupBy(g=>g.FileRef)
+            }).OrderByDescending(x => x.CreatedAt).GroupBy(g => g.FileRef)
             .ToList();
 
             return Json(ForwardSummaryData, JsonRequestBehavior.AllowGet);
@@ -444,7 +449,7 @@ namespace ERPortal.WebUI.Controllers
         {
             string[] arr = Session["UserData"] as string[];
             string userid = arr[0];
-            string statuscheck = "Hide";
+            string statuscheck = ButtonStatus.Hide.ToString();
             int recievecheck = 0;
             int approvedcount = 0;
             string dgid = "";
@@ -458,19 +463,19 @@ namespace ERPortal.WebUI.Controllers
 
                     if (recievecheck > 0)
                     {
-                        statuscheck = "Show";
+                        statuscheck = ButtonStatus.Show.ToString();
                         if (AuditTrailsContext.Collection().Where(x => x.ERApplicationId == appid && x.Is_Active == true).Count() == 1)
                         {
-                            statuscheck = "Show";
+                            statuscheck = ButtonStatus.Show.ToString();
                         }
                         else
                         {
-                            int actionBtn = ForwardApplicationContext.Collection().Where(x => x.ERApplicationId == appid && x.FileStatus!=FileStatus.CommentBack && x.Is_active == true && x.Sender == userid).Count();
+                            int actionBtn = ForwardApplicationContext.Collection().Where(x => x.ERApplicationId == appid && x.FileStatus != FileStatus.CommentBack && x.Is_active == true && x.Sender == userid).Count();
 
                             //  statuscheck = actionBtn == 0 ? "Hide" : "Show";
                             if (actionBtn > 0)
                             {
-                                statuscheck = "Hide";
+                                statuscheck = ButtonStatus.Hide.ToString();
                             }
                             else
                             {
@@ -478,32 +483,32 @@ namespace ERPortal.WebUI.Controllers
                                 approvedcount = ForwardApplicationContext.Collection()
                                     .Where(x => x.Sender == userid && (x.FileStatus == FileStatus.Recommended) && x.ERApplicationId == appid && x.Is_active == true).Count();
 
-                                statuscheck = countcommentback == 0 ? "Hide" : approvedcount > 0 ? "Hide" : "Show";
-                                
+                                statuscheck = countcommentback == 0 ? ButtonStatus.Hide.ToString() : approvedcount > 0 ? ButtonStatus.Hide.ToString() : ButtonStatus.Show.ToString();
+
                             }
                         }
                     }
                     else
                     {
-                        statuscheck = "Hide";
+                        statuscheck = ButtonStatus.Hide.ToString();
                     }
-                    dgid = UserAccountContext.Collection().Where(u => u.UserRole == "DG").FirstOrDefault().Id;
+                    dgid = UserAccountContext.Collection().Where(u => u.UserRole == UserRoleType.DG.ToString()).FirstOrDefault().Id;
                     countdgid = AuditTrailsContext.Collection().Where(x => x.ERApplicationId == appid && x.Is_Active == true && x.SenderId == dgid && x.StatusId == "S105").Count();
-                    statuscheck = arr[2] == "coordinator" && countdgid == 0 ? "Show" : statuscheck;
+                    statuscheck = arr[2] == UserRoleType.Coordinator.ToString() && countdgid == 0 ? ButtonStatus.Show.ToString() : statuscheck;
 
                     break;
                 case "BtnUploadLetter":
-                    dgid = UserAccountContext.Collection().Where(u => u.UserRole == "DG").FirstOrDefault().Id;
+                    dgid = UserAccountContext.Collection().Where(u => u.UserRole == UserRoleType.DG.ToString()).FirstOrDefault().Id;
                     countdgid = AuditTrailsContext.Collection().Where(x => x.ERApplicationId == appid && x.Is_Active == true && x.SenderId == dgid && x.StatusId == "S105").Count();
 
                     countapprovalletter = AuditTrailsContext.Collection().Where(x => x.ERApplicationId == appid && x.Is_Active == true && x.StatusId == "S116").Count();
-                    statuscheck =  countapprovalletter == 0 && countdgid==1 ? "Show" : statuscheck;
+                    statuscheck = countapprovalletter == 0 && countdgid == 1 ? ButtonStatus.Show.ToString() : statuscheck;
                     break;
 
                 default:
                     return Json("ERROR", JsonRequestBehavior.AllowGet);
             }
-          
+
             return Json(statuscheck, JsonRequestBehavior.AllowGet);
         }
 

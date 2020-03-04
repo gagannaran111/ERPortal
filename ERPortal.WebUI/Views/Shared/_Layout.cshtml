@@ -168,7 +168,7 @@
     <div class="modal  fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content ">
-                <div class="modal-header alert-danger">
+                <div class="modal-header alert-info">
                     <h5 class="modal-title" id="exampleModalLongTitle">Alert</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -195,6 +195,7 @@
                 <div class="modal-body" id="modalContentComment">
                 </div>
                 <div class="modal-footer">
+                    <p class="text-danger h5 ErrorComment"></p>
                     <button type="submit" class="btn btn-primary" style="display:none" id="btnCommentSave"><i class="fas fa-save"></i> Save</button>
                 </div>
             </div>
@@ -261,43 +262,58 @@
         });
     });
 
+    const statusERROR = "ERROR";
+    const statusNoCommentRec = "NCR";
     $('#btnCommentSave').click(() => {
         let form = $('#modalContentComment').find('form');
         let formUrl = form.attr('action');
+
+        let DataText = $('#modalContentComment').find('#Comment_Text').val();
+        let msg = 'Something Went Wrong. Try Again.';       
+       
+        if (DataText.length > 0) {
+            msg = 'Something Went Wrong. Try Again.';
             $.ajax({
                 url: formUrl,
                 type: 'POST',
                 data: form.serialize(),
                 async: false,
-                success: (result)=> {
+                success: (result) => {
                     console.log(result);
-                    if ('ERROR' != result) {
-
-                        $('#modalContentComment').html('<div class="alert alert-success" role="alert"> '+ result +'  </div >');
-                         if ($("#btnCommentSave").is(":visible")) {
-                             $('#btnCommentSave').fadeOut();
-                        }
-                    }
-                    else {
-                        $('#modalContentComment').html(result);
-                          if ($("#btnCommentSave").is(":visible")) {
-                              $('#btnCommentSave').fadeOut();
-                          }
-                        if (result == "Query Reply Successfully") {
+                    switch (result) {
+                        case statusERROR:
+                            $('.ErrorComment').text(msg);
+                            break;
+                        case "Query Reply Successfully":
                             $('.Querycommenttablink').click();
-                        }
+                            break;
+                        case statusNoCommentRec:
+                            $('.ErrorComment').text("There Have No Comment Recieved To Resolve");
+                            break;
+                        default:
+                            $('#modalContentComment').html(result);
+                            if ($("#btnCommentSave").is(":visible")) {
+                                $('#btnCommentSave').fadeOut();
+                            }
+                            window.location.reload(); 
+                            break;
                     }
                 },
-                error: (result)=> {
+                error: (result) => {
 
-                      $('#modalContentComment').html(result);
+                    $('#modalContentComment').html(result);
                 },
-                fail: (xhr, textStatus, errorThrown)=> {
+                fail: (xhr, textStatus, errorThrown) => {
                     $('#modalContentComment').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
 
                 }
-             });
-
+            });
+        }
+        else {            
+            msg = 'Text Field Not Empty. Enter Some Text To Save';
+            $('.ErrorComment').text(msg);
+            return false;
+        }
     });
 
     $(document).on('click', '.UploadFile', (e)=> {
@@ -376,8 +392,8 @@
                         if (data.length > 0) {
                             for (let file of data) {
                                 txt += `<div class='badge badge-warning mr-2 mb-2'><a class='text-dark' href='@Url.Content("~/Content/UploadedFiles/") 
-                                    ${file.FileName}' target='_blank'>${file.FileName}</a><a class='fileDelete small text-danger' data-fileid='
-                                    ${file.Id}' data-fileref='${file.FIleRef}' data-divid ='${divId}'  href='#'><i class='ml-1 fa fa-times'></i></a></div>`;
+                                    ${file.FileName}' target='_blank'>${file.FileName}</a><a class='fileDelete small text-danger'
+                                    data-fileid='${file.Id}' data-fileref='${file.FIleRef}' data-divid ='${divId}'  href='#'><i class='ml-1 fa fa-times'></i></a></div>`;
                             }
                             $(divId).html(txt);
                             $(divId).fadeIn("slow");

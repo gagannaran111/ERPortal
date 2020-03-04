@@ -22,17 +22,5 @@ namespace ERPortal.Core.Models
         public FileStatus FileStatus { get; set; }
         public Boolean Is_active { get; set; }
     }
-    public enum FileStatus
-    {
-        [Display(Name = "Application Forward")]
-        Forward,
-        [Display(Name = "Application Recommended")]
-        Recommended,
-        [Display(Name = "Application Comment Back")]
-        CommentBack,
-        [Display(Name = "Comment Resolved Review Application Again.")]
-        ReviewAgain,
-        [Display(Name = "Approval Letter")]
-        ApprovalLetter
-    }
+   
 }

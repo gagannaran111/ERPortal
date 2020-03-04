@@ -310,7 +310,7 @@
 
 <script>
     const UserRoleCER = "Consultant Enhanced Recovery";
-    const UserRoleCoord = "coordinator";
+    const UserRoleCoord = "Coordinator";
 
     $(document).ready(()=>{
 
@@ -436,7 +436,8 @@
     });
 
     $(document).on('change', '#ForwardApplication_FileStatus', ()=> {
-          let value = $('#ForwardApplication_FileStatus option:selected').val();
+        let value = $('#ForwardApplication_FileStatus option:selected').val();
+        $('.ErrorComment').text('');
           if (value == "1" || value == "2" || value=="3") {
               $('.ReciverIdSelectList').addClass('d-none');
               $(".ReciverIdSelectList option:selected").prop("selected", false);

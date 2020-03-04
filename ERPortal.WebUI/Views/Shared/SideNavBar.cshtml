@@ -23,7 +23,7 @@
                 {
                     string[] arr = Session["UserData"] as string[];
                     <span class="user-name">
-                        <strong>@arr[3]</strong>
+                        <strong>@arr[5]</strong>
                     </span>
 
                     if (arr[4] != null)
@@ -72,7 +72,7 @@
                 <li class="header-menu">
                     <span>General</span>
                 </li>
-                @if (arr[2] == "operator")
+                @if (arr[2] == "Operator")
                 {
 
                     <li class="sidebar-content">
@@ -85,12 +85,12 @@
                     <li class="sidebar-content">
                         <a href="@Url.Action("SubmitERProposal", "Operator")">
                             <i class="fa fa-edit"></i>
-                            <span>Er Screening Applciation</span>
+                            <span>Submit ER Screening Applciation</span>
                             @*<span class="badge badge-pill badge-warning">New</span>*@
                         </a>
                     </li>
                 }
-                else if (arr[2] == "HoD" || arr[2] == "coordinator" || arr[2] == "ADG" || arr[2] == "Consultant Enhanced Recovery" || arr[2] == "DG")
+                else if (arr[2] == "HoD" || arr[2] == "Coordinator" || arr[2] == "ADG" || arr[2] == "Consultant Enhanced Recovery" || arr[2] == "DG")
                 {
                     <li class="sidebar-content">
                         <a href="@Url.Action("Index", "DGH")">

@@ -40,7 +40,7 @@
     <link href="~/Content/css/signin.css" rel="stylesheet">
 </head>
 <body class="text-center">
-    @using (Html.BeginForm("Login", "Account", new { returnUrl = Url.Action("Index", "Operator") }, FormMethod.Post, new
+    @using (Html.BeginForm("Login", "Account",FormMethod.Post, new
 {
     @class = "card form-signin",
     style = "background-color:rgba(245, 245, 245, 0.7);"

@@ -116,32 +116,4 @@ namespace ERPortal.Core.Models
         public Boolean? FinalApprovalStatus { get; set; }
     }
 
-    public enum ProductionProfile
-    {
-        Incremental,
-        BAU,
-        Decreasing
-    }
-
-    public enum HydrocarbonType
-    {
-        Oil,
-        Gas,
-        UHC
-    }
-
-    public enum ImplementaionType
-    {
-        [Display(Name = "Oil EOR Method")]
-        EORMethod,
-        [Display(Name = "Oil IOR Recovery")]
-        IORRecoveryMethod,     
-        [Display(Name = "Gas EGR Method")]
-        EGRMethod,
-        [Display(Name = " Gas IGR Recovery")]
-        IGRRecoveryMethod,
-        [Display(Name = "UHC Extraction")]
-        UHCMethod
-    }
-
 }

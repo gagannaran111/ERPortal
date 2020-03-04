@@ -12,7 +12,7 @@ using System.Transactions;
 namespace ERPortal.WebUI.Controllers
 {
     [CustomAuthenticationFilter]
-    [CustomAuthorize("HoD", "ADG", "coordinator", "Consultant Enhanced Recovery", "DG")]
+    [CustomAuthorize("HoD", "ADG", "Coordinator", "Consultant Enhanced Recovery", "DG")]
     public class DGHController : Controller
     {
         IRepository<ERApplication> ERApplicationContext;
@@ -55,7 +55,7 @@ namespace ERPortal.WebUI.Controllers
             string userid = userdata[0];
             List<ERApplication> erapp = ERApplicationContext.Collection().ToList();
             List<ERAppActiveUsers> activeuser = ERAppActiveUsersContext.Collection().Where(x => x.UserAccountId == userid && x.Is_Active == true).Distinct().ToList();
-            string dgid = UserAccountContext.Collection().Where(u => u.UserRole == "DG").FirstOrDefault().Id;
+            string dgid = UserAccountContext.Collection().Where(u => u.UserRole == UserRoleType.DG.ToString()).FirstOrDefault().Id;
 
             var applicationdata = erapp.Join(activeuser, x => x.Id, y => y.ERApplicationId, (x, y) => new
             {
@@ -68,14 +68,14 @@ namespace ERPortal.WebUI.Controllers
                 y.Dept_Id,
                 y.UserAccount,
 
-                Status = AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true).Count() == 1 ? "NA"
-                : AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true && w.StatusId == "S116").Count() > 0 ? "AP"
+                Status = AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true).Count() == 1 ? AppStatus.NA.ToString()
+                : AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true && w.StatusId == "S116").Count() > 0 ? AppStatus.AP.ToString()
                 : AuditTrailContext.Collection().Where(a => a.ERApplicationId == x.Id && a.Is_Active == true && a.SenderId == dgid && a.StatusId == "S105").Count() > 0
-                && userdata[2] == "Consultant Enhanced Recovery" ? "PWM"
-                : AuditTrailContext.Collection().Where(a => a.ERApplicationId == x.Id && a.Is_Active == true && a.SenderId == dgid && a.StatusId == "S105").Count() > 0 ? "UP"
+                && userdata[2] == UserRoleType.ConsultantEnhancedRecovery.GetDisplayName() ? AppStatus.PWM.ToString()
+                : AuditTrailContext.Collection().Where(a => a.ERApplicationId == x.Id && a.Is_Active == true && a.SenderId == dgid && a.StatusId == "S105").Count() > 0 ? AppStatus.UP.ToString()
                 : AuditTrailContext.Collection().Where(d => d.ERApplicationId == x.Id && d.Is_Active == true && (d.SenderId == userid || d.ReceiverId == userid)).Count() > 0 ?
                 AuditTrailContext.Collection().Where(d => d.ERApplicationId == x.Id && d.Is_Active == true && (d.SenderId == userid || d.ReceiverId == userid))
-                .OrderByDescending(o => o.CreatedAt).Select(s => new { StatusId = s.ReceiverId == userid ? "PWM" : "UP" }).FirstOrDefault().StatusId : "UP",
+                .OrderByDescending(o => o.CreatedAt).Select(s => new { StatusId = s.ReceiverId == userid ? AppStatus.PWM.ToString() : AppStatus.UP.ToString() }).FirstOrDefault().StatusId : AppStatus.UP.ToString(),
 
                 FileRef = AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true && w.StatusId == "S116").Count() == 0 ? null
                 : AuditTrailContext.Collection().Where(w => w.ERApplicationId == x.Id && w.Is_Active == true && w.StatusId == "S116").FirstOrDefault().FileRefId

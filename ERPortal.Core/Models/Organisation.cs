@@ -38,12 +38,5 @@ namespace ERPortal.Core.Models
         public OrganisationType Type { get; set; }
     }
 
-    public enum OrganisationType
-    {
-        Operator,
-        DGH,
-        [Display(Name = "ER Committee")]
-        ERCommittee,
-        Others
-    }
+    
 }

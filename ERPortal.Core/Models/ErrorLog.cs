@@ -17,11 +17,6 @@ namespace ERPortal.Core.Models
         public Boolean Is_Active { get; set; }
         public virtual ErrorStatus ErrorStatus { get; set; }
     }
-    public enum ErrorStatus
-    {
-        Resolved,
-        Issued,
-        Pending,
-    }
+    
 
 }

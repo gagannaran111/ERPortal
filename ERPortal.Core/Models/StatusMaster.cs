@@ -16,12 +16,4 @@ namespace ERPortal.Core.Models
         public Boolean Is_Active { get; set; }
     }
 
-    public enum Status { 
-    
-    
-    }
-
-
-
-
 }
