@@ -14,7 +14,7 @@ using System.Data.Entity;
 namespace ERPortal.WebUI.Controllers
 {
     [CustomAuthenticationFilter]
-    [CustomAuthorize("operator")]
+    [CustomAuthorize("Operator")]
     public class OperatorController : Controller
     {
         IRepository<ERApplication> ERApplicationContext;

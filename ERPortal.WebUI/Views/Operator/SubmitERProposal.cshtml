@@ -332,8 +332,7 @@
         $('[data-toggle="tooltip"]').tooltip();
         if ($('#ERApplications_AppId').val() != "") {
 
-            $('#operatorform').find('input,select,radio').prop('disabled', true);
-            // $('#FileDiv').addClass('d-none');
+            $('#operatorform').find('input,select,radio').prop('disabled', true);           
             $('#ERAppSubmit').hide();
             $('.statussuccess').empty().append('Application Ref. No. : ' + $('#ERApplications_AppId').val()).removeClass('d-none');
             GetUploadFilesData('#UploadFilesData', $('#ReportDocument').val());
@@ -465,8 +464,7 @@
                     if ('Success' == res[0]) {
                         if (res[2] == "ERScreeningDetail") {
 
-                            $('#ERApplications_ERScreeningDetailId').val(res[1]);
-                            //erlinkid.attr('form-detail-name', res[2]);
+                            $('#ERApplications_ERScreeningDetailId').val(res[1]);                           
                             erscreeninglinkshowhideonload();
 
                         }
@@ -497,10 +495,7 @@
             //      return false;
             //  }
 
-        });
-        //$(document).on('click', '.ViewDetails', function (e) {
-        //    e.preventDefault();
-        //});
+        });      
 
         $(document).on("change", "input[name='ERApplications.PresentlyUnderProduction']", function (e) {
             let actionDiv = $("#DateOfLastCommercialProductionDiv");
@@ -515,8 +510,7 @@
             }
             else {
 
-                alertModal("Select Date of Commencement of Commercial Production");
-                // alert('Select Date of Commencement of Commercial Production')
+                alertModal("Select Date of Commencement of Commercial Production");              
                 $(this).prop("checked", false);;
             }
         });
@@ -552,10 +546,7 @@
                   if (result.length == 0) {
                       $("#QueryCommentTab .body-panel").html('<h3 class="text-danger ">Data Not Found</h3>');
                   }
-                  else {
-                      //editor("#demo-editor-bootstrap");
-
-                      //(parseInt(index) + counter) +
+                  else {                      
                       var dd = "";
                       var userid = "@arr[0]";
                       var statuscheck = "";
