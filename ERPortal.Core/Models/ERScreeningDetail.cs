@@ -28,6 +28,17 @@ namespace ERPortal.Core.Models
         [Required(ErrorMessage = "Required")]
         public Boolean? ThirdOrderScreening { get; set; }
 
+
+        [Display(Name = "Comment for Select First Order Screening : (NO)")]        
+        public string FirstOrderScrText { get; set; }
+        [Display(Name = "Comment for Select Second Order Screening : (NO)")]        
+        public string SecondOrderScrText { get; set; }
+        [Display(Name = "Comment for Select Third Order Screening : (NO)")]        
+        public string ThirdOrderScrText { get; set; }
+
+
+
+
         // DGH Section
         [Display(Name = "Approval Status")]
         public Boolean? ApprovalStatus { get; set; }

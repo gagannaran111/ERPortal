@@ -56,13 +56,13 @@ namespace ERPortal.Core.Models
     }
     public enum ImplementaionType
     {
-        [Display(Name = "Oil EOR Method")]
+        [Display(Name = "EOR Method")]
         EORMethod,
-        [Display(Name = "Oil IOR Recovery")]
+        [Display(Name = "IOR Recovery")]
         IORRecoveryMethod,
-        [Display(Name = "Gas EGR Method")]
+        [Display(Name = "EGR Method")]
         EGRMethod,
-        [Display(Name = " Gas IGR Recovery")]
+        [Display(Name = "IGR Recovery")]
         IGRRecoveryMethod,
         [Display(Name = "UHC Extraction")]
         UHCMethod

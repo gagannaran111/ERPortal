@@ -195,6 +195,19 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001231139136_InitialCreate.cs" />
+    <Compile Include="Migrations\202001231139136_InitialCreate.designer.cs">
+      <DependentUpon>202001231139136_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202003110515471_ga.cs" />
+    <Compile Include="Migrations\202003110515471_ga.designer.cs">
+      <DependentUpon>202003110515471_ga.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202003180837273_ColumnUpdates.cs" />
+    <Compile Include="Migrations\202003180837273_ColumnUpdates.designer.cs">
+      <DependentUpon>202003180837273_ColumnUpdates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BaseController.cs" />
     <Compile Include="Models\Data.cs" />
@@ -707,10 +720,12 @@
     <Content Include="Views\Comment\QueryCommentReply.cshtml" />
     <Content Include="Views\Admin\Department.cshtml" />
     <Content Include="Views\Comment\UploadApprovalLetter.cshtml" />
+    <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\UploadedFiles\" />
+    <Folder Include="Content\Uploads\" />
     <Folder Include="Views\test\" />
   </ItemGroup>
   <ItemGroup>
@@ -740,6 +755,17 @@
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202001231139136_InitialCreate.resx">
+      <DependentUpon>202001231139136_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003110515471_ga.resx">
+      <DependentUpon>202003110515471_ga.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003180837273_ColumnUpdates.resx">
+      <DependentUpon>202003180837273_ColumnUpdates.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -759,7 +785,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>54960</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:51806/</IISUrl>
+          <IISUrl>http://localhost:54960/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

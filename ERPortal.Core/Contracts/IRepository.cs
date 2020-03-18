@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ERPortal.Core.Contracts
 {
-    public interface IRepository<T> where T :BaseEntity
+    public interface IRepository<T> where T : BaseEntity
     {
         IQueryable<T> Collection();
         void Commit();

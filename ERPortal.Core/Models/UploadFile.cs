@@ -14,5 +14,6 @@ namespace ERPortal.Core.Models
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public string CreatedBy { get; set; }
+        public string NewFileName { get; set; }
     }
 }

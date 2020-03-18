@@ -20,7 +20,9 @@ namespace ERPortal.Core.Models
         public string ERApplicationId { get; set; }
         public virtual ERApplication ERApplication { get; set; }     
         [Required]
+        [Display(Name = "Comment")]
         public string Text { get; set; }
+        public string Subject { get; set; }
     }
     public class ListItemData
     {

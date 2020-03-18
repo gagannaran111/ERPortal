@@ -128,7 +128,8 @@
                                             @Html.LabelFor(model => model.ERApplications.PresentlyUnderProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                             <div class="col-sm-6 d-flex align-items-center">
                                                 <div class="form-check form-check-inline">
-                                                    @Html.DisplayFor(model => model.ERApplications.PresentlyUnderProduction, new { @class = "form-check-input" })
+                                                    @Html.DisplayTextFor(model => model.ERApplications.PresentlyUnderProduction)
+
                                                 </div>
                                             </div>
                                         </div>
@@ -154,7 +155,17 @@
                                             @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                             <div class="col-sm-6 d-flex align-items-center">
                                                 <div class="form-check form-check-inline">
-                                                    @Html.DisplayFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, new { @class = "form-check-input" })
+
+                                                    @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                            <div class="col-sm-6 d-flex align-items-center">
+                                                <div class="form-check form-check-inline">
+
+                                                    @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScrText)
                                                 </div>
                                             </div>
                                         </div>
@@ -162,7 +173,17 @@
                                             @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                             <div class="col-sm-6 d-flex align-items-center">
                                                 <div class="form-check form-check-inline">
-                                                    @Html.DisplayFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, new { @class = "form-check-input" })
+
+                                                    @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                            <div class="col-sm-6 d-flex align-items-center">
+                                                <div class="form-check form-check-inline">
+
+                                                    @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScrText)
                                                 </div>
                                             </div>
                                         </div>
@@ -170,7 +191,17 @@
                                             @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                             <div class="col-sm-6 d-flex align-items-center">
                                                 <div class="form-check form-check-inline">
-                                                    @Html.DisplayFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, new { @class = "form-check-input" })
+
+                                                    @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                            <div class="col-sm-6 d-flex align-items-center">
+                                                <div class="form-check form-check-inline">
+
+                                                    @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScrText)
                                                 </div>
                                             </div>
                                         </div>
@@ -200,7 +231,8 @@
                                             @Html.LabelFor(model => model.ERApplications.TechnicallyCompatible, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                             <div class="col-sm-6 d-flex align-items-center">
                                                 <div class="form-check form-check-inline">
-                                                    @Html.DisplayFor(model => model.ERApplications.TechnicallyCompatible, new { @class = "form-check-input" })
+
+                                                    @Html.DisplayTextFor(model => model.ERApplications.TechnicallyCompatible)
 
                                                 </div>
                                             </div>
@@ -210,8 +242,8 @@
                                             @Html.LabelFor(model => model.ERApplications.EconomicViability, htmlAttributes: new { @class = "col-sm-5 col-form-label" })
                                             <div class="col-sm-6 d-flex align-items-center">
                                                 <div class="form-check form-check-inline">
-                                                    @Html.DisplayFor(model => model.ERApplications.EconomicViability, new { @class = "form-check-input" })
 
+                                                    @Html.DisplayTextFor(model => model.ERApplications.EconomicViability)
                                                 </div>
 
                                             </div>
@@ -414,8 +446,8 @@
                                     default: statuscheck = "";
                                         break;
                                 }                               
-                                dd += `<li class="left clearfix "><span class="chat_img pull-left">
-                                    <span class="chat_img"><img src="../Content/img/user-profile.png" alt="User" style="width:50px"> </span>
+                                dd += `<li class="left clearfix "><span class=" pull-left">
+                                    <span class=""><img src="../Content/img/user-profile.png" alt="User" style="width:40px"> </span>
                                     </span><div class="chat-body clearfix"><div class="header"><strong class="text-danger">${statuscheck}</strong> <small class="pull-right text-muted">
                                     <i class="fas fa-clock"></i> ${ToChangeDateFormate(element.CreatedAt)}</small></div>
                                     <p>${element.comments}</p><div class="mb-2"><p>${files}</p ></div></div ></li >`;

@@ -19,11 +19,11 @@
                                 <p class="card-title text-center h6"><span class="badge badge-primary mr-2 Allapp"> </span>All Application</p>
                             </div>
                         </div>
-                        <div class="card d-flex  deckdivyellow" data-val="New Application">
+                        @*<div class="card d-flex  deckdivyellow" data-val="New Application">
                             <div class="card-body align-items-center d-flex justify-content-center text-warning">
                                 <p class="card-title text-center h6"><span class="badge badge-warning mr-2 newapp"> </span> New Applications</p>
                             </div>
-                        </div>
+                        </div>*@
                         <div class="card d-flex  deckdivInfo" data-val="Under Proccessing">
                             <div class="card-body align-items-center d-flex justify-content-center text-info">
                                 <div><p class="card-title text-center h6"><span class="badge badge-info mr-2 underproccessingapp"> </span>Under Proccessing</p></div>
@@ -41,7 +41,7 @@
                         </div>
                         <div class="card d-flex deckdivred" data-val="Reject">
                             <div class="card-body align-items-center d-flex justify-content-center text-danger">
-                                <p class="card-title text-center h6"><span class="badge badge-danger mr-2 rejectapp"> </span>Reject</p>
+                                <p class="card-title text-center h6"><span class="badge badge-danger mr-2 rejectapp"> </span>Rejected</p>
                             </div>
                         </div>
 
@@ -99,10 +99,10 @@
                             files += '<a class="btn btn-sm btn-primary text-truncate" style="max-width: 120px;" href="../Content/UploadedFiles/' + e1.FileName + '" target="_blank"><i class="fas fa-file-download"></i> ' + e1.FileName + '</a>';
                         };
                     }
-                    status = e.Status == "AP" ? "<kbd class='bg-success'>" + statusAP + "</kbd>"
-                        : e.Status == "NA" ? "<kbd class='bg-warning'>" + statusNA + "</kbd>"
-                            : e.Status == "PWM" ? "<kbd class='bg-dark'>" + statusPWM + "</kbd>"
-                                : e.Status == "UP" ? "<kbd class='bg-info'>" + statusUP + "</kbd>"
+                    status = e.Status == "AP" ? "<kbd class='bg-success'>" + statusDeck.statusAP + "</kbd>"
+                        : e.Status == "NA" ? "<kbd class='bg-dark'>" + statusDeck.statusPWM + "</kbd>"
+                            : e.Status == "PWM" ? "<kbd class='bg-dark'>" + statusDeck.statusPWM + "</kbd>"
+                                : e.Status == "UP" ? "<kbd class='bg-info'>" + statusDeck.statusUP + "</kbd>"
                                     : "<kbd class='bg-Warning'>Revert Back</kbd>";
 
                     e.Status == "AP" ? approvalappcount++
@@ -141,14 +141,16 @@
         })
     };
 
-    
-    const statusAll = "All";
-    const statusAP = "Approved";
-    const statusNA = "New Application";
-    const statusUP = "Under Proccessing";
-    const statusPWM = "Pending With Me";
-    const statusRJ = "Reject";      
-    const filterData = { type: "Status", statustext: statusAll};
+   
+     const statusDeck = {
+        statusAll: "All",
+        statusAP : "Approved",
+        statusNA: "New Application",
+        statusUP: "Under Proccessing",
+        statusPWM: "Pending With Me",
+        statusRJ: "Reject"
+    }
+    const filterData = { type: "Status", statustext: statusDeck.statusAll};
 
       $(document).on('click', '.card-deck .card', ({currentTarget }) => {  
         let DatasetAttrVal =  currentTarget.dataset;        
@@ -160,7 +162,7 @@
         switch (filterData.type) {
             case "Status":
                 Status = data[6];
-                filterData.statustext = filterData.statustext == statusAll ? "" : filterData.statustext;
+                filterData.statustext = filterData.statustext == statusDeck.statusAll ? "" : filterData.statustext;
                 return Status == filterData.statustext || filterData.statustext == "" ? true : false;
             default: return false;
         }

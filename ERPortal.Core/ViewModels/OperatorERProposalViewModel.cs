@@ -10,7 +10,8 @@ namespace ERPortal.Core.ViewModels
 {
     public class OperatorERProposalViewModel
     {
-        
+     
+        public string Id { get; set; }
         public ERApplication ERApplications { get; set; }
         public IEnumerable<UHCProductionMethod> UHCProductionMethods { get; set; }
         public IEnumerable<FieldType> FieldTypes { get; set; }

@@ -112,6 +112,16 @@ namespace ERPortal.WebUI.Controllers
             {
                 ERApplication erapp = ERApplicationContext.Collection().Where(x => x.AppId == appid).FirstOrDefault();
                 viewModel.ERApplications = erapp;
+                if (!string.IsNullOrEmpty(erapp.ERScreeningDetailId))
+                {
+
+                    ViewBag.ERFiles = UploadFileContext.Collection()
+                        .Where(y => y.FIleRef == erapp.ERScreeningDetail.ReportDocumentPath).ToList();
+                }
+                else
+                {
+                    ViewBag.ERFiles = null;
+                }
             }
             else
             {
@@ -134,64 +144,91 @@ namespace ERPortal.WebUI.Controllers
         {
             ViewBag.Title = "Submit Proposal";
             string[] userdata = Session["UserData"] as string[];
+            string textmsg = "";
 
             if (!ModelState.IsValid)
             {
-                ViewBag.RefId = Guid.NewGuid().ToString();
+                ViewBag.RefId = FileRef;
+                _ERApplication.FieldTypes = FieldTypeContext.Collection().ToList();
+                _ERApplication.UHCProductionMethods = UHCProductionMethodContext.Collection().ToList();
+                _ERApplication.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
                 return View(_ERApplication);
             }
-            //  _ERApplication.ERApplications.FieldName
             else
             {
-                string dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss").Replace("/", "").Replace(":", "").Replace(" ", "");
-                _ERApplication.ERApplications.AppId = "ERAPPID" + dt;
-                _ERApplication.ERApplications.ERScreeningDetail.ReportDocumentPath = FileRef;
 
-                ERApplicationContext.Insert(_ERApplication.ERApplications);
-                string auditstatus = StatusMasterContext.Collection().Where(status => status.Status == "Application Submitted").FirstOrDefault().CustStatusId;
+                textmsg = _ERApplication.ERApplications.ERScreeningDetail.FirstOrderScreening != true &&
+                     string.IsNullOrEmpty(_ERApplication.ERApplications.ERScreeningDetail.FirstOrderScrText) ?
+                     "First Order Screening Comment Is Required" :
+                     _ERApplication.ERApplications.ERScreeningDetail.SecondOrderScreening != true &&
+                     string.IsNullOrEmpty(_ERApplication.ERApplications.ERScreeningDetail.SecondOrderScrText) ?
+                     "Second Order Screening Comment Is Required" :
+                     _ERApplication.ERApplications.ERScreeningDetail.ThirdOrderScreening != true &&
+                     string.IsNullOrEmpty(_ERApplication.ERApplications.ERScreeningDetail.ThirdOrderScrText) ?
+                     "Third Order Screening Comment Is Required" : "TRUE";
 
-                string CER = UserAccountContext.Collection().Where(x => x.UserRole == UserRoleType.ConsultantEnhancedRecovery.GetDisplayName()).Select(c => c.Id).FirstOrDefault();
-
-                AuditTrails auditTrails = new AuditTrails()
+                if (textmsg == "TRUE")
                 {
-                    ERApplicationId = _ERApplication.ERApplications.Id,
-                    FileRefId = FileRef,
-                    StatusId = auditstatus,
-                    // QueryDetailsId = null,
-                    SenderId = userdata[0],
-                    //ReceiverId = CER, // Consultant Enhanced Recovery
-                    Is_Active = true,
-                };
-                List<string> lst = new List<string>() {
-                    userdata[0],
-                    CER // Consultant Enhanced Recovery
-                };
-                foreach (string x in lst)
-                {
-                    ERAppActiveUsers eRAppActiveUsers = new ERAppActiveUsers()
+
+                    string dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss").Replace("/", "").Replace(":", "").Replace(" ", "");
+                    _ERApplication.ERApplications.AppId = "ERAPPID" + dt;
+                    _ERApplication.ERApplications.ERScreeningDetail.ReportDocumentPath = FileRef;
+
+                    ERApplicationContext.Insert(_ERApplication.ERApplications);
+                    string auditstatus = StatusMasterContext.Collection().Where(status => status.Status == "Application Submitted").FirstOrDefault().CustStatusId;
+
+
+                    string CERuserrole = UserRoleType.ConsultantEnhancedRecovery.GetDisplayName();
+                    string CER = UserAccountContext.Collection().Where(x => x.UserRole == CERuserrole).FirstOrDefault().Id;
+                    AuditTrails auditTrails = new AuditTrails()
                     {
                         ERApplicationId = _ERApplication.ERApplications.Id,
-                        UserAccountId = x,
-                        Dept_Id = null,
+                        FileRefId = FileRef,
+                        StatusId = auditstatus,
+                        SenderId = userdata[0],
+                        //ReceiverId = CER, // Consultant Enhanced Recovery
                         Is_Active = true,
-                        Status = null
                     };
+                    List<string> lst = new List<string>() {
+                    userdata[0],
+                    CER // Consultant Enhanced Recovery
+                    };
+                    foreach (string x in lst)
+                    {
+                        ERAppActiveUsers eRAppActiveUsers = new ERAppActiveUsers()
+                        {
+                            ERApplicationId = _ERApplication.ERApplications.Id,
+                            UserAccountId = x,
+                            Dept_Id = null,
+                            Is_Active = true,
+                            Status = null
+                        };
 
-                    ERAppActiveUsersContext.Insert(eRAppActiveUsers);
+                        ERAppActiveUsersContext.Insert(eRAppActiveUsers);
+                    }
+                    AuditTrailContext.Insert(auditTrails);
+
+                    using (TransactionScope scope = new TransactionScope())
+                    {
+                        ERApplicationContext.Commit();
+                        ERAppActiveUsersContext.Commit();
+                        AuditTrailContext.Commit();
+                        scope.Complete();
+                    }
                 }
-                AuditTrailContext.Insert(auditTrails);
-
-                using (TransactionScope scope = new TransactionScope())
+                else
                 {
-                    ERApplicationContext.Commit();
-                    ERAppActiveUsersContext.Commit();
-                    AuditTrailContext.Commit();
-                    scope.Complete();
+                    ViewBag.RefId = FileRef;
+                    _ERApplication.FieldTypes = FieldTypeContext.Collection().ToList();
+                    _ERApplication.UHCProductionMethods = UHCProductionMethodContext.Collection().ToList();
+                    _ERApplication.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
+                    return View(_ERApplication);
+                    // return Json(textmsg, JsonRequestBehavior.AllowGet);
                 }
 
             }
 
-            return Json(_ERApplication.ERApplications.AppId, JsonRequestBehavior.AllowGet);
+            return Json("Success", JsonRequestBehavior.AllowGet);
         }
         #region // Not Used
         public ActionResult AjaxAdd(string targetPage)

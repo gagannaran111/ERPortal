@@ -215,8 +215,10 @@
     $(document).ready(()=> {
 
         $(".datetimetext").datetimepicker({
-             format:'Y/m/d',
-              timepicker:false
+            format:'Y/m/d',
+            timepicker: false,
+            scrollMonth: false,
+            scrollInput: false
         });
         $(".sidebar-dropdown > a").click(function () {
             $(".sidebar-submenu").slideUp(200);
@@ -262,8 +264,8 @@
         });
     });
 
-    const statusERROR = "ERROR";
-    const statusNoCommentRec = "NCR";
+    const STATUSERROR = { ERROR: "ERROR", NOCOMMENTREC: "NCR", QUERYREPSUCC: "Query Reply Successfully" };
+
     $('#btnCommentSave').click(() => {
         let form = $('#modalContentComment').find('form');
         let formUrl = form.attr('action');
@@ -281,13 +283,13 @@
                 success: (result) => {
                     console.log(result);
                     switch (result) {
-                        case statusERROR:
+                        case STATUSERROR.ERROR:
                             $('.ErrorComment').text(msg);
                             break;
-                        case "Query Reply Successfully":
+                        case STATUSERROR.QUERYREPSUCC:
                             $('.Querycommenttablink').click();
                             break;
-                        case statusNoCommentRec:
+                        case STATUSERROR.NOCOMMENTREC:
                             $('.ErrorComment').text("There Have No Comment Recieved To Resolve");
                             break;
                         default:
@@ -315,23 +317,47 @@
             return false;
         }
     });
+    const handleImageUpload = event => {
+  const files = event.target.files
+  const formData = new FormData()
+  formData.append('myFile', files[0])
+
+  fetch('/saveImage', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data.path)
+  })
+  .catch(error => {
+    console.error(error)
+  })
+}
 
     $(document).on('click', '.UploadFile', (e)=> {
         e.preventDefault();
         let DatasetAttrVal = e.currentTarget.dataset;
         let refid = DatasetAttrVal.filerefid;
         let divid = DatasetAttrVal.divid;
-        let inputfile = DatasetAttrVal.inputfile;
-        let data = new FormData();
-        data.append("file", $(inputfile).get(0).files[0]);
-        data.append("RefId", refid);
-
+        let inputfile = DatasetAttrVal.inputfile;        
+        let file = $(inputfile).get(0).files[0];
+        let sendData = new FormData();
+        sendData.append("file", file);
+        sendData.append("RefId", refid);
+         //var sendData = function () {
+         //       var data = new FormData();
+         //       data.append("file", file);
+         //       data.append("RefId", refid);
+         //       return data;
+         //   }();
         $.ajax({
             url: "@Url.Action("LoadUploadFile","Comment")",
             type: 'POST',
-            data: data,
+            data: sendData,
             contentType: false,
             processData: false,
+            async: false,
             success: (result) => {
                 if (result == "File upload Success") {
                     $("input[type='file']").val("");
@@ -385,15 +411,14 @@
                 url: '@Url.Action("GetUploadFiles", "Comment")',
                 data: JSON.stringify(sendData),
                 datatype: 'json',
+                async: false,
                 success: (data)=> {
                     if (data) {
                         console.log(data);
                         let txt = "";
                         if (data.length > 0) {
                             for (let file of data) {
-                                txt += `<div class='badge badge-warning mr-2 mb-2'><a class='text-dark' href='@Url.Content("~/Content/UploadedFiles/") 
-                                    ${file.FileName}' target='_blank'>${file.FileName}</a><a class='fileDelete small text-danger'
-                                    data-fileid='${file.Id}' data-fileref='${file.FIleRef}' data-divid ='${divId}'  href='#'><i class='ml-1 fa fa-times'></i></a></div>`;
+                                txt += `<div class='badge badge-warning mr-2 mb-2'><a class='text-dark' href='@Url.Content("~/Content/UploadedFiles/")${file.FileName}' target='_blank'>${file.FileName}</a><a class='fileDelete small text-danger'data-fileid='${file.Id}' data-fileref='${file.FIleRef}' data-divid ='${divId}'  href='#'><i class='ml-1 fa fa-times'></i></a></div>`;
                             }
                             $(divId).html(txt);
                             $(divId).fadeIn("slow");

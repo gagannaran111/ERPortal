@@ -328,7 +328,7 @@ namespace ERPortal.WebUI.Controllers
                         else
                         {
                             ViewBag.ReciverList = UserAccountContext.Collection().Where(x => (x.UserRole == UserRoleType.Hod.ToString()
-                            || x.UserRole == UserRoleType.Coordinator.ToString() || x.UserRole == UserRoleType.ADG.ToString()) && x.Id != userid )
+                            || x.UserRole == UserRoleType.Coordinator.ToString() || x.UserRole == UserRoleType.ADG.ToString()) && x.Id != userid)
                                 .Select(d => new { ListItemKey = d.Id, ListItemValue = d.FirstName + " " + d.LastName + " (" + d.UserRole + ")" }).ToList();
                         }
 
@@ -758,11 +758,13 @@ namespace ERPortal.WebUI.Controllers
             {
                 if (file.ContentLength > 0)
                 {
+                    string[] arr = Session["UserData"] as string[];
                     string _FileName = Path.GetFileName(file.FileName);
-                    string _path = Path.Combine(Server.MapPath("~/Content/UploadedFiles"), _FileName);
+                    string NewFileName = RefId + _FileName;
+                    string _path = Path.Combine(Server.MapPath("~/Content/Uploads/"), NewFileName);
                     file.SaveAs(_path);
                     //string FileRefId = RefId != null && RefId != "" ? RefId : Guid.NewGuid().ToString();
-                    UploadFile uploadFile = new UploadFile() { FileName = _FileName, FilePath = _path, FIleRef = RefId };
+                    UploadFile uploadFile = new UploadFile() { FileName = _FileName, FilePath = _path, FIleRef = RefId, CreatedBy = arr[0], NewFileName = NewFileName };
 
                     UploadFileContext.Insert(uploadFile);
                     UploadFileContext.Commit();
@@ -773,8 +775,9 @@ namespace ERPortal.WebUI.Controllers
                     return Json("File upload failed!!", JsonRequestBehavior.AllowGet);
                 }
             }
-            catch
+            catch (Exception e)
             {
+                string errormsg = e.Message;
                 ViewBag.Message = "File upload failed!!";
                 return View();
             }
@@ -787,9 +790,17 @@ namespace ERPortal.WebUI.Controllers
         [HttpPost]
         public JsonResult RemoveUploadFile(string FileId)
         {
-            UploadFileContext.Delete(FileId);
-            UploadFileContext.Commit();
-            return Json("File Removed Success", JsonRequestBehavior.AllowGet);
+            UploadFile uploadFile = UploadFileContext.Find(FileId);
+
+            if (System.IO.File.Exists(uploadFile.FilePath))
+            {
+                System.IO.File.Delete(Path.Combine(uploadFile.FilePath));
+                UploadFileContext.Delete(FileId);
+                UploadFileContext.Commit();
+
+                return Json("File Removed Success", JsonRequestBehavior.AllowGet);
+            }
+            return Json("File Not Removed", JsonRequestBehavior.AllowGet);
         }
         #endregion
     }
