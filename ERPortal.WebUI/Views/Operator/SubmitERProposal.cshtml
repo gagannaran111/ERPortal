@@ -75,7 +75,7 @@
                                                 <div class="form-group row">
                                                     @Html.LabelFor(model => model.ERApplications.FieldType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
                                                     <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DropDownListFor(model => model.ERApplications.FieldTypeId, new SelectList(Model.FieldTypes, "Id", "Type"), "Select Field Type", new { @class = "form-control" })
+                                                        @Html.DropDownListFor(model => model.ERApplications.FieldTypeId, new SelectList(Model.FieldTypes, "Id", "Type"), "Choose...", new { @class = "form-control" })
                                                         @Html.ValidationMessageFor(model => model.ERApplications.FieldTypeId, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -207,7 +207,7 @@
                                                 <div class="form-group row">
                                                     @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstitute, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
                                                     <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DropDownListFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstituteId, new SelectList(Model.eRScreeningInstitutes, "Id", "InstituteName"), "Select ER Screening Institute", new { @class = "form-control" })
+                                                        @Html.DropDownListFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstituteId, new SelectList(Model.eRScreeningInstitutes, "Id", "InstituteName"), "Choose...", new { @class = "form-control" })
                                                         @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstituteId, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -600,8 +600,10 @@
         console.log(response);
         if (response == "Success")
             window.location.href = "@Url.Action("Index","Operator")";
-        else
+        else {
+            alert("Fill Comments If You Select Order Screening : No");
             return false;
+        }
     }
 
     const OnFailure = (response) => {
@@ -622,6 +624,7 @@
             }
         });
 
+
         $('[data-toggle="tooltip"]').tooltip();
         if ($('#ERApplications_AppId').val() != "") {
             $('#disabledForm').prop('disabled',true)
@@ -634,12 +637,17 @@
             });
         }
         else {
+
+            $('#ERApplications_DateOfDiscovery').val('');
+            $("#ERApplications_ImplementaionType option[value='']").attr('selected', true);
             $('#FileDiv').removeClass('d-none');
         }
 
 
-        $(document.body).on('change', '#ERApplications_HydrocarbonType', function () {
-            let selectedOption = $(this).children(":selected").text();
+        $(document.body).on('change', '#ERApplications_HydrocarbonType', ({ currentTarget }) => {
+
+            console.log(currentTarget.selectedOptions[0].text);
+            let selectedOption = currentTarget.selectedOptions[0].text;
             let actionDiv = $("#uhcProdnMethodDiv");
 
             if ("UHC" == selectedOption && actionDiv.is(":hidden")) {
@@ -659,6 +667,7 @@
                 $('#ERApplications_FieldGIIP').prop('disabled', true);
                 $('#ERApplications_FieldGIIP').val('');
                 $('#ERApplications_FieldOIIP').prop('disabled', false);
+                $("#ERApplications_ImplementaionType option[value='']").attr('selected', true);
             }
             else if ($('#ERApplications_HydrocarbonType option:selected').val() == '1') {
                 $('.oil').prop('hidden', true);
@@ -666,13 +675,14 @@
                 $('#ERApplications_FieldGIIP').prop('disabled', false);
                 $('#ERApplications_FieldOIIP').prop('disabled', true);
                 $('#ERApplications_FieldOIIP').val('');
+                $("#ERApplications_ImplementaionType option[value='']").attr('selected', true);
             }
         });
 
-        $(document).on("change", "input[name='ERApplications.ERScreeningStatus']", function () {
+        $(document).on("change", "input[name='ERApplications.ERScreeningStatus']", ({currentTarget})=> {
             let actionDiv = $('#FileDiv');
 
-            if ($(this).val() == "True") {
+            if (currentTarget.value == "True") {
                 $("#opertor1").click();
                 actionDiv.val('').fadeIn("slow");
             } else if (actionDiv.is(":visible")) {
@@ -790,30 +800,50 @@
 
         });
 
-        $(document).on("change", "input[name='ERApplications.PresentlyUnderProduction']", function (e) {
+        $(document).on("change", "input[name='ERApplications.PresentlyUnderProduction']", ({currentTarget})=> {
             let actionDiv = $("#DateOfLastCommercialProductionDiv");
+            console.log(currentTarget);
             if ($('#ERApplications_DateOfInitialCommercialProduction').val() != '') {
-                if ($(this).val() == "False") {
+                if (currentTarget.value == "False") {
                     actionDiv.val('').fadeIn("slow");
-                } else if ($(this).val() == "True") {
+                } else if (currentTarget.value == "True") {
                     CheckERScreeningEligibility();
                     actionDiv.val('').fadeOut("slow");
                     $('input[name="ERApplications.DateOfLastCommercialProduction"]').val('');
                 }
             }
             else {
-
                 alertModal("Select Date of Commencement of Commercial Production");
-                $(this).prop("checked", false);;
+                currentTarget.checked = false;
             }
         });
-        $(document).on('change', 'input[name="ERApplications.DateOfLastCommercialProduction"]', ()=> {
+        $(document).on('change', 'input[name="ERApplications.DateOfLastCommercialProduction"]', ({ currentTarget}) => {
+            let d1 = $('#ERApplications_DateOfLastCommercialProduction');
+            let d2 = $('#ERApplications_DateOfInitialCommercialProduction');
 
-            CheckERScreeningEligibility();
+            let msg = "";
+             if (currentTarget.value != "") {
+                let statusval = CompareTwoDates(d1, d2);
+                statusval == false ? alertModal(msg) : CheckERScreeningEligibility();
+                return statusval;
+            }
+            else {
+                return false;
+            }
         });
-        $(document).on('change', '#ERApplications_DateOfInitialCommercialProduction', () => {
 
-             checkDateOfInitialCommercialProduction();
+        $(document).on('change', '#ERApplications_DateOfInitialCommercialProduction', ({ currentTarget }) => {
+            let d1 = $('#ERApplications_DateOfInitialCommercialProduction');
+            let d2 = $('#ERApplications_DateOfDiscovery');
+            let msg = "(Date Of Initial Commercial Production > Date Of Discovery) Or (Date Of Initial Commercial Production Or Date Of Discovery Are Empty.)";
+            if (currentTarget.value != "") {
+                let statusval = CompareTwoDates(d1, d2);
+                statusval == false ? alertModal(msg) : null;
+                return statusval;
+            }
+            else {
+                return false;
+            }
          });
 
         $(document).on('change', 'input[name="ERApplications.FieldOIIP"]', ()=> {
@@ -922,6 +952,22 @@
 
     });
 
+    $(document).on("change", "input[name='ERApplications.ERScreeningDetail.FirstOrderScreening']", ({ currentTarget }) => {
+        let firstodertext = $('.FirstOrderScrText');
+        currentTarget.value == "False" ? firstodertext.removeClass('d-none') : firstodertext.addClass('d-none').find('textarea').val('');
+    });
+
+    $(document).on("change", "input[name='ERApplications.ERScreeningDetail.SecondOrderScreening']", ({ currentTarget }) => {
+        let secondodertext = $('.SecondOrderScrText');
+        currentTarget.value == "False" ? secondodertext.removeClass('d-none') : secondodertext.addClass('d-none').find('textarea').val('');
+     });
+
+    $(document).on("change", "input[name='ERApplications.ERScreeningDetail.ThirdOrderScreening']", ({currentTarget}) => {
+        console.log(currentTarget.value);
+        let thirdodertext = $('.ThirdOrderScrText');
+        currentTarget.value == "False" ? thirdodertext.removeClass('d-none') : thirdodertext.addClass('d-none').find('textarea').val('');
+    });
+
     ////////////////
     //  Function  //
     ////////////////
@@ -1009,7 +1055,7 @@
         let diffYear = "";
         let diffmonth = "";
         let diffdate = "";
-
+        let statusval = true;
         if (dateoflastsubmission != '') {
             let lastdatesplit = dateoflastsubmission.split("/");
             diffYear = parseInt(lastdatesplit[0]) - parseInt(initialdatesplit[0]);
@@ -1023,57 +1069,34 @@
             diffdate = parseInt(currentdate.getDate()) - parseInt(initialdatesplit[2]);
         }
         if (diffYear > 3) {
+            statusval = true;
             alertModal('ERScreening Details Mandatory');
         }
         else if (diffYear == 3) {
             if (diffmonth >= 0) {
                 if (diffdate >= 0) {
+                     statusval = true;
                     alertModal('ERScreening Details Mandatory');
+
                 }
                 else {
+                     statusval = false;
                     alertModal('ERScreening Details Not Mandatory');
+
                 }
             }
             else {
+                 statusval = false;
                 alertModal('ERScreening Details Not Mandatory');
             }
         }
         else {
+             statusval = false;
             alertModal('ERScreening Details Not Mandatory');
         }
+        return statusval;
     }
-    const checkDateOfInitialCommercialProduction = () => {
-        let doi = $('#ERApplications_DateOfInitialCommercialProduction');
-        let dod = $('#ERApplications_DateOfDiscovery');
-        let msg = "Date Of Initial Commercial Production Greater Then Date Of Discovery.";
-        if (doi != "" && dod != "") {
-            let dateofinitial = doi.val().split('/');
-            let dateofdiscoveryval = dod.val().split('/');
-            let diffYear = "";
-            let diffmonth = "";
-            let diffdate = "";
 
-            diffYear = dateofinitial[0] - parseInt(dateofdiscoveryval[0]);
-            diffmonth = parseInt((dateofinitial[1])) - parseInt(dateofdiscoveryval[1]);
-            diffdate = parseInt(dateofinitial[2]) - parseInt(dateofdiscoveryval[2]);
-            diffYear < 0 ? doi.val('') : diffmonth < 0 ? doi.val('') : diffdate < 0 ? doi.val('') : doi.val();
-        }
-        else {
-            msg = 'Date Of Initial Commercial Production Or Date Of Discovery Are Empty.';
-            doi.val('') == '' ?  alert(msg) : dpd.val('') == '' ? alert(mag):null ;
-
-        }
-        //if (diffYear < 0)
-        //    doi.val('');
-        //else if (diffmonth < 0) {
-        //    doi.val('');
-        //}
-        //else if(diffdate<0) {
-        //    doi.val('');
-        //}
-
-
-    }
     const CheckOrderScreening = (e) => {
         let RadFirstOrderId = $('#ERApplications_ERScreeningDetail_FirstOrderScreening');
         let RadSecondOrderId = $('#ERApplications_ERScreeningDetail_SecondOrderScreening');
@@ -1081,20 +1104,5 @@
 
     };
 
-    $(document).on("change", "input[name='ERApplications.ERScreeningDetail.FirstOrderScreening']",  ({currentTarget}) => {
 
-        let firstodertext = $('.FirstOrderScrText');
-        currentTarget.value == "False" ? firstodertext.removeClass('d-none') : firstodertext.addClass('d-none').find('textarea').val('');
-    });
-
-    $(document).on("change", "input[name='ERApplications.ERScreeningDetail.SecondOrderScreening']", ({ currentTarget }) => {
-        let secondodertext = $('.SecondOrderScrText');
-        currentTarget.value == "False" ? secondodertext.removeClass('d-none') : secondodertext.addClass('d-none').find('textarea').val('');
-     });
-
-    $(document).on("change", "input[name='ERApplications.ERScreeningDetail.ThirdOrderScreening']", ({currentTarget}) => {
-        console.log(currentTarget.value);
-        let thirdodertext = $('.ThirdOrderScrText');
-        currentTarget.value == "False" ? thirdodertext.removeClass('d-none') : thirdodertext.addClass('d-none').find('textarea').val('');
-    });
 </script>
