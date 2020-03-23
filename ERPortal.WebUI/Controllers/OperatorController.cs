@@ -157,13 +157,13 @@ namespace ERPortal.WebUI.Controllers
             else
             {
 
-                textmsg = _ERApplication.ERApplications.ERScreeningDetail.FirstOrderScreening != true &&
+                textmsg = _ERApplication.ERApplications.ERScreeningDetail.FirstOrderScreening != YesNo.Yes &&
                      string.IsNullOrEmpty(_ERApplication.ERApplications.ERScreeningDetail.FirstOrderScrText) ?
                      "First Order Screening Comment Is Required" :
-                     _ERApplication.ERApplications.ERScreeningDetail.SecondOrderScreening != true &&
+                     _ERApplication.ERApplications.ERScreeningDetail.SecondOrderScreening != YesNo.Yes &&
                      string.IsNullOrEmpty(_ERApplication.ERApplications.ERScreeningDetail.SecondOrderScrText) ?
                      "Second Order Screening Comment Is Required" :
-                     _ERApplication.ERApplications.ERScreeningDetail.ThirdOrderScreening != true &&
+                     _ERApplication.ERApplications.ERScreeningDetail.ThirdOrderScreening != YesNo.Yes &&
                      string.IsNullOrEmpty(_ERApplication.ERApplications.ERScreeningDetail.ThirdOrderScrText) ?
                      "Third Order Screening Comment Is Required" : "TRUE";
 
@@ -271,9 +271,9 @@ namespace ERPortal.WebUI.Controllers
                     {
                         ERScreeningInstituteId = collection["eRScreeningDetail.ERScreeningInstituteId"],
                         ReportDocumentPath = FileRef,
-                        FirstOrderScreening = Convert.ToBoolean(collection["eRScreeningDetail.FirstOrderScreening"]),
-                        SecondOrderScreening = Convert.ToBoolean(collection["eRScreeningDetail.SecondOrderScreening"]),
-                        ThirdOrderScreening = Convert.ToBoolean(collection["eRScreeningDetail.ThirdOrderScreening"]),
+                        //FirstOrderScreening = Convert.ToBoolean(collection["eRScreeningDetail.FirstOrderScreening"]),
+                        //SecondOrderScreening = Convert.ToBoolean(collection["eRScreeningDetail.SecondOrderScreening"]),
+                        //ThirdOrderScreening = Convert.ToBoolean(collection["eRScreeningDetail.ThirdOrderScreening"]),
                     };
                     id = eRScreeningDetail.Id;
 

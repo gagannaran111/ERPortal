@@ -16,6 +16,8 @@ namespace ERPortal.Core.ViewModels
         public List<ERScreeningInstitute> ERScreeningInstitutes { get; set; }
         public List<StatusMaster> StatusMasters { get; set; }
         public List<DepartmentType> Departments { get; set; }
+        public List<ERTechniques> ERTechniques { get; set; }
+
 
     }
 }

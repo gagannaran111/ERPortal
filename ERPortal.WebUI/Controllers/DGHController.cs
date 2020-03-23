@@ -135,73 +135,73 @@ namespace ERPortal.WebUI.Controllers
 
 
         #region // Currently Not Used
-        [HttpPost]
-        public JsonResult DGHFormSubmit(DGHERProposalViewModel dGHERProposalViewModel)
-        {
-            // ERApplication erapp = new ERApplication();
-            string[] userdata = Session["UserData"] as string[];
-            ERApplication erapp = ERApplicationContext.Collection().Where(x => x.AppId == dGHERProposalViewModel.ERApplications.AppId).FirstOrDefault();
+        //[HttpPost]
+        //public JsonResult DGHFormSubmit(DGHERProposalViewModel dGHERProposalViewModel)
+        //{
+        //    // ERApplication erapp = new ERApplication();
+        //    string[] userdata = Session["UserData"] as string[];
+        //    ERApplication erapp = ERApplicationContext.Collection().Where(x => x.AppId == dGHERProposalViewModel.ERApplications.AppId).FirstOrDefault();
 
-            if (erapp.ERScreeningDetailId != null)
-            {
-                erapp.ERScreeningDetail.ApprovalStatus = dGHERProposalViewModel.ERApplications.ERScreeningDetail.ApprovalStatus;
-                erapp.ERScreeningDetail.DateOfSubmission = dGHERProposalViewModel.ERApplications.ERScreeningDetail.DateOfSubmission;
-                erapp.ERScreeningDetail.DateOfLastApproval = dGHERProposalViewModel.ERApplications.ERScreeningDetail.DateOfLastApproval;
-            }
-            erapp.PilotMandatory = dGHERProposalViewModel.ERApplications.PilotMandatory;
-            erapp.PilotReportApprovalStatus = dGHERProposalViewModel.ERApplications.PilotReportApprovalStatus;
-            erapp.DGHFileAttachmentForPilot = dGHERProposalViewModel.ERApplications.DGHFileAttachmentForPilot;
-            erapp.DGHFileAttachment = dGHERProposalViewModel.ERApplications.DGHFileAttachment;
-            erapp.FinalApprovalStatus = dGHERProposalViewModel.ERApplications.FinalApprovalStatus;
-            erapp.EligibleForFiscalIncentive = dGHERProposalViewModel.ERApplications.EligibleForFiscalIncentive;
-            erapp.DGHApprovalStatus = dGHERProposalViewModel.ERApplications.DGHApprovalStatus;
-            erapp.DGHApprovalDate = DateTime.Now; //dGHERProposalViewModel.ERApplications.DGHApprovalDate;
-            if (erapp.DGHApprovalStatus != null)
-            {
-                ERApplicationContext.Update(erapp);
+        //    if (erapp.ERScreeningDetailId != null)
+        //    {
+        //        erapp.ERScreeningDetail.ApprovalStatus = dGHERProposalViewModel.ERApplications.ERScreeningDetail.ApprovalStatus;
+        //        erapp.ERScreeningDetail.DateOfSubmission = dGHERProposalViewModel.ERApplications.ERScreeningDetail.DateOfSubmission;
+        //        erapp.ERScreeningDetail.DateOfLastApproval = dGHERProposalViewModel.ERApplications.ERScreeningDetail.DateOfLastApproval;
+        //    }
+        //    erapp.PilotMandatory = dGHERProposalViewModel.ERApplications.PilotMandatory;
+        //    erapp.PilotReportApprovalStatus = dGHERProposalViewModel.ERApplications.PilotReportApprovalStatus;
+        //    erapp.DGHFileAttachmentForPilot = dGHERProposalViewModel.ERApplications.DGHFileAttachmentForPilot;
+        //    erapp.DGHFileAttachment = dGHERProposalViewModel.ERApplications.DGHFileAttachment;
+        //    erapp.FinalApprovalStatus = dGHERProposalViewModel.ERApplications.FinalApprovalStatus;
+        //    erapp.EligibleForFiscalIncentive = dGHERProposalViewModel.ERApplications.EligibleForFiscalIncentive;
+        //    erapp.DGHApprovalStatus = dGHERProposalViewModel.ERApplications.DGHApprovalStatus;
+        //    erapp.DGHApprovalDate = DateTime.Now; //dGHERProposalViewModel.ERApplications.DGHApprovalDate;
+        //    if (erapp.DGHApprovalStatus != null)
+        //    {
+        //        ERApplicationContext.Update(erapp);
 
-                AuditTrails auditTrails = new AuditTrails()
-                {
-                    ERApplicationId = erapp.AppId,
-                    // FileRefId = null,
-                    StatusId = "34fcb2d5-14d2-4fc2-9db8-a71dcbd6ffc8",
-                    // QueryDetailsId = null,
-                    SenderId = userdata[0],
-                    ReceiverId = "c40a19d6-8af7-4813-aa5c-2dc7ca6449e3",
-                    Is_Active = true,
-                };
-                List<string> lst = new List<string>() {
-                    "c40a19d6-8af7-4813-aa5c-2dc7ca6449e3"
-                };
-                foreach (string x in lst)
-                {
-                    ERAppActiveUsers eRAppActiveUsers = new ERAppActiveUsers()
-                    {
-                        ERApplicationId = erapp.AppId,
-                        UserAccountId = x,
-                        // Dept_Id = null,
-                        Is_Active = true,
-                        // Status = null
-                    };
+        //        AuditTrails auditTrails = new AuditTrails()
+        //        {
+        //            ERApplicationId = erapp.AppId,
+        //            // FileRefId = null,
+        //            StatusId = "34fcb2d5-14d2-4fc2-9db8-a71dcbd6ffc8",
+        //            // QueryDetailsId = null,
+        //            SenderId = userdata[0],
+        //            ReceiverId = "c40a19d6-8af7-4813-aa5c-2dc7ca6449e3",
+        //            Is_Active = true,
+        //        };
+        //        List<string> lst = new List<string>() {
+        //            "c40a19d6-8af7-4813-aa5c-2dc7ca6449e3"
+        //        };
+        //        foreach (string x in lst)
+        //        {
+        //            ERAppActiveUsers eRAppActiveUsers = new ERAppActiveUsers()
+        //            {
+        //                ERApplicationId = erapp.AppId,
+        //                UserAccountId = x,
+        //                // Dept_Id = null,
+        //                Is_Active = true,
+        //                // Status = null
+        //            };
 
-                    ERAppActiveUsersContext.Insert(eRAppActiveUsers);
-                }
+        //            ERAppActiveUsersContext.Insert(eRAppActiveUsers);
+        //        }
 
-                AuditTrailContext.Insert(auditTrails);
-                using (TransactionScope scope = new TransactionScope())
-                {
-                    ERApplicationContext.Commit();
-                    AuditTrailContext.Commit();
-                    ERAppActiveUsersContext.Commit();
-                    scope.Complete();
-                }
-                return Json("Submit To ER Committee Successfully", JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return Json("Not Submitted. DGH Approval Mandatory", JsonRequestBehavior.AllowGet);
-            }
-        }
+        //        AuditTrailContext.Insert(auditTrails);
+        //        using (TransactionScope scope = new TransactionScope())
+        //        {
+        //            ERApplicationContext.Commit();
+        //            AuditTrailContext.Commit();
+        //            ERAppActiveUsersContext.Commit();
+        //            scope.Complete();
+        //        }
+        //        return Json("Submit To ER Committee Successfully", JsonRequestBehavior.AllowGet);
+        //    }
+        //    else
+        //    {
+        //        return Json("Not Submitted. DGH Approval Mandatory", JsonRequestBehavior.AllowGet);
+        //    }
+        //}
 
         #endregion 
 

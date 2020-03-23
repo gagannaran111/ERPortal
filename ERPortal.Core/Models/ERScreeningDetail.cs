@@ -20,13 +20,13 @@ namespace ERPortal.Core.Models
         [Display(Name = "First Order Screening")]
         [Required(ErrorMessage ="Required")]
        
-        public Boolean? FirstOrderScreening { get; set; }
+        public YesNo? FirstOrderScreening { get; set; }
         [Display(Name = "Second Order Screening")]
         [Required(ErrorMessage = "Required")]
-        public Boolean? SecondOrderScreening { get; set; }
+        public YesNo? SecondOrderScreening { get; set; }
         [Display(Name = "Third Order Screening")]
         [Required(ErrorMessage = "Required")]
-        public Boolean? ThirdOrderScreening { get; set; }
+        public YesNo? ThirdOrderScreening { get; set; }
 
 
         [Display(Name = "Comment for Select First Order Screening : (NO)")]        
@@ -36,18 +36,5 @@ namespace ERPortal.Core.Models
         [Display(Name = "Comment for Select Third Order Screening : (NO)")]        
         public string ThirdOrderScrText { get; set; }
 
-
-
-
-        // DGH Section
-        [Display(Name = "Approval Status")]
-        public Boolean? ApprovalStatus { get; set; }
-        [Display(Name = "Date of Submission")]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
-        public DateTime? DateOfSubmission { get; set; }
-
-        [Display(Name = "Date of Last Approval")]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
-        public DateTime? DateOfLastApproval { get; set; }
     }
 }

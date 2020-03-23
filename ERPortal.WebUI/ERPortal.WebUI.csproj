@@ -432,6 +432,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\CustomFiles\DGHIndex.js" />
+    <Content Include="Scripts\CustomFiles\SubmitERProposal.js" />
     <Content Include="Scripts\CustomFiles\excludechar.js" />
     <Content Include="Scripts\CustomFiles\LayoutScript.js" />
     <Content Include="Scripts\CustomFiles\OperatorIndex.js" />

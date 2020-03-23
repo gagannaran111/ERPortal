@@ -76,9 +76,11 @@
     <Compile Include="Models\ERAppActiveUsers.cs" />
     <Compile Include="Models\ERApplication.cs" />
     <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\ERPilot.cs" />
     <Compile Include="Models\ErrorLog.cs" />
     <Compile Include="Models\ERScreeningDetail.cs" />
     <Compile Include="Models\ERScreeningInstitute.cs" />
+    <Compile Include="Models\ERTechniques.cs" />
     <Compile Include="Models\FieldType.cs" />
     <Compile Include="Models\ForwardApplication.cs" />
     <Compile Include="Models\Notification.cs" />

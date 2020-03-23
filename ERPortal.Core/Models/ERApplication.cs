@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using ERPortal.Core.CustomValidation;
 namespace ERPortal.Core.Models
 {
+
     public class ERApplication : BaseEntity
     {
-        #region  // Operator Section  
         [Display(Name = "Application Ref. No.")]
         public string AppId { get; set; }
         [Required(ErrorMessage = "Valid Operator Name is required")]
@@ -32,6 +32,10 @@ namespace ERPortal.Core.Models
         [Display(Name = "Type of Hydrocarbon")]
         [Required(ErrorMessage = "Valid Hydrocarbon Type is required")]
         public HydrocarbonType HydrocarbonType { get; set; }
+
+        [Display(Name = "Type of Hydrocarbon Method Propose")]
+        [Required(ErrorMessage = "Valid Hydrocarbon Type Method Propose is required")]
+        public HydrocarbonMethod HydrocarbonMethod { get; set; }
 
         public string UHCProductionMethodId { get; set; }
         [Display(Name = "UHC Production Method")]
@@ -56,10 +60,7 @@ namespace ERPortal.Core.Models
         public DateTime? DateOfLastCommercialProduction { get; set; }
 
         [Display(Name = "Presently Under Production")]
-        public Boolean? PresentlyUnderProduction { get; set; }
-
-        [Display(Name = "ER Screening Carried out")]
-        public Boolean? ERScreeningStatus { get; set; }
+        public YesNo? PresentlyUnderProduction { get; set; }
 
         public string ERScreeningDetailId { get; set; }
         [Display(Name = "Screening report")]
@@ -71,49 +72,15 @@ namespace ERPortal.Core.Models
         [Display(Name = "Field GIIP")]
         public int? FieldGIIP { get; set; }
 
-        [Display(Name = "Pilot Design carried out")]
-        public Boolean? PilotDesign { get; set; }
-
-        [Display(Name = "Pilot Production Profile")]
-        public ProductionProfile? PilotProductionProfile { get; set; }
-
-        [Display(Name = "Technically Compatible")]
-        public Boolean? TechnicallyCompatible { get; set; }
-
-        [Display(Name = "Economic Viability")]
-        public Boolean? EconomicViability { get; set; }
+        [Display(Name = "ER Pilot Id")]
+        public string ERPilotId { get; set; }
+        [Display(Name = "ER Pilot")]
+        public virtual ERPilot ERPilot { get; set; }
 
         [Display(Name = "Any Additional remarks")]
         public string AdditonalRemarks { get; set; }
         public DateTime? SubmissionDate { get; set; }
-        #endregion
-        #region   
-        // DGH Section
-        [Display(Name = "Eligible For Fiscal Incentive")]
-        public Boolean? EligibleForFiscalIncentive { get; set; }
-        [Display(Name = "DGH Approval Status")]
-        public Boolean? DGHApprovalStatus { get; set; }
-        [Display(Name = "DGH Approval Date")]
-        public DateTime? DGHApprovalDate { get; set; }
-        [Display(Name = "DGH File Attachment")]
-        public string DGHFileAttachment { get; set; }
-        [Display(Name = "Pilot Mandatory")]
-        public Boolean? PilotMandatory { get; set; }
+        public Boolean Is_Active { get; set; }
 
-        [Display(Name = "DGH Pilot Report Submission Date")]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
-        public DateTime? DGHPilotReportSubmissionDate { get; set; }
-        [Display(Name = "Pilot Report Approval Status")]
-        public Boolean? PilotReportApprovalStatus { get; set; }
-        [Display(Name = "DGH File Attachment For Pilot")]
-        public string DGHFileAttachmentForPilot { get; set; }
-
-        public virtual ICollection<Comment> Comments { get; set; }
-        #endregion
-        // ER Committee Section
-        // Add fields
-        [Display(Name = "Final Approval Status")]
-        public Boolean? FinalApprovalStatus { get; set; }
     }
-
 }

@@ -14,7 +14,7 @@ namespace ERPortal.DataAccess.SQL
             base("name=DefaultConnection")
         {
             //Remove in Production
-             // Database.SetInitializer<DataContext>(new DropCreateDatabaseIfModelChanges<DataContext>());
+            // Database.SetInitializer<DataContext>(new DropCreateDatabaseIfModelChanges<DataContext>());
 
             // Disable initializer in Production
             Database.SetInitializer<DataContext>(null);
@@ -24,6 +24,7 @@ namespace ERPortal.DataAccess.SQL
         {
             //base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ERApplication>().HasOptional(a => a.ERScreeningDetail);
+            modelBuilder.Entity<ERApplication>().HasOptional(a => a.ERPilot);
             modelBuilder.Entity<ERApplication>().HasOptional(a => a.UHCProductionMethod);
             modelBuilder.Entity<ERApplication>().HasRequired(a => a.Organisation).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<ERApplication>().HasRequired(a => a.FieldType).WithMany().WillCascadeOnDelete(false);
@@ -70,7 +71,9 @@ namespace ERPortal.DataAccess.SQL
         public DbSet<StatusMaster> StatusMasters { get; set; }
         public DbSet<QueryUser> QueryUsers { get; set; }
         public DbSet<DepartmentType> Departments { get; set; }
+        public DbSet<ERTechniques> ERTechniques { get; set; }
+        public DbSet<ERPilot> ERPilots{ get; set; }
 
-      
+
     }
 }

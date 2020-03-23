@@ -68,6 +68,8 @@ namespace ERPortal.WebUI
             container.RegisterType<IRepository<QueryUser>, SQLRepository<QueryUser>>();
             container.RegisterType<IRepository<StatusMaster>, SQLRepository<StatusMaster>>();
             container.RegisterType<IRepository<DepartmentType>, SQLRepository<DepartmentType>>();
+            container.RegisterType<IRepository<ERTechniques>, SQLRepository<ERTechniques>>();
+            container.RegisterType<IRepository<ERPilot>, SQLRepository<ERPilot>>();
         }
     }
 }

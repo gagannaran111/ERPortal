@@ -33,8 +33,8 @@ namespace ERPortal.Core.Models
         ApprovalLetter
     }
     public enum UserRoleType
-    {     
-        [Display(Name = "Consultant Enhanced Recovery")]        
+    {
+        [Display(Name = "Consultant Enhanced Recovery")]
         ConsultantEnhancedRecovery,
         Operator,
         Coordinator,
@@ -48,11 +48,17 @@ namespace ERPortal.Core.Models
         BAU,
         Decreasing
     }
-    public enum HydrocarbonType
+    public enum HydrocarbonMethod
     {
         Oil,
         Gas,
         UHC
+    }
+    public enum HydrocarbonType
+    {
+       Conventional,
+       UnConventional
+            
     }
     public enum ImplementaionType
     {
@@ -83,7 +89,7 @@ namespace ERPortal.Core.Models
     }
     public enum AppStatus
     {
-        [Display(Name ="Pending With Me")]
+        [Display(Name = "Pending With Me")]
         PWM,
         [Display(Name = "Under Proccessing")]
         UP,
@@ -93,12 +99,29 @@ namespace ERPortal.Core.Models
         AP,
         [Display(Name = "New Application")]
         NA
-    }   
+    }
     public enum ButtonStatus
     {
         [Display(Name = "Button Hide")]
         Hide,
         [Display(Name = "Button Show")]
         Show
+    }
+    public enum TechnicallyCompatible
+    {   
+        [Display(Name ="Favourable")]
+        Favourable,
+        [Display(Name = "UnFavourable")]
+        UnFavourable
+    }
+    public enum PositiveNegative
+    { 
+        Positive,
+        Negative    
+    }
+    public enum YesNo
+    {
+        Yes,
+        No
     }
 }
