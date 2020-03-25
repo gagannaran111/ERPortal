@@ -10,12 +10,12 @@
 
     console.log(response);
     if (response == "Success")
-        window.location.href = "@Url.Action("Index","Operator")";
-        else {
-    alert("Fill Comments If You Select Order Screening : No");
-    return false;
-}
+        window.location.href = '/Operator/Index'; //"@Url.Action("Index","Operator")";
+    else {
+        alert("Fill Comments If You Select Order Screening : No");
+        return false;
     }
+}
 
 const OnFailure = (response) => {
     console.log(response);
@@ -48,9 +48,9 @@ $(document).ready(() => {
         });
     }
     else {
-
+        $('select option[value=""]').prop('selected', true);
         $('#ERApplications_DateOfDiscovery').val('');
-        $("#ERApplications_ImplementaionType option[value='']").attr('selected', true);
+
         $('#FileDiv').removeClass('d-none');
     }
 
@@ -103,113 +103,6 @@ $(document).ready(() => {
     });
 
 
-    $('#formModal').on('show.bs.modal', (event) => {
-        let button = $(event.relatedTarget); // Button that triggered the modal
-        let targetPage = button.data('page'); // Extract page redirection from data-* attributes
-        let modalTitle = button.data('title');// Extract Modal title from data-* attributes
-        // Initiate an AJAX request here (and then updating in a callback)
-        $("#formModalLabel").html("Add " + modalTitle);
-        $.ajax({
-            url: "/Operator/AjaxAdd?targetPage=" + targetPage,
-            success: (result) => {
-                $('#modalContent').html(result);
-                if ($("#saveButton").is(":hidden")) {
-                    $('#saveButton').show();
-                }
-            },
-            error: () => {
-                $('#modalContent').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
-                if ($("#saveButton").is(":visible")) {
-                    $('#saveButton').fadeOut();
-                }
-            },
-            fail: (xhr, textStatus, errorThrown) => {
-                $('#modalContent').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
-                if ($("#saveButton").is(":visible")) {
-                    $('#saveButton').fadeOut();
-                }
-            }
-        });
-    });
-    $('#formDetailModal').on('show.bs.modal', (event) => {
-        let button = $(event.relatedTarget); // Button that triggered the modal
-        let targetPage = button.data('page'); // Extract page redirection from data-* attributes
-        let modalTitle = button.data('title');// Extract Modal title from data-* attributes
-        let RefId = button.attr('form-ref-id');
-        // Initiate an AJAX request here (and then updating in a callback)
-        $("#formModalLabelView").html(modalTitle);
-        $.ajax({
-            url: "/Operator/AjaxViewDetails?targetPage=" + targetPage + "&&RefId=" + RefId,
-            success: (result) => {
-                $('#modalContentView').html(result);
-                if (targetPage == "ERScreeningDetailView") {
-
-                    GetUploadFilesData('#DetailViewFile', $('#eRScreeningDetail_ReportDocumentPath').val());
-                    setTimeout(() => {
-                        $('.fileDelete').remove();
-                    }, 500);
-                }
-            },
-            error: () => {
-                $('#modalContentView').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
-
-            },
-            fail: (xhr, textStatus, errorThrown) => {
-                $('#modalContentView').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
-
-            }
-        });
-    });
-
-    $(document).on('submit', '#myForm', (e) => {
-        // stop default form submission
-        e.preventDefault();
-
-        // if ($('#UploadFilesData').find('div').length != 0 && ) {
-
-        let formUrl = $('#myForm').attr('action');
-
-        $.ajax({
-            url: formUrl,
-            type: 'POST',
-            data: $('#myForm').serialize(),
-            success: (result) => {
-                let res = result.split(",");
-                if ('Success' == res[0]) {
-                    if (res[2] == "ERScreeningDetail") {
-
-                        $('#ERApplications_ERScreeningDetailId').val(res[1]);
-                        erscreeninglinkshowhideonload();
-
-                    }
-
-                    $('#modalContent').html('<div class="alert alert-success" role="alert"> Successfully Added </div >');
-                    if ($("#saveButton").is(":visible")) {
-                        $('#saveButton').fadeOut();
-                    }
-                } else {
-                    $('#modalContent').html(result);
-                }
-            },
-            error: (result) => {
-
-                $('#modalContent').html(result);
-            },
-            fail: (xhr, textStatus, errorThrown) => {
-                $('#modalContent').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
-                if ($("#saveButton").is(":visible")) {
-                    $('#saveButton').fadeOut();
-                }
-            }
-
-
-        });
-        // }
-        //  else {
-        //      return false;
-        //  }
-
-    });
 
     $(document).on("change", "input[name='ERApplications.PresentlyUnderProduction']", ({ currentTarget }) => {
         let actionDiv = $("#DateOfLastCommercialProductionDiv");
@@ -270,95 +163,7 @@ $(document).ready(() => {
 $(document).on('change', '#ERApplications_DateOfDiscovery', () => {
     CheckEligibleToFillERForm();
 });
-$(document).on('click', '.Querycommenttablink', function () {
 
-    $.ajax({
-        url: "@Url.Action("QueryCommentSummary", "Comment", new { appid = Model.ERApplications.Id })",
-        type: 'POST',
-        success: function (result) {
-            @{ string[] arr = Session["UserData"] as string[]; }
-            console.log(result);
-            if (result.length == 0) {
-                $("#QueryCommentTab .body-panel").html('<h3 class="text-danger ">Data Not Found</h3>');
-            }
-            else {
-                var dd = "";
-                var userid = "@arr[0]";
-                var statuscheck = "";
-                var counter = 1;
-                var subject = "";
-                var replybtn = "";
-                var resolvedbtn = "";
-                for (let element of result) {
-                    if (element[0].Subject != subject) {
-                        subject = element[0].Subject;
-                        dd += "<div class=''><div class='alert alert-success h5'>Query : " + counter + " Subject : " + subject + "</div>";
-                        counter++;
-                    }
-                    dd += "<div class='alert alert-light border border-danger'><p class='h5 float-right'>Query Between " + element[0].Sender.SenderName + " and " + element[0].Reciver.ReciverName + "</p><hr/>";
-                    for (let f of element) {
-                        let files = "";
-                        for (let e of f.Files) {
-                            files += '<a class="badge badge-success mr-2" href="' + e.FilePath + '" target="blank"><i class="fas fa-file-download"></i> ' + e.FileName + '</a>';
-                        };
-
-                        if (f.Status == "Query Rasied") {
-                            statuscheck = "Query Rasied To " + f.Reciver.ReciverName + " by " + f.Sender.SenderName;
-
-                        }
-                        else if (f.Status == "Query Reply") {
-                            statuscheck = "Query Reply To " + f.Reciver.ReciverName + " by " + f.Sender.SenderName;
-                        }
-                        else if (f.Status == "Query Forward") {
-                            statuscheck = "Query Forward To " + f.Reciver.ReciverName + " by " + f.Sender.SenderName;
-                        }
-                        else {
-                            statuscheck = "";
-                        }
-                        if (f.Reciver.ReciverId == userid || f.Sender.SenderId == userid) {
-                            replybtn = '<button class="btn btn-sm btn-primary ml-2 BtnQueryReply" data-page="QueryCommentReply" data-query-parentid="' + f.QueryParentId + '" data-query-id="' + f.Id +
-                                '" data-toggle="modal" data-target="#CommentModal" data-title="Query Reply"><i class="fas fa-reply"></i> Reply</button>';
-                        }
-                        else {
-                            replybtn = "";
-                        }
-
-
-                        dd += ' <li class="left clearfix "><span class="chat_img pull-left">' +
-                            '	<span class="chat_img"> <img src="../Content/img/user-profile.png" alt="User" style="width:50px"> </span>' +
-                            '</span><div class="chat-body clearfix"><div class="header"><strong class="text-danger h5">' + statuscheck + '</strong> <small class="pull-right text-muted">' +
-                            '<i class="fas fa-clock"></i> ' + ToChangeDateFormate(f.CreatedAt) + '</small></div><div><p><b>Subject :</b> ' + f.Subject + '</p></div>' +
-                            '<p><b>Comments :</b> ' + f.Comments + '</p><div class="mb-2"><p>' + files + '</p ></div>' +
-                            '<div class="float-right" > <button class="btn btn-sm btn-success BtnQueryForward" data-page="QueryCommentForward" data-query-parentid="' + f.QueryParentId + '" data-query-id="' + f.Id +
-                            '" data-toggle="modal" data-target="#CommentModal" data-title="Query Forward"><i class="fas fa-forward"></i> Forward</button>' + replybtn +
-                            '</div ></div ></li > ';
-
-                        if (f.Sender.SenderId == userid && f.Status == "Query Rasied") {
-                            resolvedbtn = '<div class="alert alert-light"><button class="btn btn-sm btn-info ml-2 BtnQueryResolved" data-page="QueryCommentResolved" data-query-parentid="' + f.QueryParentId + '" data-query-id="' + f.Id +
-                                '" data-toggle="modal" data-target="#CommentModal" data-title="Query Resolved"><i class="fas fa-check"></i> Mark As Resolved</button></div>';
-                        }
-                        else {
-                            resolvedbtn = "";
-                        }
-                    };
-                    dd += resolvedbtn + "</div></div>";
-                };
-
-                //  var subject = "<div class='col alert alert-info'><h5 class=''>Subject : " + result[1].Subject + "</h4></div>"
-                $("#QueryCommentTab .body-panel").html('<ul class="chat">' + dd + '</ul>');
-            }
-        },
-        error: function () {
-
-            alertModal("Something Went Wrong. Try Again Later");
-        },
-        fail: function (xhr, textStatus, errorThrown) {
-
-            alertModal("Something Went Wrong. Try Again Later");
-        }
-    });
-
-});
 
 $(document).on("change", "input[name='ERApplications.ERScreeningDetail.FirstOrderScreening']", ({ currentTarget }) => {
     let firstodertext = $('.FirstOrderScrText');

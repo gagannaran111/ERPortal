@@ -18,7 +18,7 @@ namespace ERPortal.Core.Models
         [Display(Name = "Technically Compatible")]
         public TechnicallyCompatible TechnicallyCompatible { get; set; }
 
-        [Display(Name = "Economic Viability")]
+        [Display(Name = "Economic Viable")]
         public YesNo PilotEconomicViability { get; set; }
 
         [Display(Name = "NPV")]
@@ -32,7 +32,7 @@ namespace ERPortal.Core.Models
         [Display(Name = "Pilot Phase Culmination Date")]
         public DateTime PilotEndDate { get; set; }
 
-        [Display(Name = "Economic Viability")]
+        [Display(Name = "Economic Viable")]
         public YesNo? FullFillEconomicViability { get; set; }
 
         [Display(Name = "NPV")]
