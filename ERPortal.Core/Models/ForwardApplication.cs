@@ -19,8 +19,7 @@ namespace ERPortal.Core.Models
         // public virtual  Comment Comment { get; set; }
         public string FileRef { get; set; }
         [Display(Name = "File Status")]
-        public FileStatus FileStatus { get; set; }
-        public Boolean Is_active { get; set; }
+        public FileStatus FileStatus { get; set; }      
     }
    
 }

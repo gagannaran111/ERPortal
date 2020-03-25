@@ -9,7 +9,6 @@ namespace ERPortal.Core.Models
   public  class DepartmentType:BaseEntity
     {
         public string  DeptName { get; set; }
-        public string SubDeptName { get; set; }
-        public Boolean Is_Active { get; set; }
+        public string SubDeptName { get; set; }        
     }
 }

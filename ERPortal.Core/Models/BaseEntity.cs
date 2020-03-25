@@ -11,13 +11,19 @@ namespace ERPortal.Core.Models
     public abstract class BaseEntity
     {
         [Key]
+        [Required]
         public string Id { get; set; }
+        [Required]
         public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset ModifiedAt { get; set; }
+        [Required]
+        public Boolean Is_Active { get; set; }
 
         public BaseEntity()
         {
             this.Id = Guid.NewGuid().ToString();
             this.CreatedAt = DateTime.Now;
+            this.Is_Active = true;
         }
     }
 }

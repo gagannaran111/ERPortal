@@ -12,8 +12,7 @@ namespace ERPortal.Core.Models
         public string CustStatusId { get; set; }
 
         [Display(Name = "Description")]
-        public string Status { get; set; }
-        public Boolean Is_Active { get; set; }
+        public string Status { get; set; }       
     }
 
 }

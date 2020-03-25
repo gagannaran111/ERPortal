@@ -147,6 +147,14 @@
     <Compile Include="Migrations\202003180838063_ColumnUpdates.designer.cs">
       <DependentUpon>202003180838063_ColumnUpdates.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003250816490_AddAppERScreningTable.cs" />
+    <Compile Include="Migrations\202003250816490_AddAppERScreningTable.designer.cs">
+      <DependentUpon>202003250816490_AddAppERScreningTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202003251143143_UpdateBaseEntity.cs" />
+    <Compile Include="Migrations\202003251143143_UpdateBaseEntity.designer.cs">
+      <DependentUpon>202003251143143_UpdateBaseEntity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -232,6 +240,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003180838063_ColumnUpdates.resx">
       <DependentUpon>202003180838063_ColumnUpdates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003250816490_AddAppERScreningTable.resx">
+      <DependentUpon>202003250816490_AddAppERScreningTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003251143143_UpdateBaseEntity.resx">
+      <DependentUpon>202003251143143_UpdateBaseEntity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

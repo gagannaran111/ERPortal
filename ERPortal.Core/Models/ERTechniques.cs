@@ -20,7 +20,6 @@ namespace ERPortal.Core.Models
         [Required]
         public string TechniqueName { get; set; }        
         public string Status { get; set; }
-        [Required]
-        public Boolean Is_Active { get; set; }
+      
     }
 }

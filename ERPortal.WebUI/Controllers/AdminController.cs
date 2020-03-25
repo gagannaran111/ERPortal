@@ -22,7 +22,12 @@ namespace ERPortal.WebUI.Controllers
         IRepository<AuditTrails> AuditTrailContext;
         IRepository<ERApplication> ERApplicationContext;
         IRepository<DepartmentType> DepartmentContext;
-        public AdminController(IRepository<FieldType> _FieldTypeContext, IRepository<Organisation> _OrganisationContext, IRepository<UserAccount> _UserAccountContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext, IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<StatusMaster> _StatusMasterContext, IRepository<AuditTrails> _AuditTrailContext, IRepository<ERApplication> _ERApplicationContext, IRepository<DepartmentType> _DepartmentContext)
+        IRepository<ERTechniques> ERTechniquesContext;
+        public AdminController(IRepository<FieldType> _FieldTypeContext, IRepository<Organisation> _OrganisationContext,
+            IRepository<UserAccount> _UserAccountContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext,
+            IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<StatusMaster> _StatusMasterContext,
+            IRepository<AuditTrails> _AuditTrailContext, IRepository<ERApplication> _ERApplicationContext,
+            IRepository<DepartmentType> _DepartmentContext, IRepository<ERTechniques> _ERTechniquesContext)
         {
             FieldTypeContext = _FieldTypeContext;
             OrganisationContext = _OrganisationContext;
@@ -33,6 +38,7 @@ namespace ERPortal.WebUI.Controllers
             AuditTrailContext = _AuditTrailContext;
             ERApplicationContext = _ERApplicationContext;
             DepartmentContext = _DepartmentContext;
+            ERTechniquesContext = _ERTechniquesContext;
         }
         // GET: Admin
         public ActionResult Index()
@@ -47,6 +53,7 @@ namespace ERPortal.WebUI.Controllers
             adminManageViewModel.ERScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
             adminManageViewModel.StatusMasters = StatusMasterContext.Collection().ToList();
             adminManageViewModel.Departments = DepartmentContext.Collection().ToList();
+            adminManageViewModel.ERTechniques = ERTechniquesContext.Collection().ToList();
             return View(adminManageViewModel);
         }
         public ActionResult AuditTrail()
@@ -74,7 +81,7 @@ namespace ERPortal.WebUI.Controllers
                     x.Sender,
                     x.ReceiverId,
                     x.StatusId,
-                    
+
                     //x.Status,
                     x.QueryDetailsId,
                     x.Is_Active,
@@ -115,6 +122,9 @@ namespace ERPortal.WebUI.Controllers
                 case "Department":
                     _genericObject = Id != null ? DepartmentContext.Collection().Where(x => x.Id == Id).FirstOrDefault() : new DepartmentType();
                     break;
+                case "ERTechniques":
+                    _genericObject = Id != null ? ERTechniquesContext.Collection().Where(x => x.Id == Id).FirstOrDefault() : new ERTechniques();
+                    break;
                 default:
                     _genericObject = null;
                     break;
@@ -146,20 +156,22 @@ namespace ERPortal.WebUI.Controllers
 
                     if (FieldType != null)
                     {
-                        FieldType.Type = collection["Type"];
-
+                        FieldType.Type = collection["Type"];      
+                       
+                        FieldType.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
                     }
                     else
                     {
                         FieldType fieldType = new FieldType()
                         {
-                            Type = collection["Type"]
+                            Type = collection["Type"],
+                            Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0])
                         };
                         modelIsValid = TryValidateModel(fieldType);
                         if (modelIsValid)
                         {
                             FieldTypeContext.Insert(fieldType);
-                           
+
                         }
                         else
                         {
@@ -189,12 +201,14 @@ namespace ERPortal.WebUI.Controllers
                                 break;
                         }
                         Organisation.Name = collection["Name"];
+                        Organisation.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
 
                     }
                     else
                     {
 
                         Organisation organisation = new Organisation(collection["Name"], collection["Type"]);
+                        organisation.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
                         modelIsValid = TryValidateModel(organisation);
                         if (TryValidateModel(modelIsValid))
                         {
@@ -228,6 +242,7 @@ namespace ERPortal.WebUI.Controllers
                         {
                             user = userAccount,
                             organisations = OrganisationContext.Collection()
+
                         };
                         modelIsValid = false;
                     }
@@ -239,6 +254,7 @@ namespace ERPortal.WebUI.Controllers
                     {
                         UHCProductionMethod.Name = collection["Name"];
                         UHCProductionMethod.Description = collection["Description"];
+                        UHCProductionMethod.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
                     }
 
                     else
@@ -246,13 +262,14 @@ namespace ERPortal.WebUI.Controllers
                         UHCProductionMethod uHCProductionMethod = new UHCProductionMethod()
                         {
                             Name = collection["Name"],
-                            Description = collection["Description"]
+                            Description = collection["Description"],
+                            Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0])
                         };
                         modelIsValid = TryValidateModel(uHCProductionMethod);
                         if (modelIsValid)
                         {
                             UHCProductionMethodContext.Insert(uHCProductionMethod);
-                           
+
                         }
                         else
                         {
@@ -271,6 +288,7 @@ namespace ERPortal.WebUI.Controllers
                         ERScreeningInstitute.ContactPerson = collection["ContactPerson"];
                         ERScreeningInstitute.Address = collection["Address"];
                         ERScreeningInstitute.EmailID = collection["EmailID"];
+                        ERScreeningInstitute.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
                     }
                     else
                     {
@@ -279,13 +297,14 @@ namespace ERPortal.WebUI.Controllers
                             InstituteName = collection["InstituteName"],
                             ContactPerson = collection["ContactPerson"],
                             Address = collection["Address"],
-                            EmailID = collection["EmailID"]
+                            EmailID = collection["EmailID"],
+                            Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0])
                         };
                         modelIsValid = TryValidateModel(ERScreeningInstitute1);
                         if (modelIsValid)
                         {
                             ERScreeningInstituteContext.Insert(ERScreeningInstitute1);
-                           
+
                         }
                         else
                         {
@@ -296,13 +315,14 @@ namespace ERPortal.WebUI.Controllers
                     break;
 
                 case "StatusMaster":
-                   
+
                     var Status = StatusMasterContext.Collection().Where(x => x.Id == id).FirstOrDefault();
 
                     if (Status != null)
                     {
                         Status.CustStatusId = collection["CustStatusId"];
                         Status.Status = collection["Status"];
+                        Status.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
                     }
 
                     else
@@ -311,13 +331,13 @@ namespace ERPortal.WebUI.Controllers
                         {
                             CustStatusId = collection["CustStatusId"],
                             Status = collection["Status"],
-                            Is_Active = true
+                            Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0])
                         };
                         modelIsValid = TryValidateModel(statusMaster);
                         if (modelIsValid)
                         {
                             StatusMasterContext.Insert(statusMaster);
-                          
+
                         }
                         else
                         {
@@ -328,13 +348,14 @@ namespace ERPortal.WebUI.Controllers
                     break;
 
                 case "Department":
-                
+
                     var Dept = DepartmentContext.Collection().Where(x => x.Id == id).FirstOrDefault();
 
                     if (Dept != null)
                     {
                         Dept.DeptName = collection["DeptName"];
                         Dept.SubDeptName = collection["SubDeptName"];
+                        Dept.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
                         DepartmentContext.Update(Dept);
                     }
                     else
@@ -343,7 +364,7 @@ namespace ERPortal.WebUI.Controllers
                         {
                             DeptName = collection["DeptName"],
                             SubDeptName = collection["SubDeptName"],
-                            Is_Active = true
+                            Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0])
                         };
                         modelIsValid = TryValidateModel(department);
                         if (modelIsValid)
@@ -359,10 +380,86 @@ namespace ERPortal.WebUI.Controllers
                     DepartmentContext.Commit();
 
                     break;
+
+                case "ERTechniques":
+                    var ertechnique = ERTechniquesContext.Collection().Where(x => x.Id == id).FirstOrDefault();
+
+                    if (ertechnique != null)
+                    {
+                        switch (collection["Method"])
+                        {
+                            case "0":
+                                ertechnique.Method = ImplementaionType.EORMethod;
+                                break;
+                            case "1":
+                                ertechnique.Method = ImplementaionType.IORRecoveryMethod;
+                                break;
+                            case "2":
+                                ertechnique.Method = ImplementaionType.EGRMethod;
+                                break;
+                            case "3":
+                                ertechnique.Method = ImplementaionType.IGRRecoveryMethod;
+                                break;
+                            case "4":
+                                ertechnique.Method = ImplementaionType.UHCMethod;
+                                break;
+
+                            default:
+
+                                break;
+                        }
+                        ertechnique.TechniqueName = collection["TechniqueName"];
+                        ertechnique.TechniqueType = collection["TechniqueType"];
+                        ertechnique.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
+                        ertechnique.Status = collection["Status"];
+                        ERTechniquesContext.Update(ertechnique);
+                    }
+                    else
+                    {
+                        ERTechniques eRTechniques = new ERTechniques();
+                        switch (collection["Method"])
+                        {
+                            case "0":
+                                eRTechniques.Method = ImplementaionType.EORMethod;
+                                break;
+                            case "1":
+                                eRTechniques.Method = ImplementaionType.IORRecoveryMethod;
+                                break;
+                            case "2":
+                                eRTechniques.Method = ImplementaionType.EGRMethod;
+                                break;
+                            case "3":
+                                eRTechniques.Method = ImplementaionType.IGRRecoveryMethod;
+                                break;
+                            case "4":
+                                eRTechniques.Method = ImplementaionType.UHCMethod;
+                                break;
+
+                            default:
+                                return Content("Error");
+                        }
+                        eRTechniques.TechniqueName = collection["TechniqueName"];
+                        eRTechniques.TechniqueType = collection["TechniqueType"];
+                        eRTechniques.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
+                        eRTechniques.Status = collection["Status"];
+
+                        modelIsValid = TryValidateModel(eRTechniques);
+                        if (modelIsValid)
+                        {
+
+                            ERTechniquesContext.Insert(eRTechniques);
+                        }
+                        else
+                        {
+                            _genericObject = eRTechniques;
+                        }
+                    }
+                    ERTechniquesContext.Commit();
+                    break;
                 default:
                     return Content("Error");
             }
-            if (_genericObject==null)
+            if (_genericObject == null)
             {
                 return Content("Success");
             }

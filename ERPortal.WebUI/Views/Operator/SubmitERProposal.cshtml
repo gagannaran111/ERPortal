@@ -3,622 +3,674 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="tab-content shadow-lg col-lg-12 ">
-            <ul class="nav nav-tabs bg-gradient-light mt-3">
-                @{
-                    if (Model.ERApplications.AppId == null)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#ERProposalTab">ER Screening Report</a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#ERProposalViewTab">ER Screening View Report</a>
-                        </li>
-                    }
-                }
-                @*<li class="nav-item">
-                        <a class="nav-link Querycommenttablink" data-toggle="tab" href="#QueryCommentTab">Query</a>
-                    </li>*@
-            </ul>
-            @{
-                if (Model.ERApplications.AppId == null)
-                {
-                    <div id="ERProposalTab" class="container-fluid tab-pane active mt-3">
-                        <div class="justify-content-center">
-                            @using (Ajax.BeginForm("SubmitERProposal", "Operator", new { FileRef = ViewBag.RefId }, new AjaxOptions
-                            {
-                                HttpMethod = "POST",
-                                OnSuccess = "OnSuccess(data)",
-                                OnFailure = "OnFailure(data)"
+        @{
+            if (Model.ERApplications.AppId == null)
+            {
+                <div id="ERProposalTab" class="container-fluid">
+                    <div class="justify-content-center">
+                        @using (Ajax.BeginForm("SubmitERProposal", "Operator", new { FileRef = ViewBag.RefId }, new AjaxOptions
+                        {
+                            HttpMethod = "POST",
+                            OnSuccess = "OnSuccess(data)",
+                            OnFailure = "OnFailure(data)"
 
-                                //LoadingElementId = "progress"
-                            }, new { id = "operatorform" }))
-                            {
+                            //LoadingElementId = "progress"
+                        }, new { id = "operatorform" }))
+                        {
 
-                                @Html.AntiForgeryToken()
-                                @Html.HiddenFor(model => model.ERApplications.ERScreeningDetailId)
-                                @Html.HiddenFor(model => model.ERApplications.AppId)
-                                @Html.HiddenFor(model => model.ERApplications.OrganisationId)
-                                @Html.HiddenFor(model => model.ERApplications.ERScreeningDetail.ReportDocumentPath, new { id = "ReportDocument" })
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.ERApplications.ERScreeningDetailId)
+                            @Html.HiddenFor(model => model.ERApplications.AppId)
+                            @Html.HiddenFor(model => model.ERApplications.OrganisationId)
+                            @Html.HiddenFor(model => model.ERApplications.ERScreeningDetail.ReportDocumentPath, new { id = "ReportDocument" })
 
 
-                                <div class="alert alert-success alert-dismissible showmsg d-none statussuccess">
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                </div>
-                                <div class="card border-success shadow-lg mb-3 mw-100">
-                                    <div class="card-header bg-gradient-success text-white">
-                                        <div class="row">
-                                            <div class="col-lg-6"><h4>ER Screening Report Detail</h4></div>
-                                            <div class="col-lg-6 "><a href="#" class="btn btn-outline-light float-right GeneratePDF" id="printapp">Print</a></div>
-                                        </div>
+                            <div class="alert alert-success alert-dismissible showmsg d-none statussuccess">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            </div>
+                            <div class="card border-success shadow-lg mb-3 mw-100">
+                                <div class="card-header bg-gradient-success text-white">
+                                    <div class="row">
+                                        <div class="col-lg-6"><h4>ER Screening Report Detail</h4></div>
+                                        <div class="col-lg-6 "><a href="#" class="btn btn-outline-light float-right GeneratePDF" id="printapp">Print</a></div>
                                     </div>
-                                    <div class="card-body ml-lg-5">
-                                        <fieldset id="disabledForm">
-                                            <div class="form-horizontal">
-                                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="card-body ml-lg-5">
+                                    <fieldset id="disabledForm">
+                                        <div class="form-horizontal">
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                                                <div class="form-row">
-                                                    <h5 class="text-danger">All Fields Are Mandatory</h5>
-                                                    <hr />
-                                                </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DisplayFor(model => model.ERApplications.Organisation.Name, new { @class = "form-control" })
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.FieldType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DropDownListFor(model => model.ERApplications.FieldTypeId, new SelectList(Model.FieldTypes, "Id", "Type"), "Choose...", new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.FieldTypeId, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.FieldName, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.EditorFor(model => model.ERApplications.FieldName, new { htmlAttributes = new { @class = "form-control" } })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.FieldName, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.HydrocarbonType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.EnumDropDownListFor(model => model.ERApplications.HydrocarbonType, "Choose...", new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.HydrocarbonType, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.HydrocarbonMethod, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.EnumDropDownListFor(model => model.ERApplications.HydrocarbonMethod, "Choose...", new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.HydrocarbonMethod, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row" id="uhcProdnMethodDiv" style="display: none">
-                                                    @Html.LabelFor(model => model.ERApplications.UHCProductionMethod, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DropDownListFor(model => model.ERApplications.UHCProductionMethodId, new SelectList(Model.UHCProductionMethods, "Id", "Name"), "Select Method", new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.UHCProductionMethod, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.DateOfDiscovery, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.EditorFor(model => model.ERApplications.DateOfDiscovery, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @autocomplete = "off" } })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.DateOfDiscovery, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.ImplementaionType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.EnumDropDownListFor(model => model.ERApplications.ImplementaionType, "Choose...", new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.ImplementaionType, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.DateOfInitialCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.EditorFor(model => model.ERApplications.DateOfInitialCommercialProduction, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @autocomplete = "off" } })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.DateOfInitialCommercialProduction, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>                                              
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.PresentlyUnderProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.EnumDropDownListFor(model => model.ERApplications.PresentlyUnderProduction, "Choose...", new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.PresentlyUnderProduction, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row" id="DateOfLastCommercialProductionDiv" style="display:none">
-                                                    @Html.LabelFor(model => model.ERApplications.DateOfLastCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.EditorFor(model => model.ERApplications.DateOfLastCommercialProduction, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @autocomplete = "off" } })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.DateOfLastCommercialProduction, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.FieldOIIP, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        <div class="input-group mb-3">
-                                                            @Html.EditorFor(model => model.ERApplications.FieldOIIP, new { htmlAttributes = new { @class = "form-control", aria_describedby = "basic-addon1" } })
-                                                            <div class="input-group-append">
-                                                                <span class="input-group-text" id="basic-addon1">MMbbl</span>
-                                                            </div>
-                                                        </div>
-
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.FieldOIIP, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.FieldGIIP, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        <div class="input-group mb-3">
-                                                            @Html.EditorFor(model => model.ERApplications.FieldGIIP, new { htmlAttributes = new { @class = "form-control", aria_describedby = "basic-addon2", disabled = true } })
-                                                            <div class="input-group-append">
-                                                                <span class="input-group-text" id="basic-addon2">TCF</span>
-                                                            </div>
-                                                        </div>
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.FieldGIIP, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.TechnicallyCompatible, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.TechnicallyCompatible, "Choose...", new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.TechnicallyCompatible, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.PilotDesign, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.PilotDesign, "Choose...", new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.PilotDesign, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                                <div class=" border border-info p-2 shadow-sm PilotDetail">
-                                                    <p class="h5 text-info">Pilot Details</p>
-                                                    <div class="form-group row mt-3">
-                                                        @Html.LabelFor(model => model.ERApplications.ERPilot.PilotEconomicViability, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                        <div class="col-sm-6 d-flex align-items-center">
-                                                            @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.PilotEconomicViability, "Choose...", new { @class = "form-control" })
-                                                            @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.PilotEconomicViability, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row ">
-                                                        @Html.LabelFor(model => model.ERApplications.ERPilot.PilotNPV, htmlAttributes: new { @class = "col-sm-1 col-form-label font-weight-bold" })
-                                                        <div class="col-sm-4 d-flex align-items-center">
-                                                            @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.PilotNPV, "Choose...", new { @class = "form-control" })
-                                                            @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.PilotNPV, "", new { @class = "text-danger" })
-                                                        </div>
-                                                        @Html.LabelFor(model => model.ERApplications.ERPilot.PilotIRR, htmlAttributes: new { @class = "offset-sm-1 col-sm-1 col-form-label font-weight-bold" })
-                                                        <div class="col-sm-4 d-flex align-items-center">
-                                                            @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.PilotIRR, "Choose...", new { @class = "form-control" })
-                                                            @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.PilotIRR, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        @Html.LabelFor(model => model.ERApplications.ERPilot.PilotStartDate, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                        <div class="col-sm-6 d-flex align-items-center">
-                                                            @Html.EditorFor(model => model.ERApplications.ERPilot.PilotStartDate, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @autocomplete = "off" } })
-                                                            @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.PilotStartDate, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        @Html.LabelFor(model => model.ERApplications.ERPilot.PilotEndDate, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                        <div class="col-sm-6 d-flex align-items-center">
-                                                            @Html.EditorFor(model => model.ERApplications.ERPilot.PilotEndDate, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @autocomplete = "off" } })
-                                                            @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.PilotEndDate, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <div class=" border border-primary shadow-sm p-2 mt-3 mb-3 FullFilled">
-                                                    <p class="h5 text-primary">Full Filled</p>
-                                                    <div class="form-group row mt-3">
-                                                        @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillEconomicViability, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                        <div class="col-sm-6 d-flex align-items-center">
-                                                            @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.FullFillEconomicViability, "Choose...", new { @class = "form-control" })
-                                                            @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.FullFillEconomicViability, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillNPV, htmlAttributes: new { @class = "col-sm-1 col-form-label font-weight-bold" })
-                                                        <div class="col-sm-4 d-flex align-items-center">
-                                                            @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.FullFillNPV, "Choose...", new { @class = "form-control" })
-                                                            @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.FullFillNPV, "", new { @class = "text-danger" })
-                                                        </div>
-                                                        @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillIRR, htmlAttributes: new { @class = "offset-sm-1 col-sm-1 col-form-label font-weight-bold" })
-                                                        <div class="col-sm-4 d-flex align-items-center">
-                                                            @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.FullFillIRR, "Choose...", new { @class = "form-control" })
-                                                            @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.FullFillIRR, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillStartDate, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                        <div class="col-sm-6 d-flex align-items-center">
-                                                            @Html.EditorFor(model => model.ERApplications.ERPilot.FullFillStartDate, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @autocomplete = "off" } })
-                                                            @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.FullFillStartDate, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillEndDate, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                        <div class="col-sm-6 d-flex align-items-center">
-                                                            @Html.EditorFor(model => model.ERApplications.ERPilot.FullFillEndDate, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @autocomplete = "off" } })
-                                                            @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.FullFillEndDate, "", new { @class = "text-danger" })
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstitute, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DropDownListFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstituteId, new SelectList(Model.eRScreeningInstitutes, "Id", "InstituteName"), "Choose...", new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstituteId, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.EnumDropDownListFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, "Choose...", new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row FirstOrderScrText d-none">
-                                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.TextAreaFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScrText, new { htmlAttributes = new { @class = "form-control" }, @rows = 10, @cols = 120 })
-
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.EnumDropDownListFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, "Choose...", new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row SecondOrderScrText d-none">
-                                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-
-                                                        @Html.TextAreaFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScrText, new { htmlAttributes = new { @class = "form-control" }, @rows = 10, @cols = 120 })
-
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.EnumDropDownListFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, "Choose...", new { @class = "form-control" })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row ThirdOrderScrText d-none">
-                                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.TextAreaFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScrText, new { htmlAttributes = new { @class = "form-control" }, @rows = 10, @cols = 120 })
-
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.AdditonalRemarks, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.EditorFor(model => model.ERApplications.AdditonalRemarks, new { htmlAttributes = new { @class = "form-control" } })
-                                                        @Html.ValidationMessageFor(model => model.ERApplications.AdditonalRemarks, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
+                                            <div class="form-row">
+                                                <h5 class="text-danger">All Fields Are Mandatory</h5>
                                                 <hr />
-                                                <div class="form-group row" id="FileDiv">
-                                                    <div class="col-lg-12">
-                                                        <h6>ERScreening Report Documents</h6>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="form-check form-check-inline">
-                                                            @Html.TextBox("file", "", new { type = "file", id = "txtFile" })
-                                                            <button type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" data-filerefid="@ViewBag.RefId" data-divid="UploadFilesData" data-inputfile="#txtFile" style="z-index:99999999"><i class="fas fa-upload"></i> Upload</button>
-                                                            @*<input type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" filerefid="@ViewBag.RefId" divid="UploadFilesData" inputfile="txtFile" style="z-index:99999999" />*@
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <div class="col-lg-12 mt-3">
-                                                        <div id="UploadFilesData" style="display:none;border:dashed; border-color:brown">
-                                                            File Not Found
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row justify-content-center">
-
-                                                    <button type="submit" class="btn btn-primary" id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>
-
-                                                </div>
-
                                             </div>
-                                        </fieldset>
-                                    </div>
-                                </div>
-
-                            }
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <div id="ERProposalViewTab" class="container-fluid tab-pane active">
-                        <div class="row">
-                            <div class="col-md-12 mt-4">
-
-                                @Html.AntiForgeryToken()
-
-                                <div class="card border-primary mb-3">
-                                    <div class="card-header bg-gradient-primary text-white">
-                                        <div class="row">
-                                            <div class="col-lg-6"><h5><i class="fas fa-file-alt"></i> ER Screening Report</h5></div>
-                                            <div class="col-lg-6 ">
-                                                @*<a href="#" class="btn btn-sm btn-outline-light float-right ml-1 GeneratePDF" id="printapp"><i class="fas fa-print"></i> Print</a>*@
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.DisplayFor(model => model.ERApplications.Organisation.Name, new { @class = "form-control" })
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-body ml-lg-5">
-                                        <fieldset id="disabledForm1" disabled>
-                                            <div class="form-horizontal">
-                                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DisplayFor(model => model.ERApplications.Organisation.Name, new { htmlAttributes = new { @class = "form-control" } })
-                                                    </div>
+
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.FieldType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.DropDownListFor(model => model.ERApplications.FieldTypeId, new SelectList(Model.FieldTypes, "Id", "Type"), "Choose...", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.FieldTypeId, "", new { @class = "text-danger" })
                                                 </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.FieldType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DisplayFor(model => model.ERApplications.FieldType.Type, new { @class = "form-control" })
+                                            </div>
 
-                                                    </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.FieldName, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EditorFor(model => model.ERApplications.FieldName, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.FieldName, "", new { @class = "text-danger" })
                                                 </div>
+                                            </div>
 
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.FieldName, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DisplayFor(model => model.ERApplications.FieldName, new { htmlAttributes = new { @class = "form-control" } })
-
-                                                    </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.HydrocarbonType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EnumDropDownListFor(model => model.ERApplications.HydrocarbonType, "Choose...", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.HydrocarbonType, "", new { @class = "text-danger" })
                                                 </div>
-
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.HydrocarbonType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DisplayFor(model => model.ERApplications.HydrocarbonType, "Choose...", new { @class = "form-control" })
-
-                                                    </div>
+                                            </div>
+                                            <div class="form-group row " id="MethodProposedDiv" style="display: none">
+                                                @Html.LabelFor(model => model.ERApplications.HydrocarbonMethod, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EnumDropDownListFor(model => model.ERApplications.HydrocarbonMethod, "Choose...", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.HydrocarbonMethod, "", new { @class = "text-danger" })
                                                 </div>
+                                            </div>
 
-                                                <div class="form-group row" id="uhcProdnMethodDiv" style="display: none">
-                                                    @Html.LabelFor(model => model.ERApplications.UHCProductionMethod, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DisplayFor(model => model.ERApplications.UHCProductionMethodId, new { @class = "form-control" })
-
-                                                    </div>
+                                            <div class="form-group row" id="uhcProdnMethodDiv" style="display: none">
+                                                @Html.LabelFor(model => model.ERApplications.UHCProductionMethod, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.DropDownListFor(model => model.ERApplications.UHCProductionMethodId, new SelectList(Model.UHCProductionMethods, "Id", "Name"), "Select Method", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.UHCProductionMethod, "", new { @class = "text-danger" })
                                                 </div>
-
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.DateOfDiscovery, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DisplayFor(model => model.ERApplications.DateOfDiscovery, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text" } })
-
-                                                    </div>
+                                            </div>
+                                            <div class="form-group row" id="ImplementaionTypeDiv">
+                                                @Html.LabelFor(model => model.ERApplications.ImplementaionType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EnumDropDownListFor(model => model.ERApplications.ImplementaionType, "Choose...", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.ImplementaionType, "", new { @class = "text-danger" })
                                                 </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.ImplementaionType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DisplayFor(model => model.ERApplications.ImplementaionType, new { @class = "form-control" })
-
-                                                    </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.DateOfDiscovery, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EditorFor(model => model.ERApplications.DateOfDiscovery, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @autocomplete = "off" } })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.DateOfDiscovery, "", new { @class = "text-danger" })
                                                 </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.DateOfInitialCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DisplayFor(model => model.ERApplications.DateOfInitialCommercialProduction, new { htmlAttributes = new { @class = "form-control ", @type = "text" } })
+                                            </div>
 
-                                                    </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.DateOfInitialCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EditorFor(model => model.ERApplications.DateOfInitialCommercialProduction, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @autocomplete = "off" } })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.DateOfInitialCommercialProduction, "", new { @class = "text-danger" })
                                                 </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.PresentlyUnderProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        <div class="form-check form-check-inline">
-                                                            @Html.DisplayTextFor(model => model.ERApplications.PresentlyUnderProduction)
-
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.PresentlyUnderProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EnumDropDownListFor(model => model.ERApplications.PresentlyUnderProduction, "Choose...", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.PresentlyUnderProduction, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group row" id="DateOfLastCommercialProductionDiv" style="display:none">
+                                                @Html.LabelFor(model => model.ERApplications.DateOfLastCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EditorFor(model => model.ERApplications.DateOfLastCommercialProduction, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @autocomplete = "off" } })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.DateOfLastCommercialProduction, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.FieldOIIP, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    <div class="input-group mb-3">
+                                                        @Html.EditorFor(model => model.ERApplications.FieldOIIP, new { htmlAttributes = new { @class = "form-control", aria_describedby = "basic-addon1" } })
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text" id="basic-addon1">MMbbl</span>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                @if (Model.ERApplications.PresentlyUnderProduction == ERPortal.Core.Models.YesNo.Yes)
-                                                {
-                                                    <div class="form-group row" id="DateOfLastCommercialProductionDiv">
-                                                        @Html.LabelFor(model => model.ERApplications.DateOfLastCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                        <div class="col-sm-6 d-flex align-items-center">
-                                                            @Html.DisplayFor(model => model.ERApplications.DateOfLastCommercialProduction, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
 
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.FieldOIIP, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.FieldGIIP, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    <div class="input-group mb-3">
+                                                        @Html.EditorFor(model => model.ERApplications.FieldGIIP, new { htmlAttributes = new { @class = "form-control", aria_describedby = "basic-addon2", disabled = true } })
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text" id="basic-addon2">TCF</span>
                                                         </div>
                                                     </div>
-                                                }
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstitute.InstituteName, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        <div class="form-check form-check-inline">
-                                                            @Html.DisplayFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstitute.InstituteName, new { @class = "form-check-input" })
-                                                        </div>
-                                                    </div>
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.FieldGIIP, "", new { @class = "text-danger" })
                                                 </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        <div class="form-check form-check-inline">
+                                            </div>
 
-                                                            @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening)
-                                                        </div>
-                                                    </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.ERPilot.TechnicallyCompatible, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.TechnicallyCompatible, "Choose...", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.TechnicallyCompatible, "", new { @class = "text-danger" })
                                                 </div>
-                                                @{
-                                                    if (Model.ERApplications.ERScreeningDetail.FirstOrderScreening == ERPortal.Core.Models.YesNo.Yes)
-                                                    {
-                                                        <div class="form-group row">
-                                                            @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                            <div class="col-sm-6 d-flex align-items-center">
-                                                                <div class="form-check form-check-inline">
-
-                                                                    @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScrText)
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    }
-                                                }
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        <div class="form-check form-check-inline">
-
-                                                            @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening)
-                                                        </div>
-                                                    </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.ERPilot.PilotDesign, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.PilotDesign, "Choose...", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.PilotDesign, "", new { @class = "text-danger" })
                                                 </div>
-                                                @{
-                                                    if (Model.ERApplications.ERScreeningDetail.SecondOrderScreening == ERPortal.Core.Models.YesNo.Yes)
-                                                    {
-                                                        <div class="form-group row">
-                                                            @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                            <div class="col-sm-6 d-flex align-items-center">
-                                                                <div class="form-check form-check-inline">
-
-                                                                    @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScrText)
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    }
-                                                }
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        <div class="form-check form-check-inline">
-
-                                                            @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening)
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                @{
-                                                    if (Model.ERApplications.ERScreeningDetail.ThirdOrderScreening == ERPortal.Core.Models.YesNo.Yes)
-                                                    {
-                                                        <div class="form-group row">
-                                                            @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                            <div class="col-sm-6 d-flex align-items-center">
-                                                                <div class="form-check form-check-inline">
-
-                                                                    @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScrText)
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    }
-                                                }
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.FieldOIIP, "FieldOIIP (MMbbl)", htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        <div class="input-group mb-3">
-                                                            @Html.DisplayFor(model => model.ERApplications.FieldOIIP, new { htmlAttributes = new { @class = "form-control", aria_describedby = "basic-addon1" } })
-                                                        </div>
-
-
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.FieldGIIP, "FieldGIIP (TCF)", htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        <div class="input-group mb-3">
-                                                            @Html.DisplayFor(model => model.ERApplications.FieldGIIP, new { htmlAttributes = new { @class = "form-control", aria_describedby = "basic-addon2" } })
-
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.TechnicallyCompatible, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                    <div class="col-sm-6 d-flex align-items-center">
-                                                        <div class="form-check form-check-inline">
-
-                                                            @Html.DisplayTextFor(model => model.ERApplications.ERPilot.TechnicallyCompatible)
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group row">
+                                            </div>
+                                            <div class=" border border-info p-2 shadow-sm PilotDetail">
+                                                <p class="h5 text-info">Pilot Details</p>
+                                                <div class="form-group row mt-3">
                                                     @Html.LabelFor(model => model.ERApplications.ERPilot.PilotEconomicViability, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
                                                     <div class="col-sm-6 d-flex align-items-center">
-                                                        <div class="form-check form-check-inline">
-
-                                                            @Html.DisplayTextFor(model => model.ERApplications.ERPilot.PilotEconomicViability)
-                                                        </div>
-
+                                                        @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.PilotEconomicViability, "Choose...", new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.PilotEconomicViability, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
-
+                                                <div class="form-group row ">
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.PilotNPV, htmlAttributes: new { @class = "col-sm-1 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-4 d-flex align-items-center">
+                                                        @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.PilotNPV, "Choose...", new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.PilotNPV, "", new { @class = "text-danger" })
+                                                    </div>
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.PilotIRR, htmlAttributes: new { @class = "offset-sm-1 col-sm-1 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-4 d-flex align-items-center">
+                                                        @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.PilotIRR, "Choose...", new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.PilotIRR, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
                                                 <div class="form-group row">
-                                                    @Html.LabelFor(model => model.ERApplications.AdditonalRemarks, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.PilotStartDate, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
                                                     <div class="col-sm-6 d-flex align-items-center">
-                                                        @Html.DisplayFor(model => model.ERApplications.AdditonalRemarks, new { htmlAttributes = new { @class = "form-control" } })
-
+                                                        @Html.EditorFor(model => model.ERApplications.ERPilot.PilotStartDate, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @autocomplete = "off" } })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.PilotStartDate, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
-                                                <div id="DetailViewFile" class="form-group row">
-                                                    <div class="pl-2 border-primary col-sm-12" style="border:dashed">
-                                                        <p class="text-info font-weight-bold h5">Documents</p>
-                                                        @Html.HiddenFor(model => model.ERApplications.ERScreeningDetail.ReportDocumentPath)
-                                                        @if (ViewBag.ERFiles.Count > 0)
-                                                        {
-                                                            foreach (var x in ViewBag.ERFiles)
-                                                            {
-                                                                <div class='badge badge-warning mr-2 mb-2'>
-                                                                    <a class='text-dark' href="@Url.Content("~/Content/UploadedFiles/" + x.FileName)" target='_blank'>@x.FileName</a>
-                                                                </div>
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            <h6 class="text-danger font-weight-bold">No File Found</h6>
-                                                        }
+                                                <div class="form-group row">
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.PilotEndDate, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+                                                        @Html.EditorFor(model => model.ERApplications.ERPilot.PilotEndDate, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @autocomplete = "off" } })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.PilotEndDate, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class=" border border-primary shadow-sm p-2 mt-3 mb-3 FullFilled">
+                                                <p class="h5 text-primary">Full Filled</p>
+                                                <div class="form-group row mt-3">
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillEconomicViability, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+                                                        @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.FullFillEconomicViability, "Choose...", new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.FullFillEconomicViability, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillNPV, htmlAttributes: new { @class = "col-sm-1 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-4 d-flex align-items-center">
+                                                        @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.FullFillNPV, "Choose...", new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.FullFillNPV, "", new { @class = "text-danger" })
+                                                    </div>
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillIRR, htmlAttributes: new { @class = "offset-sm-1 col-sm-1 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-4 d-flex align-items-center">
+                                                        @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.FullFillIRR, "Choose...", new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.FullFillIRR, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillStartDate, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+                                                        @Html.EditorFor(model => model.ERApplications.ERPilot.FullFillStartDate, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @autocomplete = "off" } })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.FullFillStartDate, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillEndDate, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+                                                        @Html.EditorFor(model => model.ERApplications.ERPilot.FullFillEndDate, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text", @autocomplete = "off" } })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.FullFillEndDate, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
                                             </div>
-                                        </fieldset>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstitute, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.DropDownListFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstituteId, new SelectList(Model.eRScreeningInstitutes, "Id", "InstituteName"), "Choose...", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstituteId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EnumDropDownListFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, "Choose...", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group row FirstOrderScrText d-none">
+                                                @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.TextAreaFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScrText, new { htmlAttributes = new { @class = "form-control" }, @rows = 10, @cols = 120 })
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EnumDropDownListFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, "Choose...", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group row SecondOrderScrText d-none">
+                                                @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+
+                                                    @Html.TextAreaFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScrText, new { htmlAttributes = new { @class = "form-control" }, @rows = 10, @cols = 120 })
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EnumDropDownListFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, "Choose...", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group row ThirdOrderScrText d-none">
+                                                @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.TextAreaFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScrText, new { htmlAttributes = new { @class = "form-control" }, @rows = 10, @cols = 120 })
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.AdditonalRemarks, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EditorFor(model => model.ERApplications.AdditonalRemarks, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.AdditonalRemarks, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div class="form-group row" id="FileDiv">
+                                                <div class="col-lg-12">
+                                                    <h6>ERScreening Report Documents</h6>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-check form-check-inline">
+                                                        @Html.TextBox("file", "", new { type = "file", id = "txtFile" })
+                                                        <button type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" data-filerefid="@ViewBag.RefId" data-divid="UploadFilesData" data-inputfile="#txtFile" style="z-index:99999999"><i class="fas fa-upload"></i> Upload</button>
+                                                        @*<input type="button" value="Upload" class="btn btn-sm btn-primary UploadFile" filerefid="@ViewBag.RefId" divid="UploadFilesData" inputfile="txtFile" style="z-index:99999999" />*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-lg-12 mt-3">
+                                                    <div id="UploadFilesData" style="display:none;border:dashed; border-color:brown">
+                                                        File Not Found
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row justify-content-center">
+
+                                                @*<button type="submit" class="btn btn-primary" id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>*@
+                                                <button type="button" class="btn btn-info" id="BtnERAppEligibility"><i class="fas fa-check"></i> Check Eligibility</button>
+
+                                            </div>
+
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div id="ERProposalViewTab" class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 mt-4">
+
+                            <div class="card border-primary mb-3">
+                                <div class="card-header bg-gradient-primary text-white">
+                                    <div class="row">
+                                        <div class="col-lg-6"><h5><i class="fas fa-file-alt"></i> ER Screening Report</h5></div>
+                                        <div class="col-lg-6 ">
+                                            @*<a href="#" class="btn btn-sm btn-outline-light float-right ml-1 GeneratePDF" id="printapp"><i class="fas fa-print"></i> Print</a>*@
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="card-body ml-lg-5">
+                                    <fieldset id="disabledForm1" disabled>
+                                        <div class="form-horizontal">
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.Organisation, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.DisplayFor(model => model.ERApplications.Organisation.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.FieldType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.DisplayFor(model => model.ERApplications.FieldType.Type, new { @class = "form-control" })
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.FieldName, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.DisplayFor(model => model.ERApplications.FieldName, new { htmlAttributes = new { @class = "form-control" } })
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.HydrocarbonType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.DisplayFor(model => model.ERApplications.HydrocarbonType, "Choose...", new { @class = "form-control" })
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.HydrocarbonMethod, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.DisplayFor(model => model.ERApplications.HydrocarbonMethod, "Choose...", new { @class = "form-control" })
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row" id="uhcProdnMethodDiv" style="display: none">
+                                                @Html.LabelFor(model => model.ERApplications.UHCProductionMethod, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.DisplayFor(model => model.ERApplications.UHCProductionMethodId, new { @class = "form-control" })
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.ImplementaionType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.DisplayFor(model => model.ERApplications.ImplementaionType, new { @class = "form-control" })
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.DateOfDiscovery, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.DisplayFor(model => model.ERApplications.DateOfDiscovery, new { htmlAttributes = new { @class = "form-control datetimetext", @type = "text" } })
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.DateOfInitialCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.DisplayFor(model => model.ERApplications.DateOfInitialCommercialProduction, new { htmlAttributes = new { @class = "form-control ", @type = "text" } })
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.PresentlyUnderProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    <div class="form-check form-check-inline">
+                                                        @Html.DisplayTextFor(model => model.ERApplications.PresentlyUnderProduction)
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @if (Model.ERApplications.PresentlyUnderProduction == ERPortal.Core.Models.YesNo.Yes)
+                                            {
+                                                <div class="form-group row" id="DateOfLastCommercialProductionDiv">
+                                                    @Html.LabelFor(model => model.ERApplications.DateOfLastCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+                                                        @Html.DisplayFor(model => model.ERApplications.DateOfLastCommercialProduction, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.FieldOIIP, "FieldOIIP (MMbbl)", htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    <div class="input-group mb-3">
+                                                        @Html.DisplayFor(model => model.ERApplications.FieldOIIP, new { htmlAttributes = new { @class = "form-control", aria_describedby = "basic-addon1" } })
+                                                    </div>
 
 
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.FieldGIIP, "FieldGIIP (TCF)", htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    <div class="input-group mb-3">
+                                                        @Html.DisplayFor(model => model.ERApplications.FieldGIIP, new { htmlAttributes = new { @class = "form-control", aria_describedby = "basic-addon2" } })
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.ERPilot.TechnicallyCompatible, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    <div class="form-check form-check-inline">
+
+                                                        @Html.DisplayTextFor(model => model.ERApplications.ERPilot.TechnicallyCompatible)
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.ERPilot.PilotEconomicViability, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    <div class="form-check form-check-inline">
+
+                                                        @Html.DisplayTextFor(model => model.ERApplications.ERPilot.PilotEconomicViability)
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.ERPilot.PilotDesign, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.PilotDesign, "Choose...", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.PilotDesign, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class=" border border-info p-2 shadow-sm PilotDetail">
+                                                <p class="h5 text-info">Pilot Details</p>
+                                                <div class="form-group row mt-3">
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.PilotEconomicViability, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+                                                        @Html.DisplayTextFor(model => model.ERApplications.ERPilot.PilotEconomicViability)
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row ">
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.PilotNPV, htmlAttributes: new { @class = "col-sm-1 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-4 d-flex align-items-center">
+                                                        @Html.DisplayTextFor(model => model.ERApplications.ERPilot.PilotNPV)
+                                                    </div>
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.PilotIRR, htmlAttributes: new { @class = "offset-sm-1 col-sm-1 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-4 d-flex align-items-center">
+                                                        @Html.DisplayTextFor(model => model.ERApplications.ERPilot.PilotIRR)
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.PilotStartDate, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+
+                                                        @Html.DisplayFor(model => model.ERApplications.ERPilot.PilotStartDate, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.PilotEndDate, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+
+                                                        @Html.DisplayFor(model => model.ERApplications.ERPilot.PilotEndDate, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class=" border border-primary shadow-sm p-2 mt-3 mb-3 FullFilled">
+                                                <p class="h5 text-primary">Full Filled</p>
+                                                <div class="form-group row mt-3">
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillEconomicViability, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+                                                        @Html.DisplayTextFor(model => model.ERApplications.ERPilot.FullFillEconomicViability)
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillNPV, htmlAttributes: new { @class = "col-sm-1 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-4 d-flex align-items-center">
+                                                        @Html.DisplayTextFor(model => model.ERApplications.ERPilot.FullFillNPV)
+                                                    </div>
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillIRR, htmlAttributes: new { @class = "offset-sm-1 col-sm-1 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-4 d-flex align-items-center">
+                                                        @Html.DisplayTextFor(model => model.ERApplications.ERPilot.FullFillIRR)
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillStartDate, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+                                                        @Html.DisplayFor(model => model.ERApplications.ERPilot.FullFillStartDate, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    @Html.LabelFor(model => model.ERApplications.ERPilot.FullFillEndDate, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+                                                        @Html.DisplayFor(model => model.ERApplications.ERPilot.FullFillEndDate, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstitute.InstituteName, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    <div class="form-check form-check-inline">
+                                                        @Html.DisplayFor(model => model.ERApplications.ERScreeningDetail.ERScreeningInstitute.InstituteName, new { @class = "form-check-input" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    <div class="form-check form-check-inline">
+
+                                                        @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @{
+                                                if (Model.ERApplications.ERScreeningDetail.FirstOrderScreening == ERPortal.Core.Models.YesNo.Yes)
+                                                {
+                                                    <div class="form-group row">
+                                                        @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                        <div class="col-sm-6 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+
+                                                                @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScrText)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    <div class="form-check form-check-inline">
+
+                                                        @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @{
+                                                if (Model.ERApplications.ERScreeningDetail.SecondOrderScreening == ERPortal.Core.Models.YesNo.Yes)
+                                                {
+                                                    <div class="form-group row">
+                                                        @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                        <div class="col-sm-6 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+
+                                                                @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScrText)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    <div class="form-check form-check-inline">
+
+                                                        @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @{
+                                                if (Model.ERApplications.ERScreeningDetail.ThirdOrderScreening == ERPortal.Core.Models.YesNo.Yes)
+                                                {
+                                                    <div class="form-group row">
+                                                        @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                        <div class="col-sm-6 d-flex align-items-center">
+                                                            <div class="form-check form-check-inline">
+
+                                                                @Html.DisplayTextFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScrText)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+
+
+                                            <div class="form-group row">
+                                                @Html.LabelFor(model => model.ERApplications.AdditonalRemarks, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                <div class="col-sm-6 d-flex align-items-center">
+                                                    @Html.DisplayFor(model => model.ERApplications.AdditonalRemarks, new { htmlAttributes = new { @class = "form-control" } })
+
+                                                </div>
+                                            </div>
+                                            <div id="DetailViewFile" class="form-group row">
+                                                <div class="pl-2 border-primary col-sm-12" style="border:dashed">
+                                                    <p class="text-info font-weight-bold h5">Documents</p>
+                                                    @Html.HiddenFor(model => model.ERApplications.ERScreeningDetail.ReportDocumentPath)
+                                                    @if (ViewBag.ERFiles.Count > 0)
+                                                    {
+                                                        foreach (var x in ViewBag.ERFiles)
+                                                        {
+                                                            <div class='badge badge-warning mr-2 mb-2'>
+                                                                <a class='text-dark' href="@Url.Content("~/Content/UploadedFiles/" + x.FileName)" target='_blank'>@x.FileName</a>
+                                                            </div>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <h6 class="text-danger font-weight-bold">No File Found</h6>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
                             </div>
+
+
                         </div>
-
                     </div>
-                }
+
+                </div>
             }
-            <div id="QueryCommentTab" class="container-fluid tab-pane fade ">
-
-            </div>
-
-
-        </div>
-
+        }
     </div>
 </div>
 
-<script src="~/Scripts/CustomFiles/SubmitERProposal.js"></script>
+@Scripts.Render("~/Scripts/CustomFiles/SubmitERProposal")

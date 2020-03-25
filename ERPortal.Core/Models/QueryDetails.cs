@@ -12,19 +12,17 @@ namespace ERPortal.Core.Models
         public string CommentRefId { get; set; }
         //public virtual Comment CommentRef { get; set; }
         public string QueryParentId { get; set; }
-       // public virtual QueryMaster QueryParent { get; set; }
+        // public virtual QueryMaster QueryParent { get; set; }
         public int QuerySeq { get; set; }
-        public string FileRefId { get; set; }            
+        public string FileRefId { get; set; }
         public string Status { get; set; }
-        public Boolean Is_Active { get; set; }
         public string CustQueryId { get; set; }
     }
 
-    public class QueryMaster :BaseEntity
+    public class QueryMaster : BaseEntity
     {
         public string ERApplicationId { get; set; }
-        public string Subject { get; set; }
-        public Boolean Is_Active { get; set; }
+        public string Subject { get; set; }      
         public string QueryParentId { get; set; }
         public string CustQueryId { get; set; }
 
@@ -34,7 +32,7 @@ namespace ERPortal.Core.Models
         public string SenderId { get; set; }
         public string RecieverId { get; set; }
         public string QueryId { get; set; }
-       // public virtual QueryDetails Query{ get; set; }
+        // public virtual QueryDetails Query{ get; set; }
 
     }
 }

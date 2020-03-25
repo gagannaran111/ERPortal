@@ -28,7 +28,6 @@ namespace ERPortal.Core.Models
     {
         public string ListItemKey { get; set; }
         public string ListItemValue { get; set; }
-
     }
 
 }

@@ -14,7 +14,7 @@ namespace ERPortal.Core.Models
         public string ErrorText { get; set; }
         public string UserAccountId { get; set; }
         public virtual UserAccount UserAccount { get; set; }
-        public Boolean Is_Active { get; set; }
+      
         public virtual ErrorStatus ErrorStatus { get; set; }
     }
     

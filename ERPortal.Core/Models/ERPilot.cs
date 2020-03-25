@@ -27,9 +27,11 @@ namespace ERPortal.Core.Models
         [Display(Name = "IRR")]
         public PositiveNegative PilotIRR { get; set; }
         [Display(Name = "Pilot Phase Commencement Date")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime PilotStartDate { get; set; }
 
         [Display(Name = "Pilot Phase Culmination Date")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime PilotEndDate { get; set; }
 
         [Display(Name = "Economic Viable")]
@@ -42,14 +44,16 @@ namespace ERPortal.Core.Models
         public PositiveNegative FullFillIRR { get; set; }
 
         [Display(Name = "Commencement Date")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime FullFillStartDate { get; set; }
 
         [Display(Name = "Culmination Date")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime FullFillEndDate { get; set; }
 
         [Display(Name = "Eligible For Fiscal Incentive")]
         public YesNo? EligibleForFiscalIncentive { get; set; }
-        public Boolean Is_Active { get; set; }
+      
 
     }
 }

@@ -27,6 +27,10 @@
                     <a class="nav-link" data-toggle="tab" href="#UHCProductionMethodTab">UHC Production Method</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#ERTechniquesTab">ER Techniques</a>
+                </li>
+                
+                <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#ERScreeningInstituteTab">ER Screening Institute</a>
                 </li>
                 <li class="nav-item">
@@ -46,6 +50,7 @@
                                 <tr>
                                     <th scope="col">Organisation</th>
                                     <th scope="col">Type</th>
+                                    <th scope="col">Is_Active</th>
                                     <th scope="col" class="text-center">Edit/Delete</th>
                                 </tr>
                             </thead>
@@ -55,6 +60,7 @@
                                     <tr id="row_@Organisation.Id">
                                         <td>@Organisation.Name</td>
                                         <td>@Organisation.Type</td>
+                                        <td>@Organisation.Is_Active</td>
                                         <td class="text-center">
 
                                             <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#formModal" data-page="Organisation" data-title="Department" data-value="@Organisation.Id"><i class="fas fa-edit"></i></button>
@@ -80,6 +86,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Field Type</th>
+                                    <th scope="col">Is_Active</th>
                                     <th scope="col" class="text-center">Edit/Delete</th>
                                 </tr>
                             </thead>
@@ -88,6 +95,7 @@
                                 {
                                     <tr id="row_@FieldType.Id">
                                         <td>@FieldType.Type</td>
+                                        <td>@FieldType.Is_Active</td>
                                         <td class="text-center">
 
                                             <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#formModal" data-page="FieldType" data-title="Department" data-value="@FieldType.Id"><i class="fas fa-edit"></i></button>
@@ -114,6 +122,7 @@
                                 <tr>
                                     <th scope="col">Method Name</th>
                                     <th scope="col">Description</th>
+                                    <th scope="col">Is_Active</th>
                                     <th scope="col" class="text-center">Edit/Delete</th>
                                 </tr>
                             </thead>
@@ -123,6 +132,7 @@
                                     <tr id="row_@UHCProductionMethod.Id">
                                         <td>@UHCProductionMethod.Name</td>
                                         <td>@UHCProductionMethod.Description</td>
+                                        <td>@UHCProductionMethod.Is_Active</td>
                                         <td class="text-center">
 
 
@@ -140,6 +150,46 @@
                     </div>
                 </div>
             </div>
+            <div id="ERTechniquesTab" class="container tab-pane fade">
+                <div class="card shadow-lg m-3">
+                    <div class="card-body">
+
+                        <table class="table table-striped table-bordered ">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Method</th>
+                                    <th scope="col">TechniqueType</th>
+                                    <th scope="col">TechniqueName</th>
+                                    <th scope="col">Is_Active</th>
+                                    <th scope="col" class="text-center">Edit/Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var eRTechniques in Model.ERTechniques)
+                                {
+                                <tr id="row_@eRTechniques.Id">
+                                    <td>@eRTechniques.Method</td>
+                                    <td>@eRTechniques.TechniqueType</td>
+                                    <td>@eRTechniques.TechniqueName</td>
+                                    <td>@eRTechniques.Is_Active</td>
+
+                                    <td class="text-center">
+
+
+                                        <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#formModal" data-page="ERTechniques" data-title="ER Techniques" data-value="@eRTechniques.Id"><i class="fas fa-edit"></i></button>
+                                        <button type="button" class="btn btn-sm btn-danger DeleteData" data-target="ERTechniques" data-value="@eRTechniques.Id"><i class="fas fa-trash"></i></button>
+
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <br />
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#formModal" data-page="ERTechniques" data-title="ER Techniques">Add new ER Techniques</button>
+                    </div>
+                </div>
+            </div>
             <div id="ERScreeningInstituteTab" class="container tab-pane fade">
                 <div class="card shadow-lg m-3">
                     <div class="card-body">
@@ -151,7 +201,7 @@
                                     <th scope="col">Contact Person</th>
                                     <th scope="col">Address</th>
                                     <th scope="col">Email Id</th>
-
+                                    <th scope="col">Is_Active</th>
                                     <th scope="col" class="text-center">Edit/Delete</th>
                                 </tr>
                             </thead>
@@ -163,6 +213,7 @@
                                         <td>@ERScreeningInstitute.ContactPerson</td>
                                         <td>@ERScreeningInstitute.Address</td>
                                         <td>@ERScreeningInstitute.EmailID</td>
+                                        <td>@ERScreeningInstitute.Is_Active</td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#formModal" data-page="ERScreeningInstitute" data-title="ERScreeningInstitute" data-value="@ERScreeningInstitute.Id"><i class="fas fa-edit"></i></button>
                                             <button type="button" class="btn btn-sm btn-danger" value="@ERScreeningInstitute.Id"><i class="fas fa-trash"></i></button>
@@ -288,114 +339,11 @@
                 ...
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary BtnClose" data-dismiss="modal">Close</button>
                 <button type="submit" form="myForm" class="btn btn-primary" id="saveButton">Save</button>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        $('#formModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var targetPage = button.data('page'); // Extract page redirection from data-* attributes
-            var modalTitle = button.data('title');// Extract Modal title from data-* attributes
-            var btnval = button.data('value');
-            // Initiate an AJAX request here (and then updating in a callback)
-            $("#formModalLabel").html("Add " + modalTitle);
-            $.ajax({
-                url: "/Admin/AjaxAdd?targetPage=" + targetPage,
-                data: {Id:btnval},
-                success: function (result) {
-                    $('#modalContent').html(result);
-                    if ($("#saveButton").is(":hidden")) {
-                        $('#saveButton').show();
-                    }
-                },
-                error: function () {
-                    $('#modalContent').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
-                    if ($("#saveButton").is(":visible")) {
-                        $('#saveButton').fadeOut();
-                    }
-                },
-                fail: function (xhr, textStatus, errorThrown) {
-                    $('#modalContent').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
-                    if ($("#saveButton").is(":visible")) {
-                        $('#saveButton').fadeOut();
-                    }
-                }
-            });
-        });
-        $(document).on('submit', '#myForm', function (e) {
-            // stop default form submission
-            e.preventDefault();
-            var formUrl = $('#myForm').attr('action');
-            $.ajax({
-                url: formUrl,
-                type: 'POST',
-                data: $('#myForm').serialize(),
-                success: function (result) {
-                    if ('Success' == result) {
-                        $('#modalContent').html('<div class="alert alert-success" role="alert"> Successfully Added </div >');
-                        if ($("#saveButton").is(":visible")) {
-                            $('#saveButton').fadeOut();
-                        }
-                    } else {
-                        $('#modalContent').html(result);
-                    }
-                },
-                error: function () {
-                    $('#modalContent').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
-                    if ($("#saveButton").is(":visible")) {
-                        $('#saveButton').fadeOut();
-                    }
-                },
-                fail: function (xhr, textStatus, errorThrown) {
-                    $('#modalContent').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
-                    if ($("#saveButton").is(":visible")) {
-                        $('#saveButton').fadeOut();
-                    }
-                }
-            });
-        });
-
-        $('.table').DataTable(
-            {
-                // scrollY: '50vh',
-                scrollCollapse: true,
-                paging: true,
-                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-
-                //processing: true,
-                // deferLoading: 5
-            });
-
-    });
-
-    $(document).on('click', '.DeleteData', function () {
-
-        var target = $(this).attr('data-target');
-        var id = $(this).attr('data-value');
-        $.ajax({
-            url: "@Url.Action("DeleteData","Admin")",
-            type: 'POST',
-            data: { targetdata:target,Id : id },
-            success: function (result) {
-                alert(result);
-            },
-            error: function () {
-            },
-            fail: function (xhr, textStatus, errorThrown) { }
-
-
-
-        });
-
-    });
-
-
-
-
-
-</script>
+<script src="~/Scripts/CustomFiles/AdminIndex.js"></script>
