@@ -1,4 +1,6 @@
-﻿$(document).ready(() => {
+﻿import { alertModal } from "./CommenMethods";
+
+$(document).ready(() => {
 
     let CurrentTab = sessionStorage.getItem('CurrentTab');
     if (CurrentTab != null) {
@@ -89,7 +91,7 @@ $(document).on('click', '.DeleteData', ({ currentTarget }) => {
         type: 'POST',
         data: { targetdata: target, Id: id },
         success: (result) => {
-            alert(result);
+            alertModal(result);
         },
         error: () => {
         },

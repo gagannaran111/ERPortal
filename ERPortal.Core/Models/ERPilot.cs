@@ -22,34 +22,34 @@ namespace ERPortal.Core.Models
         public YesNo PilotEconomicViability { get; set; }
 
         [Display(Name = "NPV")]
-        public PositiveNegative PilotNPV { get; set; }
+        public PositiveNegative? PilotNPV { get; set; }
 
         [Display(Name = "IRR")]
-        public PositiveNegative PilotIRR { get; set; }
+        public PositiveNegative? PilotIRR { get; set; }
         [Display(Name = "Pilot Phase Commencement Date")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
-        public DateTime PilotStartDate { get; set; }
+        public DateTime? PilotStartDate { get; set; }
 
         [Display(Name = "Pilot Phase Culmination Date")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
-        public DateTime PilotEndDate { get; set; }
+        public DateTime? PilotEndDate { get; set; }
 
         [Display(Name = "Economic Viable")]
         public YesNo? FullFillEconomicViability { get; set; }
 
         [Display(Name = "NPV")]
-        public PositiveNegative FullFillNPV { get; set; }
+        public PositiveNegative? FullFillNPV { get; set; }
 
         [Display(Name = "IRR")]
-        public PositiveNegative FullFillIRR { get; set; }
+        public PositiveNegative? FullFillIRR { get; set; }
 
         [Display(Name = "Commencement Date")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
-        public DateTime FullFillStartDate { get; set; }
+        public DateTime? FullFillStartDate { get; set; }
 
         [Display(Name = "Culmination Date")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
-        public DateTime FullFillEndDate { get; set; }
+        public DateTime? FullFillEndDate { get; set; }
 
         [Display(Name = "Eligible For Fiscal Incentive")]
         public YesNo? EligibleForFiscalIncentive { get; set; }

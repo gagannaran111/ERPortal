@@ -1,9 +1,10 @@
-﻿
+﻿import { ToChangeDateFormate } from './CommenMethods.js';
+import { statusDeck, filterData } from './Types.js';
 $(document).ready(() => {
 
     UserTableData();
 });
-var table;
+let table;
 const UserTableData = () => {
     $.ajax({
         url: "/DGH/DGHDashboard", //"@Url.Action("DGHDashboard","DGH")",
@@ -71,17 +72,6 @@ const UserTableData = () => {
     })
 };
 
-
-const statusDeck = {
-    statusAll: "All",
-    statusAP: "Approved",
-    statusNA: "New Application",
-    statusUP: "Under Proccessing",
-    statusPWM: "Pending With Me",
-    statusRJ: "Reject"
-}
-const filterData = { type: "Status", statustext: statusDeck.statusAll };
-
 $(document).on('click', '.card-deck .card', ({ currentTarget }) => {
     let DatasetAttrVal = currentTarget.dataset;
     filterData.statustext = DatasetAttrVal.val;
@@ -91,7 +81,7 @@ $(document).on('click', '.card-deck .card', ({ currentTarget }) => {
 $.fn.dataTable.ext.search.push((settings, data, dataIndex) => {
     switch (filterData.type) {
         case "Status":
-            Status = data[6];
+           let Status = data[6];
             filterData.statustext = filterData.statustext == statusDeck.statusAll ? "" : filterData.statustext;
             return Status == filterData.statustext || filterData.statustext == "" ? true : false;
         default: return false;

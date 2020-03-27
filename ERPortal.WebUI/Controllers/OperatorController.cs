@@ -29,13 +29,14 @@ namespace ERPortal.WebUI.Controllers
         IRepository<ERAppActiveUsers> ERAppActiveUsersContext;
         IRepository<StatusMaster> StatusMasterContext;
         IRepository<UserAccount> UserAccountContext;
+        IRepository<ERTechniques> ERTechniquesContext;
         public OperatorController(IRepository<ERApplication> _ERApplicationContext,
             IRepository<FieldType> _FieldTypeContext, IRepository<UHCProductionMethod> _UHCProductionMethodContext,
             IRepository<UploadFile> _UploadFileContext, IRepository<ERScreeningDetail> _ERScreeningDetailContext,
             IRepository<ERScreeningInstitute> _ERScreeningInstituteContext, IRepository<Organisation> _OrganisationContext,
             IRepository<ForwardApplication> _ForwardApplicationContext, IRepository<AuditTrails> _AuditTrailContext,
             IRepository<ERAppActiveUsers> _ERAppActiveUsersContext, IRepository<StatusMaster> _StatusMasterContext,
-            IRepository<UserAccount> _UserAccountContext)
+            IRepository<UserAccount> _UserAccountContext, IRepository<ERTechniques> _ERTechniquesContext)
         {
             ERApplicationContext = _ERApplicationContext;
             FieldTypeContext = _FieldTypeContext;
@@ -49,6 +50,7 @@ namespace ERPortal.WebUI.Controllers
             ERAppActiveUsersContext = _ERAppActiveUsersContext;
             StatusMasterContext = _StatusMasterContext;
             UserAccountContext = _UserAccountContext;
+            ERTechniquesContext = _ERTechniquesContext;
 
         }
 
@@ -131,7 +133,7 @@ namespace ERPortal.WebUI.Controllers
             }
             viewModel.FieldTypes = FieldTypeContext.Collection().ToList();
             viewModel.UHCProductionMethods = UHCProductionMethodContext.Collection().ToList();
-            //  viewModel.organisationTypes = OrganisationContext.Collection().ToList();
+            viewModel.eRTechniques = ERTechniquesContext.Collection().ToList();
             viewModel.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
 
             //viewModel.UploadFiles = UploadFileContext.Collection();
@@ -152,6 +154,7 @@ namespace ERPortal.WebUI.Controllers
                 _ERApplication.FieldTypes = FieldTypeContext.Collection().ToList();
                 _ERApplication.UHCProductionMethods = UHCProductionMethodContext.Collection().ToList();
                 _ERApplication.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
+                _ERApplication.eRTechniques = ERTechniquesContext.Collection().ToList();
                 return View(_ERApplication);
             }
             else
@@ -222,6 +225,7 @@ namespace ERPortal.WebUI.Controllers
                     _ERApplication.FieldTypes = FieldTypeContext.Collection().ToList();
                     _ERApplication.UHCProductionMethods = UHCProductionMethodContext.Collection().ToList();
                     _ERApplication.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
+                    _ERApplication.eRTechniques = ERTechniquesContext.Collection().ToList();
                     return View(_ERApplication);
                     // return Json(textmsg, JsonRequestBehavior.AllowGet);
                 }
@@ -230,116 +234,6 @@ namespace ERPortal.WebUI.Controllers
 
             return Json("Success", JsonRequestBehavior.AllowGet);
         }
-        #region // Not Used
-        public ActionResult AjaxAdd(string targetPage)
-        {
-            object _genericObject;
-            switch (targetPage)
-            {
-                case "ERScreeningDetail":
-                    ERScreeningDetailViewModel viewModel = new ERScreeningDetailViewModel();
-                    viewModel.eRScreeningDetail = new ERScreeningDetail();
-                    viewModel.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
-                    ViewBag.RefId = Guid.NewGuid().ToString();
-                    _genericObject = viewModel;
-                    break;
-                default:
-                    _genericObject = null;
-                    break;
-            }
-            if (null != _genericObject)
-            {
-                return View(targetPage, _genericObject);
-            }
-            else
-            {
-                return Content("<div class=\"alert alert-danger\" role=\"alert\"> An Error has occured </div>");
-            }
-
-        }
-
-        [HttpPost]
-        public ActionResult AjaxAdd(string targetPage, string FileRef, FormCollection collection)
-        {
-            object _genericObject = null;
-            string id = "";
-            bool modelIsValid = false;
-            switch (targetPage)
-            {
-                case "ERScreeningDetail":
-                    ERScreeningDetail eRScreeningDetail = new ERScreeningDetail()
-                    {
-                        ERScreeningInstituteId = collection["eRScreeningDetail.ERScreeningInstituteId"],
-                        ReportDocumentPath = FileRef,
-                        //FirstOrderScreening = Convert.ToBoolean(collection["eRScreeningDetail.FirstOrderScreening"]),
-                        //SecondOrderScreening = Convert.ToBoolean(collection["eRScreeningDetail.SecondOrderScreening"]),
-                        //ThirdOrderScreening = Convert.ToBoolean(collection["eRScreeningDetail.ThirdOrderScreening"]),
-                    };
-                    id = eRScreeningDetail.Id;
-
-                    modelIsValid = TryValidateModel(eRScreeningDetail);
-                    if (modelIsValid && ModelState.IsValid)
-                    {
-                        ERScreeningDetailContext.Insert(eRScreeningDetail);
-                        ERScreeningDetailContext.Commit();
-                    }
-                    else
-                    {
-                        _genericObject = eRScreeningDetail;
-                    }
-                    break;
-                default:
-                    return Content("Error");
-            }
-            if (modelIsValid && ModelState.IsValid)
-            {
-                return Content("Success," + id + "," + targetPage);
-            }
-            else
-            {
-                ERScreeningDetailViewModel viewModel = new ERScreeningDetailViewModel();
-                viewModel.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
-                viewModel.eRScreeningDetail = (ERScreeningDetail)_genericObject;
-                ViewBag.RefId = Guid.NewGuid().ToString();
-                return View(targetPage, viewModel);
-            }
-
-        }
-        public ActionResult AjaxViewDetails(string targetPage, string RefId)
-        {
-            object _genericObject;
-            switch (targetPage)
-            {
-                case "ERScreeningDetailView":
-                    ERScreeningDetailViewModel viewModel = new ERScreeningDetailViewModel();
-                    viewModel.eRScreeningDetail = ERScreeningDetailContext.Find(RefId);
-                    _genericObject = viewModel;
-                    break;
-                default:
-                    _genericObject = null;
-                    break;
-            }
-            if (null != _genericObject)
-            {
-                return View(targetPage, _genericObject);
-            }
-            else
-            {
-                return Content("<div class=\"alert alert-danger\" role=\"alert\"> An Error has occured </div>");
-            }
-
-        }
-
-        //public ActionResult SubmitERScreeningReport()
-        //{
-        //    ERScreeningDetailViewModel viewModel = new ERScreeningDetailViewModel();
-        //    viewModel.eRScreeningDetail = new ERScreeningDetail();
-        //    viewModel.eRScreeningInstitutes = ERScreeningInstituteContext.Collection().ToList();
-        //    ViewBag.RefId = Guid.NewGuid().ToString();
-        //    return View(viewModel);
-
-        //}
-        #endregion
 
     }
 }

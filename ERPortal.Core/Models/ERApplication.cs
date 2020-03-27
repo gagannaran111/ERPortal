@@ -76,6 +76,10 @@ namespace ERPortal.Core.Models
         public string ERPilotId { get; set; }
         [Display(Name = "ER Pilot")]
         public virtual ERPilot ERPilot { get; set; }
+        [Display(Name = "ER Techniques Id")]
+        public string ERTechniquesId { get; set; }
+        [Display(Name = "ER Techniques (Conventional)")]
+        public virtual ERTechniques ERTechniques { get; set; }
 
         [Display(Name = "Any Additional remarks")]
         public string AdditonalRemarks { get; set; }

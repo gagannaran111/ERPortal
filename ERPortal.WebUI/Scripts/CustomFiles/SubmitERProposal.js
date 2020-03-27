@@ -1,11 +1,5 @@
-﻿const YesNo = { Yes: "0", No: "1" };
-const HydrocarbonType = { Conventional: "0", UnConventional: "1" };
-const StyleClass = { UHC: 'uhc', GAS: 'gas', OIL: 'oil' };
-const DivId = {
-    uhcProdnMethodDiv: $("#uhcProdnMethodDiv"),
-    MethodProposedDiv: $("#MethodProposedDiv"),
-    ImplementaionTypeDiv: $("#ImplementaionTypeDiv")
-};
+﻿import { YesNo, HydrocarbonType, StyleClass, DivId, HydrocarbonMethodProposed, ImplementationType } from './Types.js'; // Import Types.js File
+import { GetUploadFilesData, alertModal } from './CommenMethods.js';
 
 const OnSuccess = (response) => {
     //alertModal(response);
@@ -72,70 +66,118 @@ $(document).ready(() => {
 
 
 $(document).on('change', '#ERApplications_HydrocarbonType', ({ currentTarget }) => {
-
-
-    if (HydrocarbonType.UnConventional == currentTarget.value) {
-        DivId.uhcProdnMethodDiv.fadeIn("slow");
-        DivId.MethodProposedDiv.fadeOut("slow");
-        DivId.uhcProdnMethodDiv.find('select option[value=""]').prop('selected', true);
-        DivId.MethodProposedDiv.find('select option[value=""]').prop('selected', true);
-        DivId.ImplementaionTypeDiv.find('select option[value=""]').prop('selected', true);
-        DivId.ImplementaionTypeDiv.find('select option').prop('hidden', false);
-
-    }
-    else if (HydrocarbonType.Conventional == currentTarget.value) {
-        DivId.MethodProposedDiv.fadeIn("slow");
-        DivId.uhcProdnMethodDiv.fadeOut("slow");
-        DivId.MethodProposedDiv.find('select option[value=""]').prop('selected', true);
-        DivId.uhcProdnMethodDiv.find('select option[value=""]').prop('selected', true);
-        DivId.MethodProposedDiv.find('select option[value="2"]').addClass('d-none');
-        DivId.ImplementaionTypeDiv.find('select option').prop('hidden', true);
-        DivId.ImplementaionTypeDiv.find('select option[value=""]').prop('selected', true);
-    }
-    else {
-        DivId.ImplementaionTypeDiv.find('select option[value=""]').prop('selected', true);
-        DivId.ImplementaionTypeDiv.find('select option').prop('hidden', true);
-        if (DivId.uhcProdnMethodDiv.is(":visible"))
-            DivId.uhcProdnMethodDiv.fadeOut("slow");
-        else if (DivId.MethodProposedDiv.is(":visible"))
+    
+    switch (currentTarget.value) {
+        case HydrocarbonType.UnConventional:
+            DivId.uhcProdnMethodDiv.fadeIn("slow");
             DivId.MethodProposedDiv.fadeOut("slow");
+
+            DivId.HydrocarbonTypeChangeDiv.find('select option[value=""]').prop('selected', true);            
+            DivId.ImplementaionTypeDiv.find('select option').prop('hidden', false);
+            break;
+        case HydrocarbonType.Conventional:
+            DivId.MethodProposedDiv.fadeIn("slow");
+            DivId.uhcProdnMethodDiv.fadeOut("slow");
+            DivId.HydrocarbonTypeChangeDiv.find('select option[value=""]').prop('selected', true);
+
+            DivId.MethodProposedDiv.find('select option[value="2"]').addClass('d-none');
+            DivId.ImplementaionTypeDiv.find('select option').prop('hidden', true);
+            
+            break;
+        default:
+            DivId.HydrocarbonTypeChangeDiv.find('select option[value=""]').prop('selected', true);   
+            DivId.ImplementaionTypeDiv.find('select option').prop('hidden', true);
+           
+
+            if (DivId.uhcProdnMethodDiv.is(":visible"))
+                DivId.uhcProdnMethodDiv.fadeOut("slow");
+            if (DivId.MethodProposedDiv.is(":visible"))
+                DivId.MethodProposedDiv.fadeOut("slow");            
+            if (DivId.EGRTechniquesDiv.is(":visible")) {
+                DivId.EGRTechniquesDiv.fadeOut("slow");              
+            }
+            if (DivId.EORTechniquesDiv.is(":visible")) {
+                DivId.EORTechniquesDiv.fadeOut("slow")               
+            }
+            break;
     }
 });
 
 $(document.body).on('change', '#ERApplications_HydrocarbonMethod', ({ currentTarget }) => {
 
-    // console.log(currentTarget.selectedOptions[0].text);   
+    // console.log(currentTarget.selectedOptions[0].text);
+    switch (currentTarget.value) {
+        case HydrocarbonMethodProposed.Oil:
+            $('.' + StyleClass.GAS).prop('hidden', true);
+            $('.' + StyleClass.OIL).prop('hidden', false);
+            $('.' + StyleClass.UHC).prop('hidden', true);
 
-    DivId.ImplementaionTypeDiv.find('select option[value=""]').prop('selected', true);
+            $('#ERApplications_FieldGIIP').prop('disabled', true);
+            $('#ERApplications_FieldGIIP').val('');
+            $('#ERApplications_FieldOIIP').prop('disabled', false);
+            break;
+        case HydrocarbonMethodProposed.Gas:
+            $('.' + StyleClass.OIL).prop('hidden', true);
+            $('.' + StyleClass.GAS).prop('hidden', false);
+            $('.' + StyleClass.UHC).prop('hidden', true);
+            $('#ERApplications_FieldGIIP').prop('disabled', false);
+            $('#ERApplications_FieldOIIP').prop('disabled', true);
+            $('#ERApplications_FieldOIIP').val('');
+            break;
+        default:
+            DivId.ImplementaionTypeDiv.find('select option').prop('hidden', true);
+            DivId.ImplementaionTypeDiv.find('select option[value=""]').prop('selected', true);
 
-    if (currentTarget.value == '0') {
-        $('.' + StyleClass.GAS).prop('hidden', true);
-        $('.' + StyleClass.OIL).prop('hidden', false);
-        $('.' + StyleClass.UHC).prop('hidden', true);
-
-        $('#ERApplications_FieldGIIP').prop('disabled', true);
-        $('#ERApplications_FieldGIIP').val('');
-        $('#ERApplications_FieldOIIP').prop('disabled', false);
-
-    }
-    else if (currentTarget.value == '1') {
-        $('.' + StyleClass.OIL).prop('hidden', true);
-        $('.' + StyleClass.GAS).prop('hidden', false);
-        $('.' + StyleClass.UHC).prop('hidden', true);
-        $('#ERApplications_FieldGIIP').prop('disabled', false);
-        $('#ERApplications_FieldOIIP').prop('disabled', true);
-        $('#ERApplications_FieldOIIP').val('');
-    }
-    else {
-        DivId.ImplementaionTypeDiv.find('select option').prop('hidden', true);
-        DivId.ImplementaionTypeDiv.find('select option[value=""]').prop('selected', true);
+            if (DivId.EGRTechniquesDiv.is(":visible")) {
+                DivId.EGRTechniquesDiv.fadeOut("slow");
+                DivId.EGRTechniquesDiv.find('select option[value=""]').prop('selected', true);
+            }
+            if (DivId.EORTechniquesDiv.is(":visible")) {
+                DivId.EORTechniquesDiv.fadeOut("slow")
+                DivId.EORTechniquesDiv.find('select option[value=""]').prop('selected', true);
+            }
+            break;
     }
 });
 
 $(document).on('change', '#ERApplications_ImplementaionType', ({ currentTarget }) => {
-
+    if (DivId.EGRTechniquesDiv.is(":visible")) {
+        DivId.EGRTechniquesDiv.fadeOut("slow");
+        DivId.EGRTechniquesDiv.find('select option[value=""]').prop('selected', true);
+    }
+    if (DivId.EORTechniquesDiv.is(":visible")) {
+        DivId.EORTechniquesDiv.fadeOut("slow")
+        DivId.EORTechniquesDiv.find('select option[value=""]').prop('selected', true);
+    }
+    switch (currentTarget.value) {
+       
+        case ImplementationType.EOR:
+            DivId.EORTechniquesDiv.fadeIn("slow");
+            break;
+        case ImplementationType.EGR:
+            DivId.EGRTechniquesDiv.fadeIn("slow");
+            break;
+        default:
+            if (DivId.EGRTechniquesDiv.is(":visible")) {
+                DivId.EGRTechniquesDiv.fadeOut("slow");
+                DivId.EGRTechniquesDiv.find('select option[value=""]').prop('selected', true);
+            }
+            if (DivId.EORTechniquesDiv.is(":visible")) {
+                DivId.EORTechniquesDiv.fadeOut("slow")
+                DivId.EORTechniquesDiv.find('select option[value=""]').prop('selected', true);
+            }
+            break;
+    }
 });
 
+//switch (currentTarget.value) {
+//    case "0":
+//        break;
+//    case "2":
+//        break;
+//    default:
+//        break;
+//}
 $(document).on("change", "input[name='ERApplications.PresentlyUnderProduction']", ({ currentTarget }) => {
     let actionDiv = $("#DateOfLastCommercialProductionDiv");
     console.log(currentTarget);

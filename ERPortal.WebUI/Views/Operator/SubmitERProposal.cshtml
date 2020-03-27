@@ -75,26 +75,47 @@
                                                     @Html.ValidationMessageFor(model => model.ERApplications.HydrocarbonType, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
-                                            <div class="form-group row " id="MethodProposedDiv" style="display: none">
-                                                @Html.LabelFor(model => model.ERApplications.HydrocarbonMethod, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                <div class="col-sm-6 d-flex align-items-center">
-                                                    @Html.EnumDropDownListFor(model => model.ERApplications.HydrocarbonMethod, "Choose...", new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(model => model.ERApplications.HydrocarbonMethod, "", new { @class = "text-danger" })
+                                            <div id="HydrocarbonTypeChangeDiv">
+                                                <div class="form-group row " id="MethodProposedDiv" style="display: none">
+                                                    @Html.LabelFor(model => model.ERApplications.HydrocarbonMethod, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+                                                        @Html.EnumDropDownListFor(model => model.ERApplications.HydrocarbonMethod, "Choose...", new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.HydrocarbonMethod, "", new { @class = "text-danger" })
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="form-group row" id="uhcProdnMethodDiv" style="display: none">
-                                                @Html.LabelFor(model => model.ERApplications.UHCProductionMethod, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                <div class="col-sm-6 d-flex align-items-center">
-                                                    @Html.DropDownListFor(model => model.ERApplications.UHCProductionMethodId, new SelectList(Model.UHCProductionMethods, "Id", "Name"), "Select Method", new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(model => model.ERApplications.UHCProductionMethod, "", new { @class = "text-danger" })
+                                                <div class="form-group row" id="uhcProdnMethodDiv" style="display: none">
+                                                    @Html.LabelFor(model => model.ERApplications.UHCProductionMethod, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+                                                        @Html.DropDownListFor(model => model.ERApplications.UHCProductionMethodId, new SelectList(Model.UHCProductionMethods, "Id", "Name"), "Choose...", new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.UHCProductionMethod, "", new { @class = "text-danger" })
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group row" id="ImplementaionTypeDiv">
-                                                @Html.LabelFor(model => model.ERApplications.ImplementaionType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
-                                                <div class="col-sm-6 d-flex align-items-center">
-                                                    @Html.EnumDropDownListFor(model => model.ERApplications.ImplementaionType, "Choose...", new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(model => model.ERApplications.ImplementaionType, "", new { @class = "text-danger" })
+
+                                                <div class="form-group row" id="ImplementaionTypeDiv">
+                                                    @Html.LabelFor(model => model.ERApplications.ImplementaionType, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+                                                        @Html.EnumDropDownListFor(model => model.ERApplications.ImplementaionType, "Choose...", new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.ImplementaionType, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" id="EORTechniquesDiv" style="display: none">
+                                                    @Html.LabelFor(model => model.EORTechniqueId, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+                                                        @Html.DropDownListFor(model => model.EORTechniqueId, new SelectList(Model.eRTechniques.Where(x => x.Method == ERPortal.Core.Models.ImplementaionType.EORMethod), "Id", "TechniqueName"), "Choose...", new { @class = "form-control" })
+
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERTechniques, "", new { @class = "text-danger" })
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-group row" id="EGRTechniquesDiv" style="display: none">
+                                                    @Html.LabelFor(model => model.EGRTechniqueId, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
+                                                    <div class="col-sm-6 d-flex align-items-center">
+
+                                                        @Html.DropDownListFor(model => model.EGRTechniqueId, new SelectList(Model.eRTechniques.Where(x => x.Method == ERPortal.Core.Models.ImplementaionType.EGRMethod), "Id", "TechniqueName"), "Choose...", new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.ERApplications.ERTechniques, "", new { @class = "text-danger" })
+                                                    </div>
+
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -320,7 +341,7 @@
                                             </div>
                                             <div class="form-group row justify-content-center">
 
-                                                @*<button type="submit" class="btn btn-primary" id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>*@
+                                                <button type="submit" class="btn btn-primary" id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>
                                                 <button type="button" class="btn btn-info" id="BtnERAppEligibility"><i class="fas fa-check"></i> Check Eligibility</button>
 
                                             </div>
@@ -673,4 +694,5 @@
     </div>
 </div>
 
-@Scripts.Render("~/Scripts/CustomFiles/SubmitERProposal")
+@*@Scripts.Render("~/Scripts/CustomFiles/SubmitERProposal.js")*@
+<script type="module" src="~/Scripts/CustomFiles/SubmitERProposal.js"></script>

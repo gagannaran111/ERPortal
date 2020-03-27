@@ -432,6 +432,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\CustomFiles\AdminIndex.js" />
+    <Content Include="Scripts\CustomFiles\CommenMethods.js" />
     <Content Include="Scripts\CustomFiles\DGHIndex.js" />
     <Content Include="Scripts\CustomFiles\SubmitERProposal.js" />
     <Content Include="Scripts\CustomFiles\excludechar.js" />
@@ -683,9 +684,7 @@
     <Content Include="Views\Admin\Organisation.cshtml" />
     <Content Include="Views\Admin\FieldType.cshtml" />
     <Content Include="Views\Admin\UHCProductionMethod.cshtml" />
-    <Content Include="Views\Operator\ERScreeningDetail.cshtml" />
     <Content Include="Views\Admin\ERScreeningInstitute.cshtml" />
-    <Content Include="Views\Operator\ERScreeningDetailView.cshtml" />
     <Content Include="webfonts\fa-brands-400.svg" />
     <Content Include="webfonts\fa-regular-400.svg" />
     <Content Include="webfonts\fa-solid-900.svg" />
@@ -709,7 +708,6 @@
     <Content Include="Views\Shared\SideNavBar.cshtml" />
     <Content Include="Views\Admin\StatusMaster.cshtml" />
     <Content Include="Views\Admin\AuditTrail.cshtml" />
-    <Content Include="Views\Operator\SubmitERScreeningReport.cshtml" />
     <Content Include="Views\Comment\ApplicationSummary.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
@@ -732,7 +730,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\UploadedFiles\" />
     <Folder Include="Content\Uploads\" />
-    <Folder Include="Views\test\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
