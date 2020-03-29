@@ -1,9 +1,18 @@
 ﻿import { PATTERNS } from './Types.js';
 
-export const alertModal = (msg) => {
+export const CurrentDate = () => {
+    let currdate = new Date();
+    let year = currdate.getFullYear();
+    let month = currdate.getMonth() + 1;
+    let date = currdate.getDate()
+    return year + "/" + month + "/" + date;
+};
+
+export const alertModal = (msg,color) => {
     $('#btnalertmodal').click();
-    $('#modalContentAlert').html("<strong>" + msg + "</strong>");
-}
+    $('#alertmodelheader').addClass(color);
+    $('#modalContentAlert').html("<strong>" + msg + "</strong>");    
+};
 
 export const ToChangeDateFormate = (value) => {
 

@@ -135,7 +135,6 @@ namespace ERPortal.WebUI.Controllers
             }
             else
             {
-
                 return Content("<div class=\"alert alert-danger\" role=\"alert\"> An Error has occured </div>");
             }
 
@@ -156,9 +155,10 @@ namespace ERPortal.WebUI.Controllers
 
                     if (FieldType != null)
                     {
-                        FieldType.Type = collection["Type"];      
-                       
+                        FieldType.Type = collection["Type"];                            
                         FieldType.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
+                        FieldType.ModifiedAt = DateTime.Now;
+                        FieldTypeContext.Update(FieldType);
                     }
                     else
                     {
@@ -202,6 +202,8 @@ namespace ERPortal.WebUI.Controllers
                         }
                         Organisation.Name = collection["Name"];
                         Organisation.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
+                        Organisation.ModifiedAt = DateTime.Now;
+                        OrganisationContext.Update(Organisation);
 
                     }
                     else
@@ -255,6 +257,8 @@ namespace ERPortal.WebUI.Controllers
                         UHCProductionMethod.Name = collection["Name"];
                         UHCProductionMethod.Description = collection["Description"];
                         UHCProductionMethod.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
+                        UHCProductionMethod.ModifiedAt = DateTime.Now;
+                        UHCProductionMethodContext.Update(UHCProductionMethod);
                     }
 
                     else
@@ -289,6 +293,8 @@ namespace ERPortal.WebUI.Controllers
                         ERScreeningInstitute.Address = collection["Address"];
                         ERScreeningInstitute.EmailID = collection["EmailID"];
                         ERScreeningInstitute.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
+                        ERScreeningInstitute.ModifiedAt = DateTime.Now;
+                        ERScreeningInstituteContext.Update(ERScreeningInstitute);
                     }
                     else
                     {
@@ -323,6 +329,8 @@ namespace ERPortal.WebUI.Controllers
                         Status.CustStatusId = collection["CustStatusId"];
                         Status.Status = collection["Status"];
                         Status.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
+                        Status.ModifiedAt = DateTime.Now;
+                        StatusMasterContext.Update(Status);
                     }
 
                     else
@@ -356,6 +364,7 @@ namespace ERPortal.WebUI.Controllers
                         Dept.DeptName = collection["DeptName"];
                         Dept.SubDeptName = collection["SubDeptName"];
                         Dept.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
+                        Dept.ModifiedAt = DateTime.Now;
                         DepartmentContext.Update(Dept);
                     }
                     else
@@ -412,6 +421,7 @@ namespace ERPortal.WebUI.Controllers
                         ertechnique.TechniqueType = collection["TechniqueType"];
                         ertechnique.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
                         ertechnique.Status = collection["Status"];
+                        ertechnique.ModifiedAt = DateTime.Now;
                         ERTechniquesContext.Update(ertechnique);
                     }
                     else

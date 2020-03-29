@@ -28,7 +28,7 @@ $(document).ready(() => {
     });
 });
 
-$(document).on("click", ".GeneratePDF", function (e) {
+$(document).on("click", ".GeneratePDF", (e)=> {
     e.preventDefault();
     let cssfile = "";
     cssfile = "/Content/css/PrintingData.css";

@@ -15,7 +15,7 @@ namespace ERPortal.Core.Models
         public string Id { get; set; }
         [Required]
         public DateTimeOffset CreatedAt { get; set; }
-        public DateTimeOffset ModifiedAt { get; set; }
+        public DateTimeOffset? ModifiedAt { get; set; }
         [Required]
         public Boolean Is_Active { get; set; }
 

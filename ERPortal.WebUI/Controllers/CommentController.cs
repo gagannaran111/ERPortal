@@ -750,7 +750,7 @@ namespace ERPortal.WebUI.Controllers
         }
         #endregion
 
-        #region Upload,Delete,Get Files
+         #region Upload,Delete,Get Files
         [HttpPost]
         public ActionResult LoadUploadFile(HttpPostedFileBase file, string RefId)
         {
@@ -764,8 +764,16 @@ namespace ERPortal.WebUI.Controllers
                     string _path = Path.Combine(Server.MapPath("~/Content/Uploads/"), NewFileName);
                     file.SaveAs(_path);
                     //string FileRefId = RefId != null && RefId != "" ? RefId : Guid.NewGuid().ToString();
-                    UploadFile uploadFile = new UploadFile() { FileName = _FileName, FilePath = _path, FIleRef = RefId, CreatedBy = arr[0], NewFileName = NewFileName };
-
+                    UploadFile uploadFile = new UploadFile() 
+                    {
+                        FileName = _FileName,
+                        FilePath = _path,
+                        FIleRef = RefId, 
+                        CreatedBy = arr[0],
+                        NewFileName = NewFileName,
+                        Is_Active=true ,
+                        ModifiedAt=DateTime.Now
+                    };
                     UploadFileContext.Insert(uploadFile);
                     UploadFileContext.Commit();
                     return Json("File upload Success", JsonRequestBehavior.AllowGet);
