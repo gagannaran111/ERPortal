@@ -279,7 +279,7 @@
                                                     @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScreening, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
-                                            <div class="form-group row FirstOrderScrText d-none">
+                                            <div class="form-group row d-none" id="FirstOrderScrTextDiv">
                                                 @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
                                                 <div class="col-sm-6 d-flex align-items-center">
                                                     @Html.TextAreaFor(model => model.ERApplications.ERScreeningDetail.FirstOrderScrText, new { htmlAttributes = new { @class = "form-control" }, @rows = 10, @cols = 120 })
@@ -293,7 +293,7 @@
                                                     @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
-                                            <div class="form-group row SecondOrderScrText d-none">
+                                            <div class="form-group row d-none" id="SecondOrderScrTextDiv">
                                                 @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
                                                 <div class="col-sm-6 d-flex align-items-center">
 
@@ -308,7 +308,7 @@
                                                     @Html.ValidationMessageFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScreening, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
-                                            <div class="form-group row ThirdOrderScrText d-none">
+                                            <div class="form-group row d-none" id="ThirdOrderScrTextDiv">
                                                 @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
                                                 <div class="col-sm-6 d-flex align-items-center">
                                                     @Html.TextAreaFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScrText, new { htmlAttributes = new { @class = "form-control" }, @rows = 10, @cols = 120 })
@@ -344,7 +344,7 @@
                                             </div>
                                             <div class="form-group row justify-content-center">
 
-                                                <button type="submit" class="btn btn-primary" id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>
+                                                <button type="submit" class="btn btn-success" id="ERAppSubmit"><i class="fas fa-save"></i> Submit</button>
                                                 <button type="button" class="btn btn-info" id="BtnERAppEligibility"><i class="fas fa-check"></i> Check Eligibility</button>
 
                                             </div>
@@ -455,7 +455,7 @@
                                             </div>
                                             @if (Model.ERApplications.PresentlyUnderProduction == ERPortal.Core.Models.YesNo.Yes)
                                             {
-                                                <div class="form-group row" id="DateOfLastCommercialProductionDiv">
+                                                <div class="form-group row">
                                                     @Html.LabelFor(model => model.ERApplications.DateOfLastCommercialProduction, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
                                                     <div class="col-sm-6 d-flex align-items-center">
                                                         @Html.DisplayFor(model => model.ERApplications.DateOfLastCommercialProduction, new { htmlAttributes = new { @class = "form-control", @type = "text" } })

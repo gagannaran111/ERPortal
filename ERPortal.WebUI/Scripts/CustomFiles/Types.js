@@ -24,14 +24,6 @@ export const ImplementationType = {
     IGR: "3",
     UHC: "4"
 };
-export const DivId = {
-    uhcProdnMethodDiv: $("#uhcProdnMethodDiv"),
-    MethodProposedDiv: $("#MethodProposedDiv"),
-    ImplementaionTypeDiv: $("#ImplementaionTypeDiv"),
-    EORTechniquesDiv: $("#EORTechniquesDiv"),
-    EGRTechniquesDiv: $("#EGRTechniquesDiv"),
-    HydrocarbonTypeChangeDiv: $("#HydrocarbonTypeChangeDiv")
-};
 export const StyleClass = {
     UHC: 'uhc',
     GAS: 'gas',
@@ -60,4 +52,9 @@ export const AlertColors = {
     Secondary: "alert-secondary",
     Success: "alert-success",
     Warning: "alert-warning"
+};
+export const DateDiff = {
+    diffYear: 0,
+    diffmonth: 0,
+    diffdate: 0
 };

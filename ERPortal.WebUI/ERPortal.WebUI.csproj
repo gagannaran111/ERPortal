@@ -409,6 +409,7 @@
     <Content Include="Content\img\Icon_Design_trans.svg" />
     <Content Include="Content\img\Icon_Design_trans_white.png" />
     <Content Include="Content\img\user-profile.png" />
+    <Content Include="Content\img\user.jpg" />
     <Content Include="Content\jquery.datetimepicker.css" />
     <Content Include="Content\regular.css" />
     <Content Include="Content\regular.min.css" />

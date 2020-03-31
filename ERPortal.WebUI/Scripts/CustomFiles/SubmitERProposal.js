@@ -1,5 +1,37 @@
-﻿import { YesNo, HydrocarbonType, StyleClass, DivId, HydrocarbonMethodProposed, ImplementationType, AlertColors } from './Types.js'; // Import Types.js File
-import { GetUploadFilesData, alertModal, CompareTwoDates, CurrentDate } from './CommenMethods.js';
+﻿import { YesNo, HydrocarbonType, StyleClass, HydrocarbonMethodProposed, ImplementationType, AlertColors } from './Types.js'; // Import Types.js File
+import { GetUploadFilesData, alertModal, CompareTwoDates, CurrentDate, CompareTwoDatesByYear } from './CommenMethods.js';
+
+const ElementsId = {
+    ERApplicationId: '#ERApplications_AppId',
+    DateOfInitialComProd: '#ERApplications_DateOfInitialCommercialProduction',
+    DateOfDiscovery: '#ERApplications_DateOfDiscovery',
+    ReportDocument: '#ReportDocument',
+    FieldGIIP: '#ERApplications_FieldGIIP',
+    FieldOIIP: '#ERApplications_FieldOIIP',
+    ImplementationType: '#ERApplications_ImplementaionType',
+    HydrocarbonType: '#ERApplications_HydrocarbonType',
+    HydrocarbonMethod: '#ERApplications_HydrocarbonMethod',
+    FirstOrderScreening: '#ERApplications_ERScreeningDetail_FirstOrderScreening',
+    SecondOrderScreening: '#ERApplications_ERScreeningDetail_SecondOrderScreening',
+    ThirdOrderScreening: '#ERApplications_ERScreeningDetail_ThirdOrderScreening',
+    PresentlyUnderProduction: '#ERApplications_PresentlyUnderProduction',
+    DateOfLastComProd: '#ERApplications_DateOfLastCommercialProduction'
+};
+
+const DivId = {
+    uhcProdnMethodDiv: $("#uhcProdnMethodDiv"),
+    MethodProposedDiv: $("#MethodProposedDiv"),
+    ImplementaionTypeDiv: $("#ImplementaionTypeDiv"),
+    EORTechniquesDiv: $("#EORTechniquesDiv"),
+    EGRTechniquesDiv: $("#EGRTechniquesDiv"),
+    HydrocarbonTypeChangeDiv: $("#HydrocarbonTypeChangeDiv"),
+    UploadFileDataDiv: $('#UploadFilesData'),
+    FileDiv: $('#FileDiv'),
+    FirstOrderScrTextDiv: $("#FirstOrderScrTextDiv"),
+    SecondOrderScrTextDiv: $("#SecondOrderScrTextDiv"),
+    ThirdOrderScrTextDiv: $("#ThirdOrderScrTextDiv"),
+    DateOfLastCommProdDiv: $("#DateOfLastCommercialProductionDiv")
+};
 
 const OnSuccess = (response) => {
 
@@ -16,8 +48,7 @@ const OnFailure = (response) => {
     console.log(response);
     alertModal("Try Again Error Occured.");
 }
-$(document).ready(() => {
-
+$(document).ready(() => {    
     $.each($('#ERApplications_ImplementaionType option'), function (index, element) {
         if ($(this).val() == "1" || $(this).val() == "0") {
             $(this).addClass(StyleClass.OIL);
@@ -56,7 +87,7 @@ $(document).ready(() => {
 });
 
 
-$(document).on('change', '#ERApplications_HydrocarbonType', ({ currentTarget }) => {
+$(document).on('change', ElementsId.HydrocarbonType, ({ currentTarget }) => {
 
     switch (currentTarget.value) {
         case HydrocarbonType.UnConventional:
@@ -113,7 +144,7 @@ $(document).on('change', '#ERApplications_HydrocarbonType', ({ currentTarget }) 
     }
 });
 
-$(document.body).on('change', '#ERApplications_HydrocarbonMethod', ({ currentTarget }) => {
+$(document.body).on('change', ElementsId.HydrocarbonMethod, ({ currentTarget }) => {
     // console.log(currentTarget.selectedOptions[0].text);
     switch (currentTarget.value) {
         case HydrocarbonMethodProposed.Oil:
@@ -169,7 +200,7 @@ $(document.body).on('change', '#ERApplications_HydrocarbonMethod', ({ currentTar
     }
 });
 
-$(document).on('change', '#ERApplications_ImplementaionType', ({ currentTarget }) => {
+$(document).on('change', ElementsId.ImplementationType, ({ currentTarget }) => {
     if (DivId.EGRTechniquesDiv.is(":visible")) {
         DivId.EGRTechniquesDiv.fadeOut("slow");
         DivId.EGRTechniquesDiv.find('select option[value=""]').prop('selected', true);
@@ -219,8 +250,8 @@ $(document).on('change', '#ERApplications_ImplementaionType', ({ currentTarget }
 //        break;
 //}
 // DateOfDiscovery
-$(document).on('change', '#ERApplications_DateOfDiscovery', ({ currentTarget }) => {
 
+$(document).on('change', ElementsId.DateOfDiscovery, ({ currentTarget }) => {
 
     let datestatus = false;
 
@@ -243,92 +274,124 @@ $(document).on('change', '#ERApplications_DateOfDiscovery', ({ currentTarget }) 
             }
 
         }
-        else if (datestatus == false) {
+        else if (datestatus == true) {
+            alertModal("Eligible For Fiscal Incentive", AlertColors.Success);
+        }
+        else {
             currentTarget.value = "";
         }
-    }    
+    }
     //CheckEligibleToFillERForm();
 });
+$(document).on('change', ElementsId.DateOfInitialComProd, ({ currentTarget }) => {
+    let statusval = false;
+    if (currentTarget.value != "") {
+        statusval = CompareTwoDates(currentTarget.value, $(ElementsId.DateOfDiscovery).val());
+        console.log(statusval + " dd");
+        if (statusval == true) {
 
-//$(document).on("change", "input[name='ERApplications.PresentlyUnderProduction']", ({ currentTarget }) => {
-//    let actionDiv = $("#DateOfLastCommercialProductionDiv");
-//    console.log(currentTarget);
-//    if ($('#ERApplications_DateOfInitialCommercialProduction').val() != '') {
-//        if (currentTarget.value == "False") {
-//            actionDiv.val('').fadeIn("slow");
-//        } else if (currentTarget.value == "True") {
-//            CheckERScreeningEligibility();
-//            actionDiv.val('').fadeOut("slow");
-//            $('input[name="ERApplications.DateOfLastCommercialProduction"]').val('');
-//        }
-//    }
-//    else {
-//        alertModal("Select Date of Commencement of Commercial Production");
-//        currentTarget.checked = false;
-//    }
-//});
-//$(document).on('change', 'input[name="ERApplications.DateOfLastCommercialProduction"]', ({ currentTarget }) => {
-//    let d1 = $('#ERApplications_DateOfLastCommercialProduction');
-//    let d2 = $('#ERApplications_DateOfInitialCommercialProduction');
+            if ($(ElementsId.HydrocarbonType).val() == HydrocarbonType.Conventional &&
+                $(ElementsId.HydrocarbonMethod).val() == HydrocarbonMethodProposed.Oil &&
+                $(ElementsId.ImplementationType).val() == ImplementationType.EOR) {
+                let st = false;
+                st = CompareTwoDatesByYear(currentTarget.value, CurrentDate(), 3);
+                if (st == true) {
+                    console.log(st);
+                    alertModal("Project/Proposal Is Eligible For Availing Fiscal Incentive(s) as Entittled For EOR Method")
+                    return st;
+                }
+                else {
+                    currentTarget.value = "";
+                    console.log(st);
+                    alertModal("Project/Proposal Is Not Eligible For Availing Fiscal Incentive(s) as Entittled For EOR Method");
+                    return st;
+                }
+            }
+            console.log(statusval);
+            return statusval;
+        }
+        else {
+            currentTarget.value = "";
+            alertModal('Date Of Initial Commercial Production > Date Of Discovery');
+            console.log(statusval);
+            return statusval;
+        }
 
-//    let msg = "";
-//    if (currentTarget.value != "") {
-//        let statusval = CompareTwoDates(d1, d2);
-//        statusval == false ? alertModal(msg) : CheckERScreeningEligibility();
-//        return statusval;
-//    }
-//    else {
-//        return false;
-//    }
-//});
+    }
+});
 
-//$(document).on('change', '#ERApplications_DateOfInitialCommercialProduction', ({ currentTarget }) => {
-//    let d1 = $('#ERApplications_DateOfInitialCommercialProduction');
-//    let d2 = $('#ERApplications_DateOfDiscovery');
-//    let msg = "(Date Of Initial Commercial Production > Date Of Discovery) Or (Date Of Initial Commercial Production Or Date Of Discovery Are Empty.)";
-//    if (currentTarget.value != "") {
-//        let statusval = CompareTwoDates(d1, d2);
-//        statusval == false ? alertModal(msg) : null;
-//        return statusval;
-//    }
-//    else {
-//        return false;
-//    }
-//});
+$(document).on("change", ElementsId.PresentlyUnderProduction, ({ currentTarget }) => {
 
-$(document).on('change', 'input[name="ERApplications.FieldOIIP"]', () => {
+    console.log(currentTarget);
+    if ($(ElementsId.DateOfInitialComProd).val() != '') {
+        if (currentTarget.value == YesNo.No) {
+            DivId.DateOfLastCommProdDiv.fadeIn("slow");
+        } else if (currentTarget.value == YesNo.Yes) {
+            // CheckERScreeningEligibility();
+            DivId.DateOfLastCommProdDiv.fadeOut("slow");
+            $(ElementsId.DateOfLastComProd).val('');
+        }
+    }
+    else {
+        alertModal("Select Date of Commencement of Commercial Production", AlertColors.Warning);
+        currentTarget.value = '';
+    }
+});
+
+$(document).on('change', ElementsId.DateOfLastComProd, ({ currentTarget }) => {
+    let d1 = currentTarget.value;
+    let d2 = $(ElementsId.DateOfInitialComProd).val();
+    let statusval = false;
+    if (currentTarget.value != "") {
+        statusval = CompareTwoDates(d1, d2);
+        if (statusval == true) {
+            statusval = CompareTwoDatesByYear(d1, d2, 3);
+            if (statusval == false) {
+                currentTarget.value = "";
+                alertModal("Not Eligible For Fiscal Incentive")
+                return statusval;
+            }
+            else {
+                alertModal("Eligible For Fiscal Incentive");
+                return statusval;
+            }
+        }
+        return statusval;
+    }
+    else {
+        return statusval;
+    }
+});
+
+$(document).on('change', ElementsId.FieldOIIP, () => {
 
     checkMandatoryPilot();
 });
-$(document).on('change', 'input[name="ERApplications.FieldGIIP"]', () => {
+$(document).on('change', ElementsId.FieldGIIP, () => {
 
     //  checkMandatoryPilot();
 });
 
-
-
-
-$(document).on("change", "#ERApplications_ERScreeningDetail_FirstOrderScreening", ({ currentTarget }) => {
+$(document).on("change", ElementsId.FirstOrderScreening, ({ currentTarget }) => {
     console.log(currentTarget);
-    let firstodertext = $('.FirstOrderScrText');
-    currentTarget.value == YesNo.No ? firstodertext.removeClass('d-none') : firstodertext.addClass('d-none').find('textarea').val('');
+    currentTarget.value == YesNo.No ? DivId.FirstOrderScrTextDiv.removeClass('d-none')
+        : DivId.FirstOrderScrTextDiv.addClass('d-none').find('textarea').val('');
 });
 
-$(document).on("change", "#ERApplications_ERScreeningDetail_SecondOrderScreening", ({ currentTarget }) => {
-    let secondodertext = $('.SecondOrderScrText');
-    currentTarget.value == YesNo.No ? secondodertext.removeClass('d-none') : secondodertext.addClass('d-none').find('textarea').val('');
+$(document).on("change", ElementsId.SecondOrderScreening, ({ currentTarget }) => {
+    currentTarget.value == YesNo.No ? DivId.SecondOrderScrTextDiv.removeClass('d-none')
+        : DivId.SecondOrderScrTextDiv.addClass('d-none').find('textarea').val('');
 });
 
-$(document).on("change", "#ERApplications_ERScreeningDetail_ThirdOrderScreening", ({ currentTarget }) => {
+$(document).on("change", ElementsId.ThirdOrderScreening, ({ currentTarget }) => {
     console.log(currentTarget.value);
-    let thirdodertext = $('.ThirdOrderScrText');
-    currentTarget.value == YesNo.No ? thirdodertext.removeClass('d-none') : thirdodertext.addClass('d-none').find('textarea').val('');
+    currentTarget.value == YesNo.No ? DivId.ThirdOrderScrTextDiv.removeClass('d-none')
+        : DivId.ThirdOrderScrTextDiv.addClass('d-none').find('textarea').val('');
 });
 
 ////////////////
 //  Function  //
 ////////////////
-
 
 const checkMandatoryPilot = () => {
 
