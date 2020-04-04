@@ -60,7 +60,7 @@ namespace ERPortal.Core.Models
         public DateTime? DateOfLastCommercialProduction { get; set; }
 
         [Display(Name = "Presently Under Production")]
-        public YesNo? PresentlyUnderProduction { get; set; }
+        public YesNo PresentlyUnderProduction { get; set; }
 
         public string ERScreeningDetailId { get; set; }
         [Display(Name = "Screening report")]

@@ -7,10 +7,20 @@ export const CurrentDate = () => {
     let date = currdate.getDate()
     return year + "/" + month + "/" + date;
 };
-
+const RemoveClass = (Id) => {
+    let classArr = $(Id).attr("class").split(" ")
+    $(Id).attr("class", "")
+    for (let alertcolor of classArr) {         
+        // some condition/filter
+        if (alertcolor.substr(0, 5) != "alert") {
+            $(Id).addClass(alertcolor);
+        }        
+    }
+}
 export const alertModal = (msg, color) => {
     $('#btnalertmodal').click();
-    $('#alertmodelheader').addClass(color);
+    RemoveClass("#alertmodelheader");
+    $('#alertmodelheader').addClass(color);  
     $('#modalContentAlert').html("<strong>" + msg + "</strong>");
 };
 
@@ -30,13 +40,15 @@ export const CompareTwoDates = (d1, d2) => {
         DateDiff.diffmonth = parseInt(date1[1]) - parseInt(date2[1]);
         DateDiff.diffdate = parseInt(date1[2]) - parseInt(date2[2]);
         valnull = DateDiff.diffYear > 0 ? true
-            : DateDiff.diffmonth > 0 && DateDiff.diffYear == 0 ? true
-                : DateDiff.diffdate > 0 && DateDiff.diffmonth == 0 ? true : false;
+            : DateDiff.diffYear < 0 ? false
+                : DateDiff.diffmonth > 0 && DateDiff.diffYear == 0 ? true
+                    : DateDiff.diffmonth < 0 ? false
+                        : DateDiff.diffdate > 0 && DateDiff.diffmonth == 0 ? true : false;
 
         console.log(DateDiff.diffYear, DateDiff.diffmonth, DateDiff.diffdate, valnull);
     }
     else {
-        return "ERROR";
+        return false;
     }
     return valnull;
 
@@ -52,39 +64,40 @@ export const CompareTwoDatesByYear = (d1, d2, y) => {
         DateDiff.diffmonth = parseInt(date1[1]) - parseInt(date2[1]);
         DateDiff.diffdate = parseInt(date1[2]) - parseInt(date2[2]);
 
-        valnull = DateDiff.diffYear > y ? true :
-            DateDiff.diffYear < 0 ? false :
-                DateDiff.diffmonth > 0 ? true :
-                    DateDiff.diffmonth < 0 ? false :
-                        DateDiff.diffdate > 0 ? true :
-                            DateDiff.diffdate < 0 ? false : false;
-        return valnull;
+        //valnull = DateDiff.diffYear > y ? true :
+        //    dateDiff.diffYear == 3 ?
+        //        DateDiff.diffmonth > 0 ? true :
+        //            DateDiff.diffmonth == 0 ? false :
+        //                DateDiff.diffdate > 0 ? true :
+        //                    DateDiff.diffdate < 0 ? false : false;
+        //return valnull;
 
-        //if (diffYear > 3) {
-        //    valnull = true;
-        //}
-        //else if (diffYear == 3) {
-        //    if (diffmonth > 0) {
-        //        valnull = true;
-        //    }
-        //    else if (diffmonth == 0) {
-        //        if (diffdate > 0) {
-        //            valnull = true;
-        //        }
-        //        else
-        //            valnull = false;
-        //    }
-        //    else {
-        //        valnull = false;
-        //    }
-        //}
-        //else {
-        //    valnull = false;
-        //}
+        if (DateDiff.diffYear > 3) {
+            valnull = true;
+        }
+        else if (DateDiff.diffYear == 3) {
+            if (DateDiff.diffmonth > 0) {
+                valnull = true;
+            }
+            else if (DateDiff.diffmonth == 0) {
+                if (DateDiff.diffdate > 0) {
+                    valnull = true;
+                }
+                else
+                    valnull = false;
+            }
+            else {
+                valnull = false;
+            }
+        }
+        else {
+            valnull = false;
+        }
 
     }
+    return valnull;
 }
-export const GetUploadFilesData = (divId, refid) => {
+export const  GetUploadFilesData = (divId, refid) => {
     $(divId).html("No files attached");
     let sendData = { RefId: refid };
     $.ajax({

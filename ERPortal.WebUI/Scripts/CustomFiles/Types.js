@@ -58,3 +58,4 @@ export const DateDiff = {
     diffmonth: 0,
     diffdate: 0
 };
+export const ReturnData = { Status: null, Msg: "",Mandatory:[] };

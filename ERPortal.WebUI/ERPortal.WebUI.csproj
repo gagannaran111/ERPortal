@@ -434,6 +434,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\CustomFiles\AdminIndex.js" />
     <Content Include="Scripts\CustomFiles\CommenMethods.js" />
+    <Content Include="Scripts\CustomFiles\CommentClasses.js" />
     <Content Include="Scripts\CustomFiles\DGHIndex.js" />
     <Content Include="Scripts\CustomFiles\SubmitERProposal.js" />
     <Content Include="Scripts\CustomFiles\excludechar.js" />
