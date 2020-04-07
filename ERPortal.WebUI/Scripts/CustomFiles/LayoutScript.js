@@ -1,5 +1,14 @@
 ﻿import { STATUSERROR } from './Types.js';
-import { GetUploadFilesData, alertModal} from './CommenMethods.js';
+import { GetUploadFilesData, alertModal } from './CommenMethods.js';
+const ClassName = {
+    GeneratePDF: ".GeneratePDF",
+    UploadFile: ".UploadFile",
+    FileDelete: ".fileDelete"
+};
+const AjaxURL = {
+    UploadFile: "/Comment/LoadUploadFile",
+    FileDelete: "/Comment/RemoveUploadFile",
+};
 $(document).ready(() => {
 
     $(".datetimetext").datetimepicker({
@@ -28,7 +37,7 @@ $(document).ready(() => {
     });
 });
 
-$(document).on("click", ".GeneratePDF", (e)=> {
+$(document).on("click", ClassName.GeneratePDF, (e) => {
     e.preventDefault();
     let cssfile = "";
     cssfile = "/Content/css/PrintingData.css";
@@ -43,7 +52,7 @@ $(document).on("click", ".GeneratePDF", (e)=> {
 });
 
 
-$(document).on('click','#btnCommentSave',() => {
+$(document).on('click', '#btnCommentSave', () => {
     let form = $('#modalContentComment').find('form');
     let formUrl = form.attr('action');
 
@@ -95,7 +104,7 @@ $(document).on('click','#btnCommentSave',() => {
     }
 });
 
-$(document).on('click', '.UploadFile', (e) => {
+$(document).on('click', ClassName.UploadFile, (e) => {
     e.preventDefault();
     let DatasetAttrVal = e.currentTarget.dataset;
     let refid = DatasetAttrVal.filerefid;
@@ -112,7 +121,7 @@ $(document).on('click', '.UploadFile', (e) => {
     //       return data;
     //   }();
     $.ajax({
-        url: "/Comment/LoadUploadFile",
+        url: AjaxURL.UploadFile,
         type: 'POST',
         data: sendData,
         contentType: false,
@@ -132,7 +141,7 @@ $(document).on('click', '.UploadFile', (e) => {
     });
 });
 
-$(document).on("click", '.fileDelete', (e) => {
+$(document).on("click", ClassName.FileDelete, (e) => {
     e.preventDefault();
     let DatasetAttrVal = e.currentTarget.dataset;
     let divId = DatasetAttrVal.divid;
@@ -142,7 +151,7 @@ $(document).on("click", '.fileDelete', (e) => {
     $.ajax({
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
-        url: "/Comment/RemoveUploadFile",
+        url: AjaxURL.FileDelete,
         data: JSON.stringify(sendData),
         datatype: 'json',
         async: false,

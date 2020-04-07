@@ -29,11 +29,11 @@ namespace ERPortal.Core.Models
         public YesNo? ThirdOrderScreening { get; set; }
 
 
-        [Display(Name = "Comment for Select First Order Screening : (NO)")]        
+        [Display(Name = "Comment for First Order Screening (If No)")]        
         public string FirstOrderScrText { get; set; }
-        [Display(Name = "Comment for Select Second Order Screening : (NO)")]        
+        [Display(Name = "Comment for Second Order Screening (If No)")]        
         public string SecondOrderScrText { get; set; }
-        [Display(Name = "Comment for Select Third Order Screening : (NO)")]        
+        [Display(Name = "Comment for Third Order Screening (If No)")]        
         public string ThirdOrderScrText { get; set; }
 
     }

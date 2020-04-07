@@ -84,7 +84,5 @@ namespace ERPortal.Core.Models
         [Display(Name = "Any Additional remarks")]
         public string AdditonalRemarks { get; set; }
         public DateTime? SubmissionDate { get; set; }
-      
-
     }
 }

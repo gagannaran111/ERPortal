@@ -1,0 +1,22 @@
+React Native Commands
+-------------------------
+1. npm start
+2. npm install --save redux react-redux;
+3. npm install --save redux-thunk;
+4. npm install --save firebase
+5. npm install -g expo-cli
+6. expo init AwesomeProject
+7. npm install --save react-navigation
+8. npm install react-native-table-component
+9. 
+10. 
+------------------------------------------------------------
+   \node_modules\metro-config\src\defaults\blacklist.js
+   
+    var sharedBlacklist = [
+  /node_modules[\/\\]react[\/\\]dist[\/\\].*/,
+  /website\/node_modules\/.*/,
+  /heapCapture\/bundle\.js/,
+  /.*\/__tests__\/.*/
+];
+-------------------------------------------------------------

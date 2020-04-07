@@ -114,7 +114,7 @@ export const  GetUploadFilesData = (divId, refid) => {
                 if (data.length > 0) {
                     for (let file of data) {
                         txt += `<div class='badge badge-warning mr-2 mb-2'>
-                    <a class='text-dark' href='@Url.Content("~/Content/UploadedFiles/")${file.FileName}' target='_blank'>${file.FileName}</a>
+                    <a class='text-dark' href='/Content/Uploads/${file.NewFileName}' target='_blank'>${file.FileName}</a>
                     <a class='fileDelete small text-danger'data-fileid='${file.Id}' data-fileref='${file.FIleRef}' data-divid ='${divId}' href='#'>
                     <i class='ml-1 fa fa-times'></i>
                     </a></div>`;
@@ -128,4 +128,29 @@ export const  GetUploadFilesData = (divId, refid) => {
             alertModal("Something Went Wrong. Try Again");
         },
     })
+}
+
+export const ShowCommentModal = (appid, title, urlpath, targetpage, queryid) => {
+    $('#modalContentComment').empty();
+    let senddata = { appid: appid, targetPage: targetpage, queryId: queryid };
+    $.ajax({
+        url: urlpath,
+        data: senddata,
+        async: false,
+        success: (result) => {
+            console.log(result);
+            $('#CommentModalLabel').text(title);
+            $('#modalContentComment').html(result);
+            if ($("#btnCommentSave").is(":hidden")) {
+                $('#btnCommentSave').show();
+            }
+            //  editor('#modalContentComment textarea');
+        },
+        error: () => {
+            $('#modalContentComment').html('<div class="alert alert-danger" role="alert"> An Error has occured </div >');
+        },
+        fail: (xhr, textStatus, errorThrown) => {
+            $('#modalContentComment').html('<div class="alert alert-danger" role="alert">Request Failed with error: ' + errorThrown + '</div > ');
+        }
+    });
 }

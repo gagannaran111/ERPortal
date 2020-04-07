@@ -2,8 +2,6 @@
 import { GetUploadFilesData, alertModal, CompareTwoDates, CurrentDate, CompareTwoDatesByYear } from './CommenMethods.js';
 import { StatusData } from './CommentClasses.js';
 
-
-
 const ElementsId = {
     ERApplicationId: '#ERApplications_AppId',
     DateOfInitialComProd: '#ERApplications_DateOfInitialCommercialProduction',
@@ -60,7 +58,7 @@ const OnSuccess = (response) => {
     if (response == "Success")
         window.location.href = '/Operator/Index';
     else {
-        alert("Fill Comments If You Select Order Screening : No");
+        alertModal("Fill Comments If You Select Order Screening : No");
         return false;
     }
 }
@@ -87,20 +85,20 @@ $(document).ready(() => {
     DivId.ImplementaionTypeDiv.find('select option').prop('hidden', true);
 
     $('[data-toggle="tooltip"]').tooltip();
-    if ($('#ERApplications_AppId').val() != "") {
+    if ($(ElementsId.ERApplicationId).val() != "") {
         $('#disabledForm').prop('disabled', true)
-        $('#ERAppSubmit').hide();
-        $('.statussuccess').empty().append('Application Ref. No. : ' + $('#ERApplications_AppId').val()).removeClass('d-none');
-        GetUploadFilesData('#UploadFilesData', $('#ReportDocument').val());
+        $(ElementsId.ERAppSubmit).hide();
+        $('.statussuccess').empty().append('Application Ref. No. : ' + $(ElementsId.ERApplicationId).val()).removeClass('d-none');
+        GetUploadFilesData('#UploadFilesData', $(ElementsId.ReportDocument).val());
         setTimeout(() => {
             $('.fileDelete').addClass('d-none');
         });
     }
     else {
         $('select option[value=""]').prop('selected', true);
-        $('#ERApplications_DateOfDiscovery').val('');
+        $(ElementsId.DateOfDiscovery).val('');
 
-        $('#FileDiv').removeClass('d-none');
+        DivId.FileDiv.removeClass('d-none');
     }
 
 
@@ -230,8 +228,7 @@ $(document).on('click', ElementsId.BtnERAppEligibility, (e) => {
             }
             else {
                 console.log(true);
-                $(ElementsId.operatorform).find('input,select,file,button').attr('disabled', 'disabled');
-                $(ElementsId.ERAppSubmit).removeAttr('disabled').removeClass('d-none');
+                $(ElementsId.ERAppSubmit).removeClass('d-none');
                 $(ElementsId.BtnERAppEligibility).addClass('d-none');
                 return true;
             }
@@ -243,8 +240,14 @@ $(document).on('click', ElementsId.BtnERAppEligibility, (e) => {
 ////////////////
 //  Function  //
 ////////////////
-
+const BtnEligibleOrSubmitVisible = () => {
+    if ($(ElementsId.ERAppSubmit).hasClass('d-none') == false) {
+        $(ElementsId.ERAppSubmit).addClass('d-none');
+        $(ElementsId.BtnERAppEligibility).removeClass('d-none');
+    }
+};
 const ChangeHydrocarbonType = (currentTarget) => {
+
     switch (currentTarget.value) {
         case HydrocarbonType.UnConventional:
             //  DivId.uhcProdnMethodDiv.fadeIn("slow");
@@ -302,6 +305,7 @@ const ChangeHydrocarbonType = (currentTarget) => {
             ReturnData.Status = false;
             break;
     }
+    BtnEligibleOrSubmitVisible();
     return ReturnData;
 };
 const ChangeHydrocarbonMethod = (currentTarget) => {
@@ -364,6 +368,7 @@ const ChangeHydrocarbonMethod = (currentTarget) => {
             ReturnData.Status = false;
             break;
     }
+    BtnEligibleOrSubmitVisible();
     return ReturnData;
 };
 const ChangeImplementationType = (currentTarget) => {
@@ -418,6 +423,7 @@ const ChangeImplementationType = (currentTarget) => {
             ReturnData.Status = true;
             break;
     }
+    BtnEligibleOrSubmitVisible();
     return ReturnData;
 };
 const ChangeDateOfDiscovery = (currentTarget) => {
@@ -436,33 +442,33 @@ const ChangeDateOfDiscovery = (currentTarget) => {
                 // currentTarget.value = "";
                 ReturnData.Status = datestatus;
                 ReturnData.Msg = "Not Eligible For Fiscal Incentive. Because Date Of Discovery > Date: 10/10/2018. For Choosing UHC Extraction";
-                return ReturnData;
+
             }
             else {
                 ReturnData.Status = datestatus;
                 ReturnData.Msg = "Eligible For Fiscal Incentive";
-                return ReturnData;
+
             }
 
         }
         else if (datestatus == true) {
             ReturnData.Status = datestatus;
             ReturnData.Msg = "Eligible For Fiscal Incentive";
-            return ReturnData;
+
         }
         else {
 
             ReturnData.Status = datestatus;
             ReturnData.Msg = "Date Of Discovery Greater Then Or Equal To Current Date.";
-            currentTarget.value = "";
-            return ReturnData;
         }
     }
     else {
         ReturnData.Status = datestatus;
         ReturnData.Msg = "Date Of Discovery Is Empty";
-        return ReturnData;
+
     }
+    BtnEligibleOrSubmitVisible();
+    return ReturnData;
 };
 const ChangeDateOfInitComProd = (currentTarget) => {
     let statusval = false;
@@ -481,34 +487,36 @@ const ChangeDateOfInitComProd = (currentTarget) => {
                     console.log(st);
                     ReturnData.Status = st;
                     ReturnData.Msg = "Project/Proposal Is Eligible For Availing Fiscal Incentive(s) as Entittled For EOR Method";
-                    return ReturnData;
+
                 }
                 else {
                     // currentTarget.value = "";
                     ReturnData.Status = st;
                     ReturnData.Msg = "Project/Proposal Is Not Eligible For Availing Fiscal Incentive(s) as Entittled For EOR Method";
-                    return ReturnData;
+
                 }
             }
             console.log(statusval);
             ReturnData.Status = statusval;
             ReturnData.Msg = "";
-            return ReturnData;
+
         }
         else {
             //currentTarget.value = "";
             console.log(statusval);
             ReturnData.Status = statusval;
             ReturnData.Msg = "Date Of Initial Commercial Production > Date Of Discovery";
-            return ReturnData;
+
         }
 
     }
     else {
         ReturnData.Status = statusval;
         ReturnData.Msg = "Date of Commencement of Commercial Production Is Empty";
-        return ReturnData;
+
     }
+    BtnEligibleOrSubmitVisible();
+    return ReturnData;
 };
 const ChangeDateOfLastComProd = (currentTarget) => {
     let d1 = currentTarget.value;
@@ -522,72 +530,76 @@ const ChangeDateOfLastComProd = (currentTarget) => {
                 // currentTarget.value = "";
                 ReturnData.Status = statusval;
                 ReturnData.Msg = "Not Eligible For Fiscal Incentive. Because Date of most recent Commercial Production Greater Then Or Equal To 3 Years ( >= 3) From Date of Commencement of Commercial Production.";
-                return ReturnData;
+
             }
             else {
                 ReturnData.Status = statusval;
                 ReturnData.Msg = "Eligible For Fiscal Incentive";
-                return ReturnData;
+
             }
         }
         ReturnData.Status = statusval;
         ReturnData.Msg = "Date of most recent Commercial Production < Date of Commencement of Commercial Production.";
-        // currentTarget.value = "";
-        return ReturnData;
 
     }
     else {
         ReturnData.Status = statusval;
         ReturnData.Msg = "Date of most recent Commercial Production Is Empty.";
-        return ReturnData;
+
     }
+    BtnEligibleOrSubmitVisible();
+    return ReturnData;
 };
 const ChangeFieldGIIP = (currentTarget) => {
     if (parseFloat(currentTarget.value) < 0.25 && parseFloat(currentTarget.value) > 0) {
         ReturnData.Status = false;
         ReturnData.Msg = "Pilot Phase Is Not Mandatory. Because If GIIP < 0.25 TCF.";
-        return ReturnData;
+
     }
     else if (parseInt(currentTarget.value) < 0) {
         currentTarget.value = 0;
         ReturnData.Status = false;
         ReturnData.Msg = "";
-        return ReturnData;
+
     }
     else if (parseFloat(currentTarget.value)) {
         ReturnData.Status = true;
         ReturnData.Msg = "Pilot Phase Is Mandatory. Because If GIIP < 0.25 TCF.";
-        return ReturnData;
+
     }
     else {
         ReturnData.Status = false;
         ReturnData.Msg = "Field GIIP Is Empty";
-        return ReturnData;
+
     }
+    BtnEligibleOrSubmitVisible();
+    return ReturnData;
 };
 
 const ChangeFieldOIIP = (currentTarget) => {
     if (parseInt(currentTarget.value) < 25 && parseInt(currentTarget.value) > 0) {
         ReturnData.Status = false;
         ReturnData.Msg = "Pilot Phase Is Not Mandatory. Because If OIIP < 25 MMBBL";
-        return ReturnData;
+
     }
     else if (parseInt(currentTarget.value) < 0) {
         currentTarget.value = 0;
         ReturnData.Status = false;
         ReturnData.Msg = "";
-        return ReturnData;
+
     }
     else if (parseInt(currentTarget.value) >= 25) {
         ReturnData.Status = true;
         ReturnData.Msg = "Pilot Phase Is Mandatory. Because If OIIP < 25 MMBBL";
-        return ReturnData;
+
     }
     else {
         ReturnData.Status = false;
         ReturnData.Msg = "Field OIIP Is Empty";
-        return ReturnData;
+
     }
+    BtnEligibleOrSubmitVisible();
+    return ReturnData;
 };
 const ChangeFirstOrderScreening = (currentTarget) => {
     if (currentTarget.value == YesNo.No) {
@@ -607,87 +619,96 @@ const ChangeFirstOrderScreening = (currentTarget) => {
         ReturnData.Status = false;
         ReturnData.Msg = "Choose First Order Screening ";
     }
+    BtnEligibleOrSubmitVisible();
     return ReturnData;
 };
 const ChangeSecondOrderScreening = (currentTarget) => {
-    if (currentTarget.value == YesNo.No) {
-        DivId.SecondOrderScrTextDiv.removeClass('d-none');
-        if (DivId.SecondOrderScrTextDiv.find('textarea').val() == "") {
-            ReturnData.Msg = "Comments Mandatory If No";
-            ReturnData.Status = false;
-        } else {
-            ReturnData.Msg = "";
+
+    switch (currentTarget.value) {
+        case YesNo.No:
+            DivId.SecondOrderScrTextDiv.removeClass('d-none');
+            if (DivId.SecondOrderScrTextDiv.find('textarea').val() == "") {
+                ReturnData.Msg = "Comments Mandatory If No";
+                ReturnData.Status = false;
+            } else {
+                ReturnData.Msg = "";
+                ReturnData.Status = true;
+            }
+            break;
+        case YesNo.Yes:
+            DivId.SecondOrderScrTextDiv.addClass('d-none').find('textarea').val('');
             ReturnData.Status = true;
-        }
+            ReturnData.Msg = "";
+            break;
+        default:
+            DivId.SecondOrderScrTextDiv.addClass('d-none').find('textarea').val('');
+            ReturnData.Status = false;
+            ReturnData.Msg = "Choose Second Order Screening ";
+            break;
     }
-    else if (currentTarget.value == YesNo.Yes) {
-        DivId.SecondOrderScrTextDiv.addClass('d-none').find('textarea').val('');
-        ReturnData.Status = true;
-        ReturnData.Msg = "";
-    }
-    else {
-        ReturnData.Status = false;
-        ReturnData.Msg = "Choose Second Order Screening ";
-    }
+    BtnEligibleOrSubmitVisible();
     return ReturnData;
 };
 const ChangeThirdOrderScreening = (currentTarget) => {
-    if (currentTarget.value == YesNo.No) {
-        DivId.ThirdOrderScrTextDiv.removeClass('d-none');
-        if (DivId.ThirdOrderScrTextDiv.find('textarea').val() == "") {
-            ReturnData.Msg = "Third Order Screening Comments Mandatory If No";
-            ReturnData.Status = false;
-        }
-        else {
-            ReturnData.Msg = "";
+    switch (currentTarget.value) {
+        case YesNo.No:
+            DivId.ThirdOrderScrTextDiv.removeClass('d-none');
+            if (DivId.ThirdOrderScrTextDiv.find('textarea').val() == "") {
+                ReturnData.Msg = "Third Order Screening Comments Mandatory If No";
+                ReturnData.Status = false;
+            }
+            else {
+                ReturnData.Msg = "";
+                ReturnData.Status = true;
+            }
+            break;
+        case YesNo.Yes:
+            DivId.ThirdOrderScrTextDiv.addClass('d-none').find('textarea').val('');
             ReturnData.Status = true;
-        }
-    }
-    else if (currentTarget.value == YesNo.Yes) {
-        DivId.ThirdOrderScrTextDiv.addClass('d-none').find('textarea').val('');
-        ReturnData.Status = true;
-        ReturnData.Msg = "";
-    }
-    else {
-        ReturnData.Status = false;
-        ReturnData.Msg = "Choose Third Order Screening ";
-    }
+            ReturnData.Msg = "";
+            break;
+        default:
+            DivId.ThirdOrderScrTextDiv.addClass('d-none').find('textarea').val('');
+            ReturnData.Status = false;
+            ReturnData.Msg = "Choose Third Order Screening ";
+            break;
+    }   
+    BtnEligibleOrSubmitVisible();
     return ReturnData;
 };
 const ChangePilotDesign = (currentTarget) => {
     let FieldGIIP = $(ElementsId.FieldGIIP);
     let FieldOIIP = $(ElementsId.FieldOIIP);
     let st = ReturnData;
-    if (currentTarget.value == YesNo.No) {
-        if (parseInt(FieldOIIP.val()) > 0 && FieldOIIP.val().length > 0) {
-            st = ChangeFieldOIIP(FieldOIIP);
-        }
-        else if (parseFloat(FieldGIIP.val()) > 0 && FieldGIIP.val().length > 0) {
-            st = ChangeFieldGIIP(FieldGIIP);
-        }
-        else {
-            st.Msg = "Hydrocarbon In Place : OIIP or GIIP Empty";
+    switch (currentTarget.value) {
+        case YesNo.No:
+            if (parseInt(FieldOIIP.val()) > 0 && FieldOIIP.val().length > 0) {
+                st = ChangeFieldOIIP(FieldOIIP);
+            }
+            else if (parseFloat(FieldGIIP.val()) > 0 && FieldGIIP.val().length > 0) {
+                st = ChangeFieldGIIP(FieldGIIP);
+            }
+            else {
+                st.Msg = "Hydrocarbon In Place : OIIP or GIIP Empty";
+                st.Status = false;
+            }
+            break;
+        case YesNo.Yes:
+            st.Msg = "Pilot Detail Mandatory and Full Field Mandatory";
+            st.Status = true;
+
+            st.Mandatory.push("Pilot");
+            st.Mandatory.push("FullField");
+
+            $(DivId.PilotDetailDiv).addClass('RequirdData');
+            $(DivId.FullFilledDiv).addClass('RequirdData');
+            break;
+        default:
+            st.Msg = "Choose Pilot Design Carried Out";
             st.Status = false;
-            return st;
-        }
-    }
-    else if (currentTarget.value == YesNo.Yes) {
-        st.Msg = "Pilot Detail Mandatory and Full Field Mandatory";
-        st.Status = true;
-
-        st.Mandatory.push("Pilot");
-        st.Mandatory.push("FullField");
-
-        $(DivId.PilotDetailDiv).addClass('RequirdData');
-        $(DivId.FullFilledDiv).addClass('RequirdData');
-        return st;
-    }
-    else {
-        st.Msg = "Choose Pilot Design Carried Out";
-        st.Status = false;
-        $(DivId.PilotDetailDiv).removeClass('RequirdData');
-        $(DivId.FullFilledDiv).removeClass('RequirdData');
-        return st;
+            $(DivId.PilotDetailDiv).removeClass('RequirdData');
+            $(DivId.FullFilledDiv).removeClass('RequirdData');
+            break;
     }
 
     if (st.Status == true) {
@@ -703,6 +724,7 @@ const ChangePilotDesign = (currentTarget) => {
         $(DivId.PilotDetailDiv).addClass('RequirdData');
         $(DivId.FullFilledDiv).removeClass('RequirdData');
     }
+    BtnEligibleOrSubmitVisible();
     return st;
 };
 const ChangePilotEndDate = (currentTarget) => {
@@ -712,20 +734,21 @@ const ChangePilotEndDate = (currentTarget) => {
         if (st == false) {
             ReturnData.Status = st;
             ReturnData.Msg = "Pilot Phase Commencement Date < Pilot Phase Culmination Date";
-            currentTarget.value = "";
-            return ReturnData;
+
         }
         else {
             ReturnData.Status = st;
             ReturnData.Msg = "";
-            return ReturnData;
+
         }
     }
     else {
         ReturnData.Status = false
         ReturnData.Msg = "Pilot Phase Commencement Date Or Pilot Phase Culmination Date Are Empty";
-        return ReturnData;
+
     }
+    BtnEligibleOrSubmitVisible();
+    return ReturnData;
 };
 const ChangeFullFillStartDate = (currentTarget) => {
     let PilotEndDate = $(ElementsId.PilotEndDate);
@@ -734,21 +757,20 @@ const ChangeFullFillStartDate = (currentTarget) => {
         if (st == false) {
             ReturnData.Status = st;
             ReturnData.Msg = "Pilot Phase Culmination Date < Full Field Commencement Date";
-            currentTarget.value = "";
-            return ReturnData;
+
         }
         else {
             ReturnData.Status = st;
             ReturnData.Msg = "";
-            return ReturnData;
+
         }
     }
     else {
         ReturnData.Status = false;
         ReturnData.Msg = "Pilot Phase Culmination Date or Full Field Commencement Date Are Empty";
-        return ReturnData;
-
     }
+    BtnEligibleOrSubmitVisible();
+    return ReturnData;
 };
 const ChangeFullFillEndDate = (currentTarget) => {
     let FullFillStartDate = $(ElementsId.FullFillStartDate);
@@ -757,69 +779,73 @@ const ChangeFullFillEndDate = (currentTarget) => {
         if (st == false) {
             ReturnData.Status = st;
             ReturnData.Msg = "Full Field Commencement Date < Full Field Culmination Date";
-            return ReturnData;
+
         }
         else {
             ReturnData.Status = st;
             ReturnData.Msg = "";
-            return ReturnData;
+
         }
     }
     else {
         ReturnData.Status = false;
         ReturnData.Msg = "Full Field Culmination Date or Full Field Commencement Date Are Empty";
-        return ReturnData;
-
     }
+    BtnEligibleOrSubmitVisible();
+    return ReturnData;
 
 };
 const ChangeERScreeningIntitute = (currentTarget) => {
     if (currentTarget.value != "" || currentTarget.value == undefined) {
         ReturnData.Status = true;
         ReturnData.Msg = "";
-        return ReturnData;
+
     }
     else {
         ReturnData.Status = false;
         ReturnData.Msg = "Choose ER Screening Institute";
-        return ReturnData;
+
     }
+    BtnEligibleOrSubmitVisible();
+    return ReturnData;
 };
 const ChangeEORTechnique = (currentTarget) => {
     if (currentTarget.value != "" || currentTarget.value == undefined) {
         ReturnData.Status = true;
         ReturnData.Msg = "";
-        return ReturnData;
+
     }
     else {
         ReturnData.Status = false;
         ReturnData.Msg = "Choose EOR Technique";
-        return ReturnData;
+
     }
+    BtnEligibleOrSubmitVisible();
+    return ReturnData;
 };
 const ChangeEGRTechnique = (currentTarget) => {
     if (currentTarget.value != "" || currentTarget.value == undefined) {
         ReturnData.Status = true;
         ReturnData.Msg = "";
-        return ReturnData;
     }
     else {
         ReturnData.Status = false;
         ReturnData.Msg = "Choose EGR Technique";
-        return ReturnData;
     }
+    BtnEligibleOrSubmitVisible();
+    return ReturnData;
 };
 const ChangeUHCProductionMethod = (currentTarget) => {
     if (currentTarget.value != "" || currentTarget.value == undefined) {
         ReturnData.Status = true;
         ReturnData.Msg = "";
-        return ReturnData;
     }
     else {
         ReturnData.Status = false;
         ReturnData.Msg = "Choose UHC Production Methods.";
-        return ReturnData;
     }
+    BtnEligibleOrSubmitVisible();
+    return ReturnData;
 };
 const CheckEligibilityToSubmit = async (e) => {
     let arr = [];

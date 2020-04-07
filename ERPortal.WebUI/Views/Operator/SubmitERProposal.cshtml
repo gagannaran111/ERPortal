@@ -508,8 +508,8 @@
                                             <div class="form-group row">
                                                 @Html.LabelFor(model => model.ERApplications.ERPilot.PilotDesign, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
                                                 <div class="col-sm-6 d-flex align-items-center">
-                                                    @Html.EnumDropDownListFor(model => model.ERApplications.ERPilot.PilotDesign, "Choose...", new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(model => model.ERApplications.ERPilot.PilotDesign, "", new { @class = "text-danger" })
+                                                    @Html.DisplayTextFor(model => model.ERApplications.ERPilot.PilotDesign)
+                                                   
                                                 </div>
                                             </div>
                                             <div class=" border border-info p-2 shadow-sm PilotDetail">
@@ -594,7 +594,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            @{
+                                            @*@{
                                                 if (Model.ERApplications.ERScreeningDetail.FirstOrderScreening == ERPortal.Core.Models.YesNo.Yes)
                                                 {
                                                     <div class="form-group row">
@@ -607,7 +607,7 @@
                                                         </div>
                                                     </div>
                                                 }
-                                            }
+                                            }*@
                                             <div class="form-group row">
                                                 @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScreening, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
                                                 <div class="col-sm-6 d-flex align-items-center">
@@ -618,7 +618,7 @@
                                                 </div>
                                             </div>
                                             @{
-                                                if (Model.ERApplications.ERScreeningDetail.SecondOrderScreening == ERPortal.Core.Models.YesNo.Yes)
+                                                if (Model.ERApplications.ERScreeningDetail.SecondOrderScreening == ERPortal.Core.Models.YesNo.No)
                                                 {
                                                     <div class="form-group row">
                                                         @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.SecondOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })
@@ -641,7 +641,7 @@
                                                 </div>
                                             </div>
                                             @{
-                                                if (Model.ERApplications.ERScreeningDetail.ThirdOrderScreening == ERPortal.Core.Models.YesNo.Yes)
+                                                if (Model.ERApplications.ERScreeningDetail.ThirdOrderScreening == ERPortal.Core.Models.YesNo.No)
                                                 {
                                                     <div class="form-group row">
                                                         @Html.LabelFor(model => model.ERApplications.ERScreeningDetail.ThirdOrderScrText, htmlAttributes: new { @class = "col-sm-5 col-form-label font-weight-bold" })

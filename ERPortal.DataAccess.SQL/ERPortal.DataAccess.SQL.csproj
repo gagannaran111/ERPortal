@@ -155,6 +155,10 @@
     <Compile Include="Migrations\202003251143143_UpdateBaseEntity.designer.cs">
       <DependentUpon>202003251143143_UpdateBaseEntity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202004071235518_ERTechniqueColAdd.cs" />
+    <Compile Include="Migrations\202004071235518_ERTechniqueColAdd.designer.cs">
+      <DependentUpon>202004071235518_ERTechniqueColAdd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -246,6 +250,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003251143143_UpdateBaseEntity.resx">
       <DependentUpon>202003251143143_UpdateBaseEntity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004071235518_ERTechniqueColAdd.resx">
+      <DependentUpon>202004071235518_ERTechniqueColAdd.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

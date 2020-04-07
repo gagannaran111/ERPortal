@@ -58,4 +58,17 @@ export const DateDiff = {
     diffmonth: 0,
     diffdate: 0
 };
-export const ReturnData = { Status: null, Msg: "",Mandatory:[] };
+export const ReturnData = {
+    Status: null,
+    Msg: "",
+    Mandatory: []
+};
+
+export const UserRole = {
+    CER: "Consultant Enhanced Recovery",
+    Coord: "Coordinator",
+}
+export const ShowHide = {
+    Show: "Show",
+    Hide:"Hide",
+};
