@@ -56,7 +56,7 @@ const OnSuccess = (response) => {
 
     console.log(response);
     if (response == "Success")
-        window.location.href = '/Operator/Index';
+        window.location.href = '../Operator/Index';
     else {
         alertModal("Fill Comments If You Select Order Screening : No");
         return false;

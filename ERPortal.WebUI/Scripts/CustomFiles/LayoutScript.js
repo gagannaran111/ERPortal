@@ -6,8 +6,8 @@ const ClassName = {
     FileDelete: ".fileDelete"
 };
 const AjaxURL = {
-    UploadFile: "/Comment/LoadUploadFile",
-    FileDelete: "/Comment/RemoveUploadFile",
+    UploadFile: "../Comment/LoadUploadFile",
+    FileDelete: "../Comment/RemoveUploadFile",
 };
 $(document).ready(() => {
 
@@ -40,7 +40,7 @@ $(document).ready(() => {
 $(document).on("click", ClassName.GeneratePDF, (e) => {
     e.preventDefault();
     let cssfile = "";
-    cssfile = "/Content/css/PrintingData.css";
+    cssfile = "../Content/css/PrintingData.css";
     $(".container-fluid").printThis({
         importCSS: true,
         importStyle: true,

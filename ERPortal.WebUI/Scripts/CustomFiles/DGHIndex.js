@@ -7,7 +7,7 @@ $(document).ready(() => {
 let table;
 const UserTableData = () => {
     $.ajax({
-        url: "/DGH/DGHDashboard", //"@Url.Action("DGHDashboard","DGH")",
+        url: "../DGH/DGHDashboard", //"@Url.Action("DGHDashboard","DGH")",
         type: 'POST',
         async: false,
         success: (result) => {
@@ -41,7 +41,7 @@ const UserTableData = () => {
                             : e.Status == "UP" ? underproccessingappcount++
                                 : 0;
                 totalappcount = approvalappcount + newappcount + pendingappcount + underproccessingappcount;
-                dd += `<tr><td><a href='/DGH/AppRecToDGH?appid=${e.AppId}'>${e.AppId}</a></td>
+                dd += `<tr><td><a href='../DGH/AppRecToDGH?appid=${e.AppId}'>${e.AppId}</a></td>
                         <td> ${e.FieldType.Type}</td><td>${e.FieldName}</td>
                         <td>${e.Organisation.Name}</td><td>${ToChangeDateFormate(e.CreatedAt)}</td>
                         <td>${files}</td><td>${status}</td></tr>`;

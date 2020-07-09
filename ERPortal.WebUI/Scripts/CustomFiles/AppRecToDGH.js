@@ -15,9 +15,9 @@ const AppUserDetail = {
     CurrUserRole: $(ElementId.Id).attr('UserRole'),
 };
 const AjaxURL = {
-    AjaxAdd: "/Comment/AjaxAdd",
-    ApplicationSummary: "/Comment/ApplicationSummary",
-    BtnCheckStatus: "/Comment/BtnCheckStatus"
+    AjaxAdd: "../Comment/AjaxAdd",
+    ApplicationSummary: "../Comment/ApplicationSummary",
+    BtnCheckStatus: "../Comment/BtnCheckStatus"
 };
 $(document).ready(() => {
     BtnForwardCheckShowHideStatus();

@@ -15,7 +15,7 @@ $(document).ready(() => {
         // Initiate an AJAX request here (and then updating in a callback)
         $("#formModalLabel").html("Add " + modalTitle);
         $.ajax({
-            url: "/Admin/AjaxAdd?targetPage=" + targetPage,
+            url: "../Admin/AjaxAdd?targetPage=" + targetPage,
             data: { Id: btnval },
             success: (result) => {
                 $('#modalContent').html(result);
@@ -87,7 +87,7 @@ $(document).on('click', '.DeleteData', ({ currentTarget }) => {
     let target = DatasetAttrVal.target; //$(this).attr('data-target');
     let id = DatasetAttrVal.value;// $(this).attr('data-value');
     $.ajax({
-        url: "/Admin/DeleteData", // "@Url.Action("DeleteData","Admin")",
+        url: "../Admin/DeleteData", // "@Url.Action("DeleteData","Admin")",
         type: 'POST',
         data: { targetdata: target, Id: id },
         success: (result) => {
