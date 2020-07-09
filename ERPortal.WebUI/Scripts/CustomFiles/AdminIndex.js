@@ -1,4 +1,4 @@
-﻿import { alertModal } from "./CommenMethods";
+﻿import { alertModal } from "./CommenMethods.js";
 
 $(document).ready(() => {
 
