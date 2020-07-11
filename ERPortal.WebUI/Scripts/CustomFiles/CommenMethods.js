@@ -103,7 +103,7 @@ export const  GetUploadFilesData = (divId, refid) => {
     $.ajax({
         type: 'POST',
         contentType: 'application/json; charset=utf-8',
-        url: "/Comment/GetUploadFiles",
+        url: "../Comment/GetUploadFiles",
         data: JSON.stringify(sendData),
         datatype: 'json',
         async: false,
@@ -114,7 +114,7 @@ export const  GetUploadFilesData = (divId, refid) => {
                 if (data.length > 0) {
                     for (let file of data) {
                         txt += `<div class='badge badge-warning mr-2 mb-2'>
-                    <a class='text-dark' href='/Content/Uploads/${file.NewFileName}' target='_blank'>${file.FileName}</a>
+                    <a class='text-dark' href='../Content/Uploads/${file.NewFileName}' target='_blank'>${file.FileName}</a>
                     <a class='fileDelete small text-danger'data-fileid='${file.Id}' data-fileref='${file.FIleRef}' data-divid ='${divId}' href='#'>
                     <i class='ml-1 fa fa-times'></i>
                     </a></div>`;

@@ -8,7 +8,7 @@ $(document).ready(() => {
 let table;
 const UserTableData = () => {
     $.ajax({
-        url:  "/Operator/OperatorDashboard",  // "@Url.Action("OperatorDashboard","Operator")",
+        url:  "../Operator/OperatorDashboard",  // "@Url.Action("OperatorDashboard","Operator")",
         type: 'POST',
         async: false,
         beforeSend: function (xhr) {
@@ -48,7 +48,7 @@ const UserTableData = () => {
                                 : 0;
 
                 totalappcount = approvalappcount + newappcount + pendingappcount + underproccessingappcount;
-                dd += `<tr><td><a href="/Operator/SubmitERProposal?appid=${e.AppId}">${e.AppId}</a></td><td> ${e.FieldType.Type}</td><td>${e.FieldName}</td>
+                dd += `<tr><td><a href="../Operator/SubmitERProposal?appid=${e.AppId}">${e.AppId}</a></td><td> ${e.FieldType.Type}</td><td>${e.FieldName}</td>
                         <td>${e.Organisation.Name}</td><td>${ToChangeDateFormate(e.CreatedAt)}</td><td>${files}</td><td>${status}</td></tr>`;
             };
 

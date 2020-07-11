@@ -62,7 +62,9 @@
         </div>
     </div>
 </div>
-<script>
+<script type="module">
+    import { ToChangeDateFormate } from '../../Scripts/CustomFiles/CommenMethods.js';
+   
     $(document).ready(function () {               
         $('#AuditTable').DataTable(
                             {
@@ -88,6 +90,8 @@
                     console.log(result);
                     if (result.length > 0) {
                         var dd = "";
+                        let reciver = "";
+                        let sender = "";
                         $.each(result, function (index, element) {
                             reciver = element.Receiver == null ? "" : element.Receiver.FirstName + " " + element.Receiver.LastName + "(" + element.Receiver.UserRole + ")";
                             sender = element.Sender == null ? "" : element.ERApplicationId + "</td><td>" + element.Sender.FirstName + " " + element.Sender.LastName + "(" + element.Sender.UserRole + ")";
