@@ -10,12 +10,14 @@ namespace ERPortal.Core.Models
     public class ERPilot : BaseEntity
     {
         [Display(Name = "Pilot Design carried out")]
+        [Required(ErrorMessage = "Required Pilot Design carried out")]
         public YesNo PilotDesign { get; set; }
 
         [Display(Name = "Pilot Mandatory")]
         public YesNo? PilotMandatory { get; set; }
 
         [Display(Name = "Technically Compatible")]
+        [Required(ErrorMessage = "Required Technically Compatible")]
         public TechnicallyCompatible TechnicallyCompatible { get; set; }
 
         [Display(Name = "Economic Viable")]

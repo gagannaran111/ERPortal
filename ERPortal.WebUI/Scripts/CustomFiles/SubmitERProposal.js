@@ -52,21 +52,6 @@ const DivId = {
 
 };
 
-const OnSuccess = (response) => {
-
-    console.log(response);
-    if (response == "Success")
-        window.location.href = '/Operator/Index';
-    else {
-        alertModal("Fill Comments If You Select Order Screening : No");
-        return false;
-    }
-}
-
-const OnFailure = (response) => {
-    console.log(response);
-    alertModal("Try Again Error Occured.");
-}
 $(document).ready(() => {
     $.each($('#ERApplications_ImplementaionType option'), function (index, element) {
         if ($(this).val() == "1" || $(this).val() == "0") {
@@ -388,6 +373,8 @@ const ChangeImplementationType = (currentTarget) => {
                 DivId.uhcProdnMethodDiv.fadeOut("slow");
                 DivId.uhcProdnMethodDiv.find('select option[value=""]').prop('selected', true);
             }
+            $(ElementsId.FieldOIIP).prop('disabled', false);
+            $(ElementsId.FieldGIIP).prop('disabled', true);
             ReturnData.Msg = "";
             ReturnData.Status = true;
             break;
@@ -397,6 +384,8 @@ const ChangeImplementationType = (currentTarget) => {
                 DivId.uhcProdnMethodDiv.fadeOut("slow");
                 DivId.uhcProdnMethodDiv.find('select option[value=""]').prop('selected', true);
             }
+            $(ElementsId.FieldOIIP).prop('disabled', true);
+            $(ElementsId.FieldGIIP).prop('disabled', false);
             ReturnData.Msg = "";
             ReturnData.Status = true;
             break;
@@ -672,7 +661,7 @@ const ChangeThirdOrderScreening = (currentTarget) => {
             ReturnData.Status = false;
             ReturnData.Msg = "Choose Third Order Screening ";
             break;
-    }   
+    }
     BtnEligibleOrSubmitVisible();
     return ReturnData;
 };
@@ -683,10 +672,10 @@ const ChangePilotDesign = (currentTarget) => {
     switch (currentTarget.value) {
         case YesNo.No:
             if (parseInt(FieldOIIP.val()) > 0 && FieldOIIP.val().length > 0) {
-                st = ChangeFieldOIIP(FieldOIIP);
+                st = ChangeFieldOIIP(FieldOIIP[0]);
             }
             else if (parseFloat(FieldGIIP.val()) > 0 && FieldGIIP.val().length > 0) {
-                st = ChangeFieldGIIP(FieldGIIP);
+                st = ChangeFieldGIIP(FieldGIIP[0]);
             }
             else {
                 st.Msg = "Hydrocarbon In Place : OIIP or GIIP Empty";
