@@ -24,11 +24,19 @@ export const ImplementationType = {
     IGR: "3",
     UHC: "4"
 };
+export const UHCProductionMethod = {
+    Gas_Hydrate: "Gas_Hydrate",
+    Heavy_Oil: "Heavy_Oil",
+    Oil_Shale: "Oil_Shale",
+    Shale_Gas: "Shale_Gas",
+    Shale_Oil: "Shale_Oil",
+    Tight_Gas: "Tight_Gas",
+    Tight_Oil:"Tight_Oil"
+};
 export const StyleClass = {
     UHC: 'uhc',
     GAS: 'gas',
     OIL: 'oil',
-
 };
 
 export const statusDeck = {

@@ -392,7 +392,7 @@ namespace ERPortal.WebUI.Controllers
 
                 case "ERTechniques":
                     var ertechnique = ERTechniquesContext.Collection().Where(x => x.Id == id).FirstOrDefault();
-
+                    EORTechniqueType eORTechniqueType;
                     if (ertechnique != null)
                     {
                         switch (collection["Method"])
@@ -417,8 +417,11 @@ namespace ERPortal.WebUI.Controllers
 
                                 break;
                         }
-                        ertechnique.TechniqueName = collection["TechniqueName"];
-                        ertechnique.TechniqueType = collection["TechniqueType"];
+                       
+                        ertechnique.TechniqueName = collection["TechniqueName"];                      
+                        Enum.TryParse(collection["TechniqueType"], true, out eORTechniqueType);
+                        ertechnique.TechniqueType = eORTechniqueType;
+                      
                         ertechnique.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
                         ertechnique.Status = collection["Status"];
                         ertechnique.ModifiedAt = DateTime.Now;
@@ -449,7 +452,8 @@ namespace ERPortal.WebUI.Controllers
                                 return Content("Error");
                         }
                         eRTechniques.TechniqueName = collection["TechniqueName"];
-                        eRTechniques.TechniqueType = collection["TechniqueType"];
+                        Enum.TryParse(collection["TechniqueType"], true, out eORTechniqueType);
+                        ertechnique.TechniqueType = eORTechniqueType;
                         eRTechniques.Is_Active = Convert.ToBoolean(collection["Is_Active"].Split(',')[0]);
                         eRTechniques.Status = collection["Status"];
 

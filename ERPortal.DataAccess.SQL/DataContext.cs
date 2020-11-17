@@ -26,6 +26,7 @@ namespace ERPortal.DataAccess.SQL
             modelBuilder.Entity<ERApplication>().HasOptional(a => a.ERScreeningDetail);
             modelBuilder.Entity<ERApplication>().HasOptional(a => a.ERPilot);
             modelBuilder.Entity<ERApplication>().HasOptional(a => a.UHCProductionMethod);
+            modelBuilder.Entity<ERApplication>().HasOptional(a => a.ERTechniques);
             modelBuilder.Entity<ERApplication>().HasRequired(a => a.Organisation).WithMany().WillCascadeOnDelete(false);
             modelBuilder.Entity<ERApplication>().HasRequired(a => a.FieldType).WithMany().WillCascadeOnDelete(false);
 
@@ -40,7 +41,7 @@ namespace ERPortal.DataAccess.SQL
             modelBuilder.Entity<Notification>().HasOptional(n => n.ERApplication).WithMany().WillCascadeOnDelete(true); ;
 
             modelBuilder.Entity<ForwardApplication>().HasRequired(f => f.ERApplication);
-
+            
             //modelBuilder.Entity<QueryDetails>().HasRequired(q => q.ERApplication).WithMany().WillCascadeOnDelete(false); ;
             //modelBuilder.Entity<QueryDetails>().HasRequired(q => q.UserAccount);
 

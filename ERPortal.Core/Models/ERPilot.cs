@@ -10,15 +10,15 @@ namespace ERPortal.Core.Models
     public class ERPilot : BaseEntity
     {
         [Display(Name = "Pilot Design carried out")]
-        [Required(ErrorMessage = "Required Pilot Design carried out")]
-        public YesNo PilotDesign { get; set; }
+        //[Required(ErrorMessage = "Required Pilot Design carried out")]
+        public YesNo? PilotDesign { get; set; }
 
         [Display(Name = "Pilot Mandatory")]
         public YesNo? PilotMandatory { get; set; }
 
         [Display(Name = "Technically Compatible")]
         [Required(ErrorMessage = "Required Technically Compatible")]
-        public TechnicallyCompatible TechnicallyCompatible { get; set; }
+        public YesNo TechnicallyCompatible { get; set; }
 
         [Display(Name = "Economic Viable")]
         public YesNo PilotEconomicViability { get; set; }
@@ -55,7 +55,35 @@ namespace ERPortal.Core.Models
 
         [Display(Name = "Eligible For Fiscal Incentive")]
         public YesNo? EligibleForFiscalIncentive { get; set; }
-      
+
+        [Display(Name = "CAPEX")]
+        public string CAPEX { get; set; }
+
+        [Display(Name = "OPEX")]
+        public string OPEX { get; set; }
+
+        [Display(Name = "Duration (In Months)")]
+        public int? Duration { get; set; }
+
+        [Display(Name = "Expected Investment for Pilot Phase (In INR, cr.)")]
+        public string ExpectedInvestment { get; set; }
+        [Display(Name = "")]
+        public string EnvisagedIncremental { get; set; }
+
+        [Display(Name = "CAPEX")]
+        public string CAPEX2 { get; set; }
+
+        [Display(Name = "OPEX")]
+        public string OPEX2 { get; set; }
+
+        [Display(Name = "Duration (In Months)")]
+        public int Duration2 { get; set; }
+
+        [Display(Name = "Expected Investment Project in (In INR, cr.)")]
+        public string ExpectedInvestment2{ get; set; }
+        [Display(Name = "")]
+        public string EnvisagedIncremental2 { get; set; }
+
 
     }
 }

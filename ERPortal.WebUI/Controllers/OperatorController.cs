@@ -150,7 +150,7 @@ namespace ERPortal.WebUI.Controllers
             string dt = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss").Replace("/", "").Replace(":", "").Replace(" ", "");
             _ERApplication.ERApplications.AppId = "ERAPPID" + dt;
             _ERApplication.ERApplications.ERScreeningDetail.ReportDocumentPath = FileRef;
-            
+
             if (!string.IsNullOrEmpty(_ERApplication.EGRTechniqueId))
                 _ERApplication.ERApplications.ERTechniquesId = _ERApplication.EGRTechniqueId;
             else if (!string.IsNullOrEmpty(_ERApplication.EORTechniqueId))
@@ -158,6 +158,8 @@ namespace ERPortal.WebUI.Controllers
             else
                 _ERApplication.ERApplications.ERTechniquesId = null;
 
+
+            _ERApplication.ERApplications.MassiveFracking = MassiveUHC.AcidFracking;
             if (!TryValidateModel(_ERApplication.ERApplications))
             {
                 ViewBag.RefId = FileRef;
@@ -168,12 +170,8 @@ namespace ERPortal.WebUI.Controllers
                 return View(_ERApplication);
             }
 
-
-
             ERApplicationContext.Insert(_ERApplication.ERApplications);
             string auditstatus = StatusMasterContext.Collection().Where(status => status.Status == "Application Submitted").FirstOrDefault().CustStatusId;
-
-
             string CERuserrole = UserRoleType.ConsultantEnhancedRecovery.GetDisplayName();
             string CER = UserAccountContext.Collection().Where(x => x.UserRole == CERuserrole).FirstOrDefault().Id;
             AuditTrails auditTrails = new AuditTrails()
@@ -210,10 +208,9 @@ namespace ERPortal.WebUI.Controllers
                 ERAppActiveUsersContext.Commit();
                 AuditTrailContext.Commit();
                 scope.Complete();
-            }
-     
+            }   
 
-            return Json("Success", JsonRequestBehavior.AllowGet);
+            return Json("Application Ref. No :" + _ERApplication.ERApplications.AppId , JsonRequestBehavior.AllowGet);
         }
 
     }

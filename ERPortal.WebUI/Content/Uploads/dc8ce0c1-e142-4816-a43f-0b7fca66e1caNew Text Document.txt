@@ -1,0 +1,31 @@
+  if(callval='7')then
+ open data_cursor for
+ select fa.REFID,(select process_longname from FRM_PROCESS_MASTER where id=to_number(fa.PROCESSID)) PROCESS_ID,
+ 
+TO_CHAR(fa.CREATED_ON,'DD/MM/YYYY') CREATED_ON,
+fa.CREATED_BY,
+fa.BLOCKNAME,
+fa.BLOCK_ID,
+BLOCKCATEGORY,
+REF_TOPSC_ARTICALNO,
+NAME_OF_INSURANCE_COMPANY,
+SUM_INSURED,
+to_char(TERM_OF_INSURANCE,'DD/MM/YYYY') as TERM_OF_INSURANCE,
+PERILS_COVERED,
+UPLOAD_INSURANCE_POLICY,
+TICK_TO_PROCEED, 
+NAME_AUTH_SIG_CONTRA,
+DESIGNATION,
+SIG_DIGITAL_SIG,
+ cm.FILEREF,
+cm.COMMENTID,
+fa.status
+  from form_sub_insurance_indemnity fa inner join CMS_WORKITEM_MASTER cm on ref_id=refid where refid=P_REFID order by cm.time_stamp asc;
+  end if;
+
+
+Reference to PSC Article No.	
+Name of Insurance company	
+Sum Insured (In INR)	
+Term of Insurance (DD/MM/YY)	
+Perils covered	

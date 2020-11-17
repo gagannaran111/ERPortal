@@ -18,14 +18,14 @@ namespace ERPortal.Core.Models
         [Display(Name = "Report Document Path")]             
         public string ReportDocumentPath { get; set; }
         [Display(Name = "First Order Screening")]
-        [Required(ErrorMessage ="Required")]
+        //[Required(ErrorMessage ="Required")]
        
         public YesNo? FirstOrderScreening { get; set; }
         [Display(Name = "Second Order Screening")]
-        [Required(ErrorMessage = "Required")]
+       // [Required(ErrorMessage = "Required")]
         public YesNo? SecondOrderScreening { get; set; }
         [Display(Name = "Third Order Screening")]
-        [Required(ErrorMessage = "Required")]
+        //[Required(ErrorMessage = "Required")]
         public YesNo? ThirdOrderScreening { get; set; }
 
 

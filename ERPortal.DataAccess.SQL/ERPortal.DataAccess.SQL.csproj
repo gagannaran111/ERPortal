@@ -159,6 +159,26 @@
     <Compile Include="Migrations\202004071235518_ERTechniqueColAdd.designer.cs">
       <DependentUpon>202004071235518_ERTechniqueColAdd.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202011121347446_update_form.cs" />
+    <Compile Include="Migrations\202011121347446_update_form.designer.cs">
+      <DependentUpon>202011121347446_update_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202011170315275_update_form2.cs" />
+    <Compile Include="Migrations\202011170315275_update_form2.designer.cs">
+      <DependentUpon>202011170315275_update_form2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202011170544267_update_form3.cs" />
+    <Compile Include="Migrations\202011170544267_update_form3.designer.cs">
+      <DependentUpon>202011170544267_update_form3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202011170727528_update_form31.cs" />
+    <Compile Include="Migrations\202011170727528_update_form31.designer.cs">
+      <DependentUpon>202011170727528_update_form31.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202011170800273_update_form32.cs" />
+    <Compile Include="Migrations\202011170800273_update_form32.designer.cs">
+      <DependentUpon>202011170800273_update_form32.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -253,6 +273,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202004071235518_ERTechniqueColAdd.resx">
       <DependentUpon>202004071235518_ERTechniqueColAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011121347446_update_form.resx">
+      <DependentUpon>202011121347446_update_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011170315275_update_form2.resx">
+      <DependentUpon>202011170315275_update_form2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011170544267_update_form3.resx">
+      <DependentUpon>202011170544267_update_form3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011170727528_update_form31.resx">
+      <DependentUpon>202011170727528_update_form31.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011170800273_update_form32.resx">
+      <DependentUpon>202011170800273_update_form32.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

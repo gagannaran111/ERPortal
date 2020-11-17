@@ -15,7 +15,7 @@ namespace ERPortal.Core.Models
 
         [Display(Name = "Type")]
         [Required]
-        public string TechniqueType { get; set; }
+        public EORTechniqueType TechniqueType { get; set; }
         [Display(Name = "Name")]
         [Required]
         public string TechniqueName { get; set; }        

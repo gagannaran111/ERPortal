@@ -73,6 +73,25 @@ namespace ERPortal.Core.Models
         [Display(Name = "UHC Extraction")]
         UHCMethod
     }
+    public enum EORTechniqueType
+    {
+        [Display(Name = "Others")]
+        Others,
+        [Display(Name = "Chemical Flooding")]
+        ChemicalFlooding,
+        [Display(Name = "Miscible Gas Flooding/Injection")]
+        MisGasFlInj,
+        [Display(Name = "Thermal")]
+        Thermal,
+    }
+    public enum MassiveUHC
+    {
+        [Display(Name = "Massive Hydraulic Fracking")]
+        HydraulicFracking,
+        [Display(Name = "Massive Acid Fracking")]
+        AcidFracking,
+        
+    }
     public enum OrganisationType
     {
         Operator,

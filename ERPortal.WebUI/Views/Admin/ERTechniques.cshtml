@@ -22,7 +22,7 @@
         <div class="form-group row">
             @Html.LabelFor(model => model.TechniqueType, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.TechniqueType, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EnumDropDownListFor(model => model.TechniqueType, "Choose...", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.TechniqueType, "", new { @class = "text-danger" })
             </div>
         </div>

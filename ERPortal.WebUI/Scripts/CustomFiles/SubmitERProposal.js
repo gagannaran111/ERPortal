@@ -1,4 +1,4 @@
-﻿import { YesNo, HydrocarbonType, StyleClass, HydrocarbonMethodProposed, ImplementationType, AlertColors, ReturnData } from './Types.js'; // Import Types.js File
+﻿import { YesNo, HydrocarbonType, StyleClass, HydrocarbonMethodProposed, ImplementationType, AlertColors, ReturnData, UHCProductionMethod } from './Types.js'; // Import Types.js File
 import { GetUploadFilesData, alertModal, CompareTwoDates, CurrentDate, CompareTwoDatesByYear } from './CommenMethods.js';
 import { StatusData } from './CommentClasses.js';
 
@@ -28,10 +28,9 @@ const ElementsId = {
     ERScreeningInstituteId: '#ERApplications_ERScreeningDetail_ERScreeningInstituteId',
     EORTechniqueId: '#EORTechniqueId',
     EGRTechniqueId: '#EGRTechniqueId',
+    ERTechniquesType: '#ERApplications_ERTechniquesType',
     UHCProductionMethodId: '#ERApplications_UHCProductionMethodId',
     operatorform: '#operatorform',
-
-
 };
 
 const DivId = {
@@ -53,37 +52,32 @@ const DivId = {
 };
 
 $(document).ready(() => {
-    $.each($('#ERApplications_ImplementaionType option'), function (index, element) {
-        if ($(this).val() == "1" || $(this).val() == "0") {
-            $(this).addClass(StyleClass.OIL);
-        }
-        else if ($(this).val() == "4") {
-            $(this).addClass(StyleClass.UHC);
-        }
-        else if ($(this).val() == "2" || $(this).val() == "3") {
-            $(this).addClass(StyleClass.GAS);
-        }
-        else {
+    //$.each($('#ERApplications_ImplementaionType option'), function (index, element) {
+    //    if ($(this).val() == "1" || $(this).val() == "0") {
+    //        $(this).addClass(StyleClass.OIL);
+    //    }
+    //    else if ($(this).val() == "4") {
+    //        $(this).addClass(StyleClass.UHC);
+    //    }
+    //    else if ($(this).val() == "2" || $(this).val() == "3") {
+    //        $(this).addClass(StyleClass.GAS);
+    //    }
+    //    else {
 
-        }
-    });
-    DivId.ImplementaionTypeDiv.find('select option').prop('hidden', true);
+    //    }
+    //});
+    DivId.ImplementaionTypeDiv.find('select option').addClass('d-none');
 
     $('[data-toggle="tooltip"]').tooltip();
     if ($(ElementsId.ERApplicationId).val() != "") {
-        $('#disabledForm').prop('disabled', true)
-        $(ElementsId.ERAppSubmit).hide();
-        $('.statussuccess').empty().append('Application Ref. No. : ' + $(ElementsId.ERApplicationId).val()).removeClass('d-none');
-        GetUploadFilesData('#UploadFilesData', $(ElementsId.ReportDocument).val());
-        setTimeout(() => {
-            $('.fileDelete').addClass('d-none');
-        });
+        formSubmitted();
     }
     else {
         $('select option[value=""]').prop('selected', true);
         $(ElementsId.DateOfDiscovery).val('');
 
         DivId.FileDiv.removeClass('d-none');
+        $('.field-validation-error').addClass('ml-2');
     }
 
 
@@ -92,28 +86,184 @@ $(document).ready(() => {
 
 
 $(document).on('change', ElementsId.HydrocarbonType, ({ currentTarget }) => {
-    ChangeHydrocarbonType(currentTarget);
+    //  ChangeHydrocarbonType(currentTarget);
+
+    if (currentTarget.value == '0') {
+        $('.hydro_meth').removeClass('d-none').find('select option[value="2"]').remove();
+        $('.uhc_prod_meth').addClass('d-none').find('select').val('');
+    }
+    else if (currentTarget.value == '1') {
+        $('.hydro_meth').addClass('d-none').find('select').val('');;
+        $('.uhc_prod_meth').removeClass('d-none');
+    }
+    else {
+        $('.uhc_prod_meth').addClass('d-none').find('select').val('');;
+        $('.hydro_meth').addClass('d-none').find('select').val('');;
+    }
+});
+
+$(document).on('change', '.Hydrotype', ({ currentTarget }) => {
+    let type_oil = [HydrocarbonMethodProposed.Oil], type_gas = [HydrocarbonMethodProposed.Gas];
+    for (let x in UHCProductionMethod) {
+        let v = x.includes('Oil');
+        let w = x.includes('Gas');
+        v == true ? type_oil.push(x) : null;
+        w == true ? type_gas.push(x) : null;
+    }
+    console.log(type_gas, type_oil);
+    let t = $(currentTarget).find('option:selected').attr('data-uhcname')?.trim();
+    let a = currentTarget.value == HydrocarbonMethodProposed.Oil ? type_oil.find(x => x == currentTarget.value)
+        : type_oil.find(x => x == t)
+    let b = currentTarget.value == HydrocarbonMethodProposed.Gas ? type_gas.find(x => x == currentTarget.value)
+        : type_gas.find(x => x == t);
+    let hydrotype = $(ElementsId.HydrocarbonType).find('option:selected').text();
+    if (a != undefined && a != '') {
+        //  alert(a);
+        a = a == HydrocarbonMethodProposed.Oil ? "Oil" : a;
+        $('.lbltxt').find('span').remove();
+        $('.lbltxt').each((i, e) => {
+            $(e).append('<span class="text-danger"> ' + a + ' ('+hydrotype+')</span>');
+
+        });
+        $('.unit').text('MMBBL');
+        $('.giip').addClass('d-none')
+        $('.oiip').removeClass('d-none')
+
+
+    }
+    else if (b != undefined && b != '') {
+        b = b == HydrocarbonMethodProposed.Gas ? "Gas" : b;
+        $('.lbltxt').find('span').remove();
+        $('.lbltxt').each((i, e) => {
+            $(e).append('<span class="text-danger"> ' + b + ' (' + hydrotype + ')</span>');
+
+        });
+        $('.unit').text('BCF');
+        $('.giip').removeClass('d-none');
+        $('.oiip').addClass('d-none');
+    }
+   // $('.Cal_Curr_Recovery input[type="number"]').val('');
+});
+
+$(document).on('keyup', '.Cal_Curr_Recovery input[type="number"]', ({ currentTarget }) => {
+    let arr = [];
+    $('.Cal_Curr_Recovery input[type="number"]').each((i, e) => {
+        let d = $(e).val() == "" ? 0 : parseFloat($(e).val());
+        arr.push(d ?? 0);
+    });
+    let oiip_giip = arr[0] > 0 ? arr[0] : arr[1] > 0 ? arr[1] : 1;
+    let CurrentRecovery = (arr[3] / oiip_giip) * 100;
+    $('.Cal_Curr_Recovery input[type="number"]:last').val(CurrentRecovery);
+    console.log(arr, oiip_giip, CurrentRecovery);
+
+    // type of propsal fisical incentive
+    // start
+
+    let uhc = $('.uhc_prod_meth select option:selected').attr('data-uhcname')?.trim();
+    let oilgas = $('.hydro_meth select option:selected').val();
+
+    let arr2 = [HydrocarbonMethodProposed.Oil, UHCProductionMethod.Heavy_Oil, UHCProductionMethod.Oil_Shale];
+    
+    let disp = [];
+    if (arr2.find(x => (x == uhc) || (x == oilgas)) != undefined) {
+        $(ElementsId.ImplementationType).find('option').addClass('d-none');
+        if (CurrentRecovery < 60) {
+            $(ElementsId.ImplementationType).find('option[value="0"]').removeClass('d-none');
+        }
+        else {
+            $(ElementsId.ImplementationType).find('option[value="0"]').removeClass('d-none');
+            $(ElementsId.ImplementationType).find('option[value="1"]').removeClass('d-none');
+        }
+    }
+    if (HydrocarbonMethodProposed.Gas == oilgas) {
+        $(ElementsId.ImplementationType).find('option').addClass('d-none');
+        if (CurrentRecovery < 80) {
+            $(ElementsId.ImplementationType).find('option[value="2"]').removeClass('d-none');
+        }
+        else {
+            $(ElementsId.ImplementationType).find('option[value="2"]').removeClass('d-none');
+            $(ElementsId.ImplementationType).find('option[value="3"]').removeClass('d-none');
+        }
+    }
+    // end
 });
 
 $(document.body).on('change', ElementsId.HydrocarbonMethod, ({ currentTarget }) => {
     // console.log(currentTarget.selectedOptions[0].text);
-    ChangeHydrocarbonMethod(currentTarget);
+    //ChangeHydrocarbonMethod(currentTarget);
 });
 
 $(document).on('change', ElementsId.ImplementationType, ({ currentTarget }) => {
-    ChangeImplementationType(currentTarget);
+    //ChangeImplementationType(currentTarget);    
+    let txt = $(currentTarget).find('option:selected').text();
+    $('.TechniquesDiv').removeClass('d-none');
+    $('.tech').addClass('d-none');
+    if (currentTarget.value == "0") {
+        $('.tech:eq(0)').removeClass('d-none');
+    }
+    else if (currentTarget.value == "2") {
+        $('.tech:eq(1)').removeClass('d-none');
+    }
+    else if (currentTarget.value == "4") {
+        $('.tech:eq(2)').removeClass('d-none');
+    } 
+    $('.lbltxt2').empty().append(`Expected Investment in <span class="text-danger">${txt}</span>  Project (In INR, cr.)`);
+
+});
+$(document).on('change', ElementsId.ERTechniquesType, ({ currentTarget }) => {
+    $(ElementsId.EORTechniqueId).find('option').each((i, e) => {
+        $(e).attr('data-type') == currentTarget.value ? $(e).removeClass('d-none') : $(e).addClass('d-none');
+    });
+    $(ElementsId.EORTechniqueId).find('option:eq(0)').removeClass('d-none');
 });
 
 $(document).on('change', ElementsId.DateOfDiscovery, ({ currentTarget }) => {
     let st = ChangeDateOfDiscovery(currentTarget);
     if (st.Msg.length > 0)
         alertModal(st.Msg);
+    if (st.Status == false) {
+        $(currentTarget).val('');
+        return st.Status;
+    }
+    let dt = new Date(currentTarget.value);
+    let dod = new Date('10-10-2018');
+    console.log(dt, dod);
+    let t = $(ElementsId.UHCProductionMethodId).find('option:selected').attr('data-uhcname')?.trim();
+    $(ElementsId.ImplementationType).find('option').addClass('d-none');
+    if (UHCProductionMethod.Tight_Oil == t || UHCProductionMethod.Shale_Oil == t) {
+
+        if (dt > dod) {
+            $(ElementsId.ImplementationType).find('option[value="0"]').removeClass('d-none');
+            $(ElementsId.ImplementationType).find('option[value="1"]').removeClass('d-none');
+            $(ElementsId.ImplementationType).find('option[value="4"]').removeClass('d-none');
+        }
+        else {
+            $(ElementsId.ImplementationType).find('option[value="0"]').removeClass('d-none');
+            $(ElementsId.ImplementationType).find('option[value="1"]').removeClass('d-none');
+        }
+    }
+    if (UHCProductionMethod.Tight_Gas == t || UHCProductionMethod.Shale_Gas == t || UHCProductionMethod.Gas_Hydrate == t) {
+
+        if (dt > dod) {
+            $(ElementsId.ImplementationType).find('option[value="2"]').removeClass('d-none');
+            $(ElementsId.ImplementationType).find('option[value="3"]').removeClass('d-none');
+            $(ElementsId.ImplementationType).find('option[value="4"]').removeClass('d-none');
+        }
+        else {
+            $(ElementsId.ImplementationType).find('option[value="2"]').removeClass('d-none');
+            $(ElementsId.ImplementationType).find('option[value="3"]').removeClass('d-none');
+        }
+    }
+
+
+
     return st.Status;
 });
 $(document).on('change', ElementsId.DateOfInitialComProd, ({ currentTarget }) => {
     let st = ChangeDateOfInitComProd(currentTarget);
     if (st.Msg.length > 0)
         alertModal(st.Msg);
+    st.Status == false ? $(currentTarget).val(''):'';
     return st.Status;
 });
 
@@ -136,23 +286,24 @@ $(document).on("change", ElementsId.PresentlyUnderProduction, ({ currentTarget }
 });
 
 $(document).on('change', ElementsId.DateOfLastComProd, ({ currentTarget }) => {
-    let st = ChangeDateOfLastComProd(currentTarget);
-    if (st.Msg.length > 0)
-        alertModal(st.Msg);
-    return st.Status;
+   // let st = ChangeDateOfLastComProd(currentTarget);
+   // if (st.Msg.length > 0)
+   //     alertModal(st.Msg);
+   //// st.Status == false ? $(currentTarget).val('') : '';
+   // return st.Status;
 });
 
 $(document).on('change', ElementsId.FieldOIIP, ({ currentTarget }) => {
-    let st = ChangeFieldOIIP(currentTarget);
-    if (st.Msg.length > 0)
-        alertModal(st.Msg, AlertColors.Warning);
-    return st.Status;
+    //let st = ChangeFieldOIIP(currentTarget);
+    //if (st.Msg.length > 0)
+    //    alertModal(st.Msg, AlertColors.Warning);
+    //return st.Status;
 });
 $(document).on('change', ElementsId.FieldGIIP, ({ currentTarget }) => {
-    let st = ChangeFieldGIIP(currentTarget);
-    if (st.Msg.length > 0)
-        alertModal(st.Msg, AlertColors.Warning);
-    return st.Status;
+    //let st = ChangeFieldGIIP(currentTarget);
+    //if (st.Msg.length > 0)
+    //    alertModal(st.Msg, AlertColors.Warning);
+    //return st.Status;
 });
 
 $(document).on("change", ElementsId.FirstOrderScreening, ({ currentTarget }) => {
@@ -226,10 +377,10 @@ $(document).on('click', ElementsId.BtnERAppEligibility, (e) => {
 //  Function  //
 ////////////////
 const BtnEligibleOrSubmitVisible = () => {
-    if ($(ElementsId.ERAppSubmit).hasClass('d-none') == false) {
-        $(ElementsId.ERAppSubmit).addClass('d-none');
-        $(ElementsId.BtnERAppEligibility).removeClass('d-none');
-    }
+    //if ($(ElementsId.ERAppSubmit).hasClass('d-none') == false) {
+    //    $(ElementsId.ERAppSubmit).addClass('d-none');
+    //    $(ElementsId.BtnERAppEligibility).removeClass('d-none');
+    //}
 };
 const ChangeHydrocarbonType = (currentTarget) => {
 
@@ -542,7 +693,7 @@ const ChangeDateOfLastComProd = (currentTarget) => {
 const ChangeFieldGIIP = (currentTarget) => {
     if (parseFloat(currentTarget.value) < 0.25 && parseFloat(currentTarget.value) > 0) {
         ReturnData.Status = false;
-        ReturnData.Msg = "Pilot Phase Is Not Mandatory. Because If GIIP < 0.25 TCF.";
+        ReturnData.Msg = "Pilot Phase Is Not Mandatory. Because If GIIP < 0.25 BCF.";
 
     }
     else if (parseInt(currentTarget.value) < 0) {
@@ -553,7 +704,7 @@ const ChangeFieldGIIP = (currentTarget) => {
     }
     else if (parseFloat(currentTarget.value)) {
         ReturnData.Status = true;
-        ReturnData.Msg = "Pilot Phase Is Mandatory. Because If GIIP < 0.25 TCF.";
+        ReturnData.Msg = "Pilot Phase Is Mandatory. Because If GIIP < 0.25 BCF.";
 
     }
     else {
@@ -903,7 +1054,17 @@ const CheckEligibilityToSubmit = async (e) => {
     return [returndt, status];
 };
 
-
+const formSubmitted = () => {
+    $('#disabledForm').prop('disabled', true).find('button').addClass('d-none');
+    $(ElementsId.ERAppSubmit).hide();
+    $('.statussuccess').empty().append('Application Ref. No. : ' + $(ElementsId.ERApplicationId).val()).removeClass('d-none');
+    GetUploadFilesData('#UploadFilesData', $(ElementsId.ReportDocument).val());
+    setTimeout(() => {
+        $('.fileDelete').addClass('d-none');
+        DivId.FileDiv.addClass('d-none');
+        $('#disabledForm').find('select').trigger('change');
+    });
+}
 
 
 

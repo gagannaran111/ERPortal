@@ -17,6 +17,8 @@ namespace ERPortal.Core.ViewModels
         public string EORTechniqueId { get; set; }
         [Display(Name = "EGR Techniques")]
         public string EGRTechniqueId { get; set; }
+        [Display(Name = "EGR Techniques Type")]
+        public string EGRTechniqueType { get; set; }
 
     }
 }

@@ -29,21 +29,28 @@ namespace ERPortal.Core.Models
         [CustomValidationClass("/.,!@#$%", ErrorMessage = "Invalid Data")]
         public string FieldName { get; set; }
 
+        [Display(Name = "Area (km2)")]
+        [CustomValidationClass("/.,!@#$%", ErrorMessage = "Invalid Data")]
+        [Required(ErrorMessage = "Valid Area is required")]
+        public string Area { get; set; }
+
         [Display(Name = "Type of Hydrocarbon")]
         [Required(ErrorMessage = "Valid Hydrocarbon Type is required")]
-        public HydrocarbonType HydrocarbonType { get; set; }
+        public HydrocarbonType? HydrocarbonType { get; set; }
 
         [Display(Name = "Type of Hydrocarbon Method Propose")]
-        [Required(ErrorMessage = "Valid Hydrocarbon Type Method Propose is required")]
-        public HydrocarbonMethod HydrocarbonMethod { get; set; }
+      //  [Required(ErrorMessage = "Valid Hydrocarbon Type Method Propose is required")]
+        public HydrocarbonMethod? HydrocarbonMethod { get; set; }
 
         public string UHCProductionMethodId { get; set; }
         [Display(Name = "UHC Production Method")]
         public virtual UHCProductionMethod UHCProductionMethod { get; set; }
 
-        [Display(Name = "Incentive Sought for Implementation")]
+        [Display(Name = "Type of Proposal seeking fiscal Incentive")]
         [Required(ErrorMessage = "Valid Implementaion Type is required")]
-        public ImplementaionType ImplementaionType { get; set; }
+        public ImplementaionType? ImplementaionType { get; set; }
+        [Display(Name = "")]        
+        public MassiveUHC? MassiveFracking { get; set; }
 
         [Display(Name = "Date of Discovery")]
         [Required(ErrorMessage = "Valid Date Of Discovery is required")]
@@ -60,22 +67,33 @@ namespace ERPortal.Core.Models
         public DateTime? DateOfLastCommercialProduction { get; set; }
 
         [Display(Name = "Presently Under Production")]
-        public YesNo PresentlyUnderProduction { get; set; }
+        public YesNo? PresentlyUnderProduction { get; set; }
 
         public string ERScreeningDetailId { get; set; }
         [Display(Name = "Screening report")]
         public virtual ERScreeningDetail ERScreeningDetail { get; set; }
 
-        [Display(Name = "Field OIIP")]
-        public int? FieldOIIP { get; set; }
+        [Display(Name = "OIIP (2P)")]
+        public string FieldOIIP { get; set; }
 
-        [Display(Name = "Field GIIP")]
-        public int? FieldGIIP { get; set; }
+        [Display(Name = "GIIP (2P)")]
+        public string FieldGIIP { get; set; }
+        [Display(Name = "EUR (2P)")]
+        public string EUR{ get; set; }
+
+        [Display(Name = "Np")]
+        public string Np{ get; set; }
+
+        [Display(Name = "Current Recovery")]
+        public string CurrentRecovery { get; set; }
+
 
         [Display(Name = "ER Pilot Id")]
         public string ERPilotId { get; set; }
         [Display(Name = "ER Pilot")]
         public virtual ERPilot ERPilot { get; set; }
+        public EORTechniqueType? ERTechniquesType { get; set; }
+
         [Display(Name = "ER Techniques Id")]
         public string ERTechniquesId { get; set; }
         [Display(Name = "ER Techniques (Conventional)")]
